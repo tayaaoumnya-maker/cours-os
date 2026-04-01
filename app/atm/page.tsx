@@ -374,31 +374,11 @@ function CatForm({ products, setProducts, editProduct, onClose, taxes, suppliers
             className="w-full bg-white/[0.05] border border-white/[0.08] rounded-xl px-4 py-4 text-sm text-white placeholder-white/30 focus:outline-none focus:border-amber-500/50 transition-colors" />
         </div>
 
-        {/* Prix */}
+        {/* Prix HT */}
         <div className="space-y-2">
-          <label className="block text-sm font-bold text-white">Prix (€)</label>
-          <div className="flex gap-2 items-center">
-            <input type="number" min={0} step={0.01} value={price} onChange={e => setPrice(e.target.value)} placeholder="0,00"
-              className="flex-1 bg-white/[0.05] border border-white/[0.08] rounded-xl px-4 py-4 text-sm text-white placeholder-white/30 focus:outline-none focus:border-amber-500/50 transition-colors" />
-            <button onClick={() => setShowPA(v => !v)}
-              className={`w-12 h-12 rounded-full border flex items-center justify-center text-lg font-bold transition-all flex-shrink-0 ${showPA ? "bg-amber-500/20 border-amber-500/50 text-amber-400" : "bg-white/[0.05] border-white/[0.08] text-white/40 hover:text-white"}`}>
-              ⋮
-            </button>
-          </div>
-          {showPA ? (
-            <div className="space-y-1">
-              <input type="number" min={0} step={0.01} value={purchasePrice} onChange={e => setPurchasePrice(e.target.value)}
-                placeholder="Prix d'achat HT (€)"
-                className="w-full bg-white/[0.05] border border-white/[0.08] rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 focus:outline-none focus:border-amber-500/50 transition-colors" />
-              {purchasePrice && price && parseFloat(price) > 0 && (
-                <p className="text-xs text-cyan-400 pl-1">
-                  Marge : {((parseFloat(price) - parseFloat(purchasePrice)) / parseFloat(price) * 100).toFixed(1)}% · +{(parseFloat(price) - parseFloat(purchasePrice)).toFixed(2)} €
-                </p>
-              )}
-            </div>
-          ) : (
-            <p className="text-xs text-white/30 pl-1">Calcul marge : ajoutez un prix d&apos;achat</p>
-          )}
+          <label className="block text-sm font-bold text-white">Prix HT (€)</label>
+          <input type="number" min={0} step={0.01} value={price} onChange={e => setPrice(e.target.value)} placeholder="0,00"
+            className="w-full bg-white/[0.05] border border-white/[0.08] rounded-xl px-4 py-4 text-sm text-white placeholder-white/30 focus:outline-none focus:border-amber-500/50 transition-colors" />
           <label className="flex items-center gap-2 cursor-pointer select-none">
             <input type="checkbox" checked={variablePrice} onChange={e => setVariablePrice(e.target.checked)} className="w-4 h-4 rounded accent-amber-500" />
             <span className="text-xs text-white/40">Prix variable (saisie à chaque vente)</span>
@@ -3570,21 +3550,21 @@ export default function ATMApp() {
                       const isLow = product.stock > 0 && product.stock <= product.alertThreshold
                       const isEditing = stockEditing === product.id
                       return (
-                        <div key={product.id} className={`flex items-center gap-3 bg-[#12121f] border rounded-xl px-4 py-3 transition-colors ${stockEditProduct?.id === product.id ? "border-amber-500/40" : "border-white/[0.05] hover:border-white/10"}`}>
-                          <div className="w-9 h-9 rounded-lg overflow-hidden flex-shrink-0 bg-white/[0.04]">
-                            {product.image ? <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
-                              : <div className="w-full h-full flex items-center justify-center text-base opacity-50">{product.emoji}</div>}
+                        <div key={product.id} className={`bg-[#12121f] border rounded-xl px-3 py-3 transition-colors ${stockEditProduct?.id === product.id ? "border-amber-500/40" : "border-white/[0.05] hover:border-white/10"}`}>
+                          {/* Ligne 1 : image + nom + prix */}
+                          <div className="flex items-center gap-3 mb-2">
+                            <div className="w-9 h-9 rounded-lg overflow-hidden flex-shrink-0 bg-white/[0.04]">
+                              {product.image ? <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+                                : <div className="w-full h-full flex items-center justify-center text-base opacity-50">{product.emoji}</div>}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium truncate">{product.name}</p>
+                              <p className="text-xs text-white/30 truncate">
+                                {product.category} · <span className="text-amber-400/70">{formatPrice(product.price)}</span>
+                              </p>
+                            </div>
                           </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium truncate">{product.name}</p>
-                            <p className="text-xs text-white/30">
-                              {product.category} · <span className="text-white/40">{formatPrice(product.price)}</span>
-                              {product.supplierId && suppliers.find(s => s.id === product.supplierId) && (
-                                <span className="ml-2 text-blue-400/60">· {suppliers.find(s => s.id === product.supplierId)!.name}</span>
-                              )}
-                            </p>
-                          </div>
-                          {/* Statut stock */}
+                          {/* Ligne 2 : stock + boutons */}
                           {isEditing ? (
                             <div className="flex items-center gap-1">
                               <input type="number" min={0} value={stockEditVal}
@@ -3596,11 +3576,10 @@ export default function ATMApp() {
                               <button onClick={() => setStockEditing(null)} className="text-red-400 text-sm hover:text-red-300 px-1">✕</button>
                             </div>
                           ) : (
-                            <div className="flex items-center gap-2 flex-wrap justify-end">
+                            <div className="flex items-center gap-2 flex-wrap">
                               <span className={`text-sm font-bold ${isOut ? "text-red-400" : isLow ? "text-amber-400" : "text-cyan-400"}`}>
                                 {product.stock} {product.unit}s
                               </span>
-                              {/* Quick +5 +10 +20 */}
                               {[5, 10, 20].map(n => (
                                 <button key={n} onClick={() => setProducts(prev => prev.map(p => p.id === product.id ? { ...p, stock: p.stock + n } : p))}
                                   className="text-[10px] px-2 py-1 rounded-md bg-cyan-500/15 hover:bg-cyan-500/25 text-cyan-400 font-bold transition-all">
