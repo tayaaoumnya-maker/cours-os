@@ -1,0 +1,1542 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Catalogue ATM Outillage — Outillage Professionnel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Barlow+Condensed:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── RESET & BASE ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --black:   #0a0a0a;
+      --dark:    #111318;
+      --panel:   #1a1d24;
+      --border:  #2a2d36;
+      --gold:    #c8960c;
+      --gold2:   #e8b420;
+      --gold-lt: #f5d060;
+      --white:   #f5f4f0;
+      --grey:    #8a8d96;
+      --grey2:   #c2c5cc;
+      --accent:  #e05c1a;
+      --font:    'Barlow', sans-serif;
+      --font2:   'Barlow Condensed', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      background: var(--dark);
+      color: var(--white);
+      font-size: 15px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── PAGE BREAKS (print) ──────────────────────────────────── */
+    @media print {
+      .page-break { page-break-before: always; }
+      .no-print { display: none !important; }
+    }
+
+    /* ─── COVER PAGE ───────────────────────────────────────────── */
+    .cover {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0a0c10 0%, #111318 45%, #1c1610 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+    .cover::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 70% 20%, rgba(200,150,12,0.12) 0%, transparent 65%),
+        radial-gradient(ellipse 50% 40% at 10% 90%, rgba(224,92,26,0.08) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    /* grid overlay */
+    .cover::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(200,150,12,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(200,150,12,0.05) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+    }
+
+    .cover-top {
+      padding: 40px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      position: relative; z-index: 1;
+    }
+    .cover-logo {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .cover-logo img {
+      height: 52px;
+      filter: brightness(0) invert(1);
+    }
+    .cover-logo-fallback {
+      font-family: var(--font2);
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      color: var(--white);
+      text-transform: uppercase;
+    }
+    .cover-logo-fallback span { color: var(--gold); }
+    .cover-year {
+      font-family: var(--font2);
+      font-size: 13px;
+      letter-spacing: 0.2em;
+      color: var(--grey);
+      text-transform: uppercase;
+      border: 1px solid var(--border);
+      padding: 8px 16px;
+      border-radius: 4px;
+    }
+
+    .cover-center {
+      padding: 0 60px;
+      position: relative; z-index: 1;
+    }
+    .cover-label {
+      font-family: var(--font2);
+      font-size: 12px;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .cover-label::before {
+      content: '';
+      width: 40px;
+      height: 2px;
+      background: var(--gold);
+      flex-shrink: 0;
+    }
+    .cover-title {
+      font-family: var(--font2);
+      font-size: clamp(56px, 9vw, 130px);
+      font-weight: 900;
+      line-height: 0.9;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+    }
+    .cover-title .line1 { color: var(--white); }
+    .cover-title .line2 { color: var(--gold); }
+    .cover-title .line3 { color: rgba(245,244,240,0.15); }
+    .cover-subtitle {
+      margin-top: 32px;
+      font-size: 18px;
+      color: var(--grey2);
+      max-width: 480px;
+      line-height: 1.6;
+      font-weight: 300;
+    }
+    .cover-cta {
+      margin-top: 44px;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .btn-gold {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--gold);
+      color: var(--black);
+      font-family: var(--font2);
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 14px 28px;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .btn-gold:hover { background: var(--gold2); }
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid rgba(245,244,240,0.3);
+      color: var(--white);
+      font-family: var(--font2);
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 14px 28px;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+    .cover-bottom {
+      padding: 40px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      position: relative; z-index: 1;
+    }
+    .cover-stats {
+      display: flex;
+      gap: 48px;
+    }
+    .cover-stat-num {
+      font-family: var(--font2);
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .cover-stat-label {
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--grey);
+      margin-top: 4px;
+    }
+    .cover-contact {
+      text-align: right;
+      font-size: 13px;
+      color: var(--grey);
+    }
+    .cover-contact a { color: var(--grey2); text-decoration: none; }
+    .cover-contact a:hover { color: var(--gold); }
+
+    /* ─── NAV / SOMMAIRE ───────────────────────────────────────── */
+    .nav-bar {
+      background: var(--black);
+      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 100;
+      padding: 0 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .nav-logo {
+      font-family: var(--font2);
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--white);
+      text-decoration: none;
+      padding: 16px 0;
+    }
+    .nav-logo span { color: var(--gold); }
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: var(--font2);
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--grey);
+      text-decoration: none;
+      padding: 20px 0;
+      transition: color 0.2s;
+      border-bottom: 2px solid transparent;
+    }
+    .nav-links a:hover { color: var(--gold); border-bottom-color: var(--gold); }
+
+    /* ─── SECTIONS ──────────────────────────────────────────────  */
+    .section { padding: 80px 60px; }
+    .section + .section { border-top: 1px solid var(--border); }
+
+    .section-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 56px;
+      gap: 24px;
+    }
+    .section-tag {
+      font-family: var(--font2);
+      font-size: 11px;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-tag::before {
+      content: '';
+      width: 28px; height: 2px;
+      background: var(--gold);
+    }
+    .section-title {
+      font-family: var(--font2);
+      font-size: clamp(36px, 4vw, 54px);
+      font-weight: 900;
+      text-transform: uppercase;
+      line-height: 0.95;
+      letter-spacing: -0.01em;
+    }
+    .section-desc {
+      max-width: 420px;
+      font-size: 14px;
+      color: var(--grey);
+      line-height: 1.65;
+    }
+    .section-count {
+      font-family: var(--font2);
+      font-size: 80px;
+      font-weight: 900;
+      color: rgba(245,244,240,0.04);
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    /* ─── PRODUCT GRID ─────────────────────────────────────────── */
+    .product-grid {
+      display: grid;
+      gap: 2px;
+    }
+    .product-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+    .product-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+
+    /* ─── PRODUCT CARD ─────────────────────────────────────────── */
+    .product-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      transition: border-color 0.25s, transform 0.25s;
+      display: flex;
+      flex-direction: column;
+    }
+    .product-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-3px);
+      z-index: 2;
+    }
+
+    .product-card.featured {
+      grid-column: span 2;
+      flex-direction: row;
+    }
+    .product-card.featured .card-img-wrap {
+      width: 45%;
+      flex-shrink: 0;
+      height: auto;
+      aspect-ratio: auto;
+    }
+    .product-card.featured .card-body {
+      padding: 48px 44px;
+    }
+
+    .card-img-wrap {
+      position: relative;
+      aspect-ratio: 4/3;
+      overflow: hidden;
+      background: #12141a;
+    }
+    .card-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.45s ease;
+      display: block;
+    }
+    .product-card:hover .card-img-wrap img { transform: scale(1.05); }
+
+    .card-badge {
+      position: absolute;
+      top: 16px; left: 16px;
+      background: var(--gold);
+      color: var(--black);
+      font-family: var(--font2);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 5px 10px;
+      border-radius: 2px;
+    }
+    .card-badge.electric { background: var(--accent); color: #fff; }
+
+    .card-body {
+      padding: 28px 28px 32px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .card-ref {
+      font-family: var(--font2);
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--grey);
+      margin-bottom: 8px;
+    }
+    .card-name {
+      font-family: var(--font2);
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.15;
+      text-transform: uppercase;
+      color: var(--white);
+      margin-bottom: 14px;
+    }
+    .card-name.large { font-size: 28px; }
+    .card-desc {
+      font-size: 13.5px;
+      color: var(--grey2);
+      line-height: 1.65;
+      flex: 1;
+      margin-bottom: 20px;
+    }
+
+    /* specs table */
+    .specs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+      margin-bottom: 24px;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .specs.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .spec-item {
+      background: rgba(255,255,255,0.02);
+      padding: 10px 14px;
+    }
+    .spec-label {
+      font-family: var(--font2);
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--grey);
+      margin-bottom: 2px;
+    }
+    .spec-val {
+      font-family: var(--font2);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    /* contents list */
+    .contents-title {
+      font-family: var(--font2);
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--grey);
+      margin-bottom: 8px;
+    }
+    .contents-list {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 24px;
+    }
+    .contents-list li {
+      background: rgba(200,150,12,0.1);
+      border: 1px solid rgba(200,150,12,0.25);
+      color: var(--gold-lt);
+      font-size: 12px;
+      font-weight: 500;
+      padding: 3px 10px;
+      border-radius: 2px;
+      font-family: var(--font2);
+      letter-spacing: 0.05em;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-top: auto;
+      gap: 12px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+    .price-block {}
+    .price-label {
+      font-family: var(--font2);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--grey);
+    }
+    .price-val {
+      font-family: var(--font2);
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .price-val.large { font-size: 38px; }
+    .price-tax {
+      font-size: 11px;
+      color: var(--grey);
+    }
+    .card-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-family: var(--font2);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 10px 18px;
+      border-radius: 3px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+      white-space: nowrap;
+    }
+    .card-cta:hover { background: var(--gold); color: var(--black); }
+
+    /* ─── FEATURES STRIP ───────────────────────────────────────── */
+    .features-strip {
+      background: var(--black);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 36px 60px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+    }
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      padding: 0 24px;
+      border-right: 1px solid var(--border);
+    }
+    .feature-item:first-child { padding-left: 0; }
+    .feature-item:last-child { border-right: none; }
+    .feature-icon {
+      width: 44px; height: 44px;
+      background: rgba(200,150,12,0.1);
+      border: 1px solid rgba(200,150,12,0.3);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 20px;
+    }
+    .feature-title {
+      font-family: var(--font2);
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+    .feature-text {
+      font-size: 12.5px;
+      color: var(--grey);
+      line-height: 1.55;
+    }
+
+    /* ─── DIVIDER ──────────────────────────────────────────────── */
+    .gold-divider {
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      opacity: 0.5;
+      margin: 0;
+    }
+
+    /* ─── CONTACT / FOOTER ─────────────────────────────────────── */
+    .footer {
+      background: var(--black);
+      border-top: 1px solid var(--border);
+      padding: 60px 60px 40px;
+    }
+    .footer-top {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 60px;
+      margin-bottom: 48px;
+    }
+    .footer-brand-name {
+      font-family: var(--font2);
+      font-size: 28px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 12px;
+    }
+    .footer-brand-name span { color: var(--gold); }
+    .footer-tagline {
+      font-size: 13px;
+      color: var(--grey);
+      line-height: 1.65;
+      max-width: 280px;
+    }
+    .footer-col-title {
+      font-family: var(--font2);
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+    .footer-links { list-style: none; }
+    .footer-links li { margin-bottom: 10px; }
+    .footer-links a {
+      font-size: 13.5px;
+      color: var(--grey);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--white); }
+    .contact-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 14px;
+      font-size: 13px;
+      color: var(--grey2);
+    }
+    .contact-icon { color: var(--gold); flex-shrink: 0; margin-top: 2px; }
+
+    .footer-bottom {
+      border-top: 1px solid var(--border);
+      padding-top: 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: var(--grey);
+    }
+
+    /* ─── SOMMAIRE PAGE ────────────────────────────────────────── */
+    .toc {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      max-width: 720px;
+    }
+    .toc-header {
+      padding: 28px 36px;
+      background: rgba(200,150,12,0.08);
+      border-bottom: 1px solid var(--border);
+    }
+    .toc-header-title {
+      font-family: var(--font2);
+      font-size: 24px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .toc-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 36px;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.2s;
+      text-decoration: none;
+      color: inherit;
+    }
+    .toc-item:last-child { border-bottom: none; }
+    .toc-item:hover { background: rgba(200,150,12,0.06); }
+    .toc-num {
+      font-family: var(--font2);
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--gold);
+      width: 40px;
+    }
+    .toc-name {
+      flex: 1;
+      font-family: var(--font2);
+      font-size: 16px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .toc-sub {
+      font-size: 12px;
+      color: var(--grey);
+      font-family: var(--font);
+      font-weight: 400;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+    .toc-arrow { color: var(--gold); font-size: 18px; }
+
+    /* ─── INTRO BANNER ──────────────────────────────────────────── */
+    .intro-banner {
+      background: linear-gradient(135deg, #111318 0%, #1a1308 100%);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 64px 60px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    .intro-tagline {
+      font-family: var(--font2);
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+    .intro-title {
+      font-family: var(--font2);
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 900;
+      text-transform: uppercase;
+      line-height: 0.95;
+    }
+    .intro-body {
+      font-size: 14px;
+      color: var(--grey2);
+      line-height: 1.75;
+      margin-top: 24px;
+    }
+    .intro-pills {
+      margin-top: 32px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .pill {
+      font-family: var(--font2);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 7px 16px;
+      border-radius: 2px;
+      background: rgba(200,150,12,0.12);
+      border: 1px solid rgba(200,150,12,0.3);
+      color: var(--gold-lt);
+    }
+    .intro-img {
+      width: 100%;
+      border-radius: 4px;
+      object-fit: cover;
+      aspect-ratio: 4/3;
+      border: 1px solid var(--border);
+    }
+
+    /* ─── RESPONSIVE TWEAKS ─────────────────────────────────────── */
+    @media (max-width: 960px) {
+      .cover-top, .cover-bottom, .section, .features-strip { padding-left: 24px; padding-right: 24px; }
+      .nav-bar { padding: 0 24px; }
+      .product-grid.cols-3 { grid-template-columns: repeat(2, 1fr); }
+      .product-card.featured { flex-direction: column; }
+      .product-card.featured { grid-column: span 1; }
+      .product-card.featured .card-img-wrap { width: 100%; }
+      .features-strip { grid-template-columns: 1fr 1fr; padding: 32px 24px; }
+      .feature-item { padding: 16px; border-right: none; border-bottom: 1px solid var(--border); }
+      .footer-top { grid-template-columns: 1fr; gap: 36px; }
+      .footer { padding: 40px 24px 24px; }
+      .cover-stats { gap: 24px; }
+      .intro-banner { grid-template-columns: 1fr; gap: 36px; }
+      .nav-links { gap: 16px; }
+    }
+    @media (max-width: 640px) {
+      .product-grid.cols-2, .product-grid.cols-3 { grid-template-columns: 1fr; }
+      .product-card.featured { grid-column: span 1; }
+      .cover-title { font-size: 52px; }
+      .cover-center { padding: 0 24px; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!--  COVER                                                         -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<section class="cover" id="home">
+  <div class="cover-top">
+    <div class="cover-logo">
+      <img src="https://atm-outillage.fr/wp-content/themes/ATM/assets/img/atmlogo.png"
+           alt="ATM Outillage"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+      <div class="cover-logo-fallback" style="display:none"><span>ATM</span> Outillage</div>
+    </div>
+    <div class="cover-year">Catalogue 2025 — 2026</div>
+  </div>
+
+  <div class="cover-center">
+    <div class="cover-label">Outillage Professionnel</div>
+    <h1 class="cover-title">
+      <div class="line1">Précision</div>
+      <div class="line2">Durabilité</div>
+      <div class="line3">Performance</div>
+    </h1>
+    <p class="cover-subtitle">
+      Découvrez notre gamme complète d'outillage à main, électroportatif et de stockage,
+      conçus pour les professionnels les plus exigeants.
+    </p>
+    <div class="cover-cta">
+      <a href="#produits" class="btn-gold">Voir les produits →</a>
+      <a href="#contact" class="btn-outline">Nous contacter</a>
+    </div>
+  </div>
+
+  <div class="cover-bottom">
+    <div class="cover-stats">
+      <div>
+        <div class="cover-stat-num">9</div>
+        <div class="cover-stat-label">Références</div>
+      </div>
+      <div>
+        <div class="cover-stat-num">3</div>
+        <div class="cover-stat-label">Catégories</div>
+      </div>
+      <div>
+        <div class="cover-stat-num">CrMo</div>
+        <div class="cover-stat-label">Acier haute qualité</div>
+      </div>
+    </div>
+    <div class="cover-contact">
+      <div>atm-outillage.fr</div>
+      <div style="margin-top:4px"><a href="https://atm-outillage.fr/contact/">Prendre contact →</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!--  NAV STICKY                                                     -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<nav class="nav-bar no-print">
+  <a href="#home" class="nav-logo"><span>ATM</span> Outillage</a>
+  <ul class="nav-links">
+    <li><a href="#electroportatif">Électroportatif</a></li>
+    <li><a href="#main">Outillage à main</a></li>
+    <li><a href="#stockage">Stockage</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!--  INTRO                                                          -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="intro-banner">
+  <div>
+    <div class="intro-tagline">À propos d'ATM Outillage</div>
+    <h2 class="intro-title">L'outillage pro au<br/>juste prix</h2>
+    <p class="intro-body">
+      ATM Outillage propose une sélection d'outils professionnels construits dans des matériaux
+      de qualité supérieure — acier chrome-vanadium, chrome-molybdène, traitements thermiques —
+      afin de garantir performance et durabilité dans les conditions les plus exigeantes.
+      Chaque référence est pensée pour le professionnel : mécanique, maintenance, industrie
+      ou poids lourds.
+    </p>
+    <div class="intro-pills">
+      <span class="pill">Chrome-Vanadium</span>
+      <span class="pill">Chrome-Molybdène</span>
+      <span class="pill">Brushless Motor</span>
+      <span class="pill">Traitement thermique</span>
+      <span class="pill">Usage intensif</span>
+    </div>
+  </div>
+  <img src="https://atm-outillage.fr/wp-content/themes/ATM/assets/img/IMG_20240512_142248.jpg"
+       alt="Atelier ATM Outillage"
+       class="intro-img"
+       onerror="this.style.display='none'" />
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!--  FEATURES STRIP                                                 -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="features-strip">
+  <div class="feature-item">
+    <div class="feature-icon">⚙️</div>
+    <div>
+      <div class="feature-title">Matériaux premium</div>
+      <div class="feature-text">Acier Cr-V et Cr-Mo avec traitement thermique pour une longévité maximale.</div>
+    </div>
+  </div>
+  <div class="feature-item">
+    <div class="feature-icon">🔋</div>
+    <div>
+      <div class="feature-title">Batterie compatible</div>
+      <div class="feature-text">Système batterie 20V interchangeable entre tous les outils électroportatifs.</div>
+    </div>
+  </div>
+  <div class="feature-item">
+    <div class="feature-icon">🏗️</div>
+    <div>
+      <div class="feature-title">Usage professionnel</div>
+      <div class="feature-text">Conçus pour les professionnels de la mécanique, maintenance et industrie.</div>
+    </div>
+  </div>
+  <div class="feature-item">
+    <div class="feature-icon">📦</div>
+    <div>
+      <div class="feature-title">Coffrets complets</div>
+      <div class="feature-text">Chaque coffret livré avec mallette de transport et accessoires inclus.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!--  SECTION 1 — ÉLECTROPORTATIF                                   -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<section class="section" id="electroportatif">
+  <div class="section-header">
+    <div>
+      <div class="section-tag">Catégorie 01</div>
+      <h2 class="section-title">Outillage<br/>Électroportatif</h2>
+      <p class="section-desc" style="margin-top:16px">
+        Moteurs brushless hautes performances, batteries 20V interchangeables et couples exceptionnels
+        pour tous vos travaux professionnels.
+      </p>
+    </div>
+    <div class="section-count">01</div>
+  </div>
+
+  <div id="produits" class="product-grid cols-2">
+
+    <!-- PRODUIT : Clé à choc 20V 2000Nm — FEATURED -->
+    <div class="product-card featured">
+      <div class="card-img-wrap">
+        <img src="https://atm-outillage.fr/wp-content/uploads/2024/06/1743692407235.png" alt="Clé à choc 20V 2000Nm" loading="lazy" />
+        <span class="card-badge electric">Brushless</span>
+      </div>
+      <div class="card-body">
+        <div class="card-ref">Réf. ATM-CAC20</div>
+        <h3 class="card-name large">Clé à choc<br/>20V — 2000 Nm</h3>
+        <p class="card-desc">
+          Clé à choc à vitesse variable avec moteur brushless pour une longévité prolongée.
+          Délivre jusqu'à 2000 Nm de couple de dévissage pour déloger les boulons les plus grippés.
+          Entraînement 3/4" avec goupille de verrouillage pour changement rapide des douilles.
+          Éclairage LED avec réglage d'intensité intégré.
+        </p>
+
+        <div class="specs cols-3">
+          <div class="spec-item">
+            <div class="spec-label">Batterie</div>
+            <div class="spec-val">20V</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Couple max</div>
+            <div class="spec-val">2000 Nm</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Vitesses</div>
+            <div class="spec-val">3 modes</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Couple trav.</div>
+            <div class="spec-val">700–1500 Nm</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Régime</div>
+            <div class="spec-val">900–1800 tr/min</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Moteur</div>
+            <div class="spec-val">Brushless</div>
+          </div>
+        </div>
+
+        <div class="contents-title">Contenu du coffret</div>
+        <ul class="contents-list">
+          <li>2× batteries 6Ah</li>
+          <li>1× chargeur rapide 4Ah</li>
+          <li>1× mallette transport</li>
+        </ul>
+
+        <div class="card-footer">
+          <div class="price-block">
+            <div class="price-label">Prix public conseillé</div>
+            <div class="price-val large">2 590 €</div>
+            <div class="price-tax">HT — hors taxes</div>
+          </div>
+          <a href="https://atm-outillage.fr/cle-a-choc-atm-cac20/" class="card-cta" target="_blank">
+            En savoir plus →
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUIT : Coffret visseuse-perceuse 20V -->
+    <div class="product-card">
+      <div class="card-img-wrap">
+        <img src="https://atm-outillage.fr/wp-content/uploads/2024/06/IMG_20240709_020117.png" alt="Coffret visseuse-perceuse 20V" loading="lazy" />
+        <span class="card-badge electric">Coffret duo</span>
+      </div>
+      <div class="card-body">
+        <div class="card-ref">Réf. ATM-VVC10</div>
+        <h3 class="card-name">Coffret Visseuse-Perceuse<br/>/ Visseuse à Choc 20V</h3>
+        <p class="card-desc">
+          Coffret combinant deux outils professionnels brushless : une perceuse-visseuse
+          à percussion (70 Nm, 20 réglages de couple, 3 modes) et une visseuse à choc
+          (230 Nm, 4 vitesses). Batteries 20V interchangeables, LED intégrées.
+        </p>
+
+        <div class="specs">
+          <div class="spec-item">
+            <div class="spec-label">ATM-V70 (perceuse)</div>
+            <div class="spec-val">70 Nm max</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">ATM-VC230 (visseuse)</div>
+            <div class="spec-val">230 Nm max</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Moteur</div>
+            <div class="spec-val">Brushless ×2</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Batterie</div>
+            <div class="spec-val">20V</div>
+          </div>
+        </div>
+
+        <div class="contents-title">Contenu du coffret</div>
+        <ul class="contents-list">
+          <li>2× batteries 4Ah</li>
+          <li>1× chargeur rapide 2Ah</li>
+          <li>1× mallette transport</li>
+        </ul>
+
+        <div class="card-footer">
+          <div class="price-block">
+            <div class="price-label">Prix public conseillé</div>
+            <div class="price-val">1 390 €</div>
+            <div class="price-tax">HT — hors taxes</div>
+          </div>
+          <a href="https://atm-outillage.fr/coffret-visseuse-visseuse-a-choc/" class="card-cta" target="_blank">
+            En savoir plus →
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /product-grid -->
+</section>
+
+<div class="gold-divider"></div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!--  SECTION 2 — OUTILLAGE À MAIN                                  -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<section class="section" id="main">
+  <div class="section-header">
+    <div>
+      <div class="section-tag">Catégorie 02</div>
+      <h2 class="section-title">Outillage<br/>à main</h2>
+      <p class="section-desc" style="margin-top:16px">
+        Coffrets de douilles, clés, tournevis et extracteurs en acier chrome-vanadium et
+        chrome-molybdène pour une utilisation intensive au quotidien.
+      </p>
+    </div>
+    <div class="section-count">02</div>
+  </div>
+
+  <div class="product-grid cols-3">
+
+    <!-- PRODUIT : Coffret tournevis 26 pcs -->
+    <div class="product-card">
+      <div class="card-img-wrap">
+        <img src="https://atm-outillage.fr/wp-content/uploads/2024/09/mmexport17202001365121.jpg" alt="Coffret 26 tournevis" loading="lazy" />
+        <span class="card-badge">26 pièces</span>
+      </div>
+      <div class="card-body">
+        <div class="card-ref">Réf. ATM-CT26</div>
+        <h3 class="card-name">Coffret 26<br/>Tournevis Mixte</h3>
+        <p class="card-desc">
+          14 tournevis traversants (plats, Phillips, Pozidriv) + 12 clés en T (hex + Torx).
+          Acier Cr-V traité thermiquement, finition satin chrome, embouts magnétiques,
+          poignée antidérapante ergonomique.
+        </p>
+
+        <div class="specs">
+          <div class="spec-item">
+            <div class="spec-label">Matériau</div>
+            <div class="spec-val">Cr-V</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Poids</div>
+            <div class="spec-val">3,8 kg</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Finition</div>
+            <div class="spec-val">Satin chrome</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Pièces</div>
+            <div class="spec-val">26</div>
+          </div>
+        </div>
+
+        <div class="contents-title">Contenu</div>
+        <ul class="contents-list">
+          <li>6× tournevis plats</li>
+          <li>6× Phillips</li>
+          <li>2× Pozidriv</li>
+          <li>6× clés hex T</li>
+          <li>6× clés Torx T</li>
+          <li>Mallette noire</li>
+        </ul>
+
+        <div class="card-footer">
+          <div class="price-block">
+            <div class="price-label">Prix public conseillé</div>
+            <div class="price-val">440 €</div>
+            <div class="price-tax">HT</div>
+          </div>
+          <a href="https://atm-outillage.fr/coffret-tournevis/" class="card-cta" target="_blank">Détails →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUIT : Coffret clé mixte cliquet 21pcs -->
+    <div class="product-card">
+      <div class="card-img-wrap">
+        <img src="https://atm-outillage.fr/wp-content/uploads/2024/07/1743690996426.png" alt="Coffret clé mixte à cliquet réversible 21pcs" loading="lazy" />
+        <span class="card-badge">21 pièces</span>
+      </div>
+      <div class="card-body">
+        <div class="card-ref">Réf. ATM-CMR21</div>
+        <h3 class="card-name">Coffret Clé Mixte<br/>Cliquet Réversible 21pcs</h3>
+        <p class="card-desc">
+          Clés mixtes à cliquet réversible en Cr-V qualité supérieure. Tête anneau compacte
+          à 15° pour accès en espaces restreints, angle d'accroche 5° (6° pour 8-9 mm).
+          Serrage et desserrage rapides.
+        </p>
+
+        <div class="specs">
+          <div class="spec-item">
+            <div class="spec-label">Matériau</div>
+            <div class="spec-val">Cr-V</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Poids</div>
+            <div class="spec-val">7,5 kg</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Angle tête</div>
+            <div class="spec-val">15°</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Pièces</div>
+            <div class="spec-val">21</div>
+          </div>
+        </div>
+
+        <div class="contents-title">Tailles incluses</div>
+        <ul class="contents-list">
+          <li>6 mm</li><li>7 mm</li><li>8 mm</li><li>9 mm</li><li>10 mm</li>
+          <li>11 mm</li><li>12 mm</li><li>13 mm</li><li>14 mm</li><li>15 mm</li>
+          <li>16–17–18–19–20–21–22–24–27–30–32 mm</li>
+        </ul>
+
+        <div class="card-footer">
+          <div class="price-block">
+            <div class="price-label">Prix public conseillé</div>
+            <div class="price-val">950 €</div>
+            <div class="price-tax">HT</div>
+          </div>
+          <a href="https://atm-outillage.fr/coffret-cle-mixte-a-cliquet-reversible-23pcs/" class="card-cta" target="_blank">Détails →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUIT : Coffret extracteurs 23pcs -->
+    <div class="product-card">
+      <div class="card-img-wrap">
+        <img src="https://atm-outillage.fr/wp-content/uploads/2025/03/IMG-20250622-WA0000.jpg" alt="Coffret extracteurs avec tournevis à frapper" loading="lazy" />
+        <span class="card-badge">23 pièces</span>
+      </div>
+      <div class="card-body">
+        <div class="card-ref">Réf. ATM-CE23</div>
+        <h3 class="card-name">Coffret Extracteurs<br/>+ Tournevis à Frapper</h3>
+        <p class="card-desc">
+          Kit 23 pcs pour extraire vis et écrous abîmés, rouillés ou arrondis.
+          Acier Cr-Mo + acier haute dureté. Tournevis à frapper 1/2" avec anneau
+          indicateur de sens de rotation. Poignée ergonomique.
+        </p>
+
+        <div class="specs">
+          <div class="spec-item">
+            <div class="spec-label">Matériau</div>
+            <div class="spec-val">Cr-Mo + HD</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Entraînement</div>
+            <div class="spec-val">1/2"</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Extracteurs</div>
+            <div class="spec-val">10 pcs</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Pièces total</div>
+            <div class="spec-val">23</div>
+          </div>
+        </div>
+
+        <div class="contents-title">Contenu</div>
+        <ul class="contents-list">
+          <li>1× tournevis frappeur 1/2"</li>
+          <li>2× extracteurs vis</li>
+          <li>2× adaptateurs</li>
+          <li>8× embouts (H4–H8, SL, PH)</li>
+          <li>10× douilles extractrices 6–21mm</li>
+        </ul>
+
+        <div class="card-footer">
+          <div class="price-block">
+            <div class="price-label">Prix public conseillé</div>
+            <div class="price-val">429 €</div>
+            <div class="price-tax">HT</div>
+          </div>
+          <a href="https://atm-outillage.fr/coffret-dextracteurs-de-vis-6-pans-creux-et-vis-tx-avec-tournevis-a-frapper/" class="card-cta" target="_blank">Détails →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUIT : Coffret douilles choc 43pcs — FEATURED -->
+    <div class="product-card featured">
+      <div class="card-img-wrap">
+        <img src="https://atm-outillage.fr/wp-content/uploads/2024/07/2.jpg" alt="Coffret douilles à choc 43pcs" loading="lazy" />
+        <span class="card-badge">43 pièces</span>
+      </div>
+      <div class="card-body">
+        <div class="card-ref">Réf. ATM-CD43</div>
+        <h3 class="card-name large">Coffret Douilles<br/>à Choc 43 pcs</h3>
+        <p class="card-desc">
+          Coffret complet de douilles à choc courtes et longues en acier Cr-Mo, revêtement
+          phosphaté noir et traitement thermique. Profil hexagonal 6 pans évitant l'arrondissage.
+          Parois épaisses haute résistance. Allonges et adaptateur pivotant 360° inclus
+          pour accéder aux zones difficiles.
+        </p>
+
+        <div class="specs cols-3">
+          <div class="spec-item">
+            <div class="spec-label">Matériau</div>
+            <div class="spec-val">Cr-Mo</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Entraînement</div>
+            <div class="spec-val">1/2"</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Poids</div>
+            <div class="spec-val">6,2 kg</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Douilles courtes</div>
+            <div class="spec-val">19 pcs (8–32mm)</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Douilles longues</div>
+            <div class="spec-val">19 pcs (8–32mm)</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Finition</div>
+            <div class="spec-val">Phosphate noir</div>
+          </div>
+        </div>
+
+        <div class="contents-title">Accessoires inclus</div>
+        <ul class="contents-list">
+          <li>19× douilles courtes 8–32mm</li>
+          <li>19× douilles longues 8–32mm</li>
+          <li>3× allonges (3" · 5" · 10")</li>
+          <li>1× adaptateur pivotant 360°</li>
+          <li>1× réducteur 3/8"→1/2"</li>
+        </ul>
+
+        <div class="card-footer">
+          <div class="price-block">
+            <div class="price-label">Prix public conseillé</div>
+            <div class="price-val large">449 €</div>
+            <div class="price-tax">HT — hors taxes</div>
+          </div>
+          <a href="https://atm-outillage.fr/coffret-douille-a-choc-43-pcs/" class="card-cta" target="_blank">
+            En savoir plus →
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUIT : Coffret douilles longues 16pcs -->
+    <div class="product-card">
+      <div class="card-img-wrap">
+        <img src="https://atm-outillage.fr/wp-content/uploads/2024/07/6.jpg" alt="Coffret douilles longues 16pcs" loading="lazy" />
+        <span class="card-badge">16 pièces</span>
+      </div>
+      <div class="card-body">
+        <div class="card-ref">Réf. ATM-CD16</div>
+        <h3 class="card-name">Coffret Douilles<br/>à Choc Longues 16pcs</h3>
+        <p class="card-desc">
+          Douilles à choc longues en Cr-Mo, revêtement phosphaté noir. Profil 6 pans
+          anti-arrondissage, parois épaisses. Idéales pour outils pneumatiques et électriques.
+        </p>
+
+        <div class="specs">
+          <div class="spec-item">
+            <div class="spec-label">Matériau</div>
+            <div class="spec-val">Cr-Mo</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Entraînement</div>
+            <div class="spec-val">1/2"</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Poids</div>
+            <div class="spec-val">4,2 kg</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Pièces</div>
+            <div class="spec-val">16</div>
+          </div>
+        </div>
+
+        <div class="contents-title">Tailles incluses</div>
+        <ul class="contents-list">
+          <li>10 mm</li><li>11 mm</li><li>12 mm</li><li>13 mm</li>
+          <li>14 mm</li><li>15 mm</li><li>16 mm</li><li>17 mm</li>
+          <li>18 mm</li><li>19 mm</li><li>21 mm</li><li>22 mm</li>
+          <li>24 mm</li><li>27 mm</li><li>30 mm</li><li>32 mm</li>
+        </ul>
+
+        <div class="card-footer">
+          <div class="price-block">
+            <div class="price-label">Prix public conseillé</div>
+            <div class="price-val">299 €</div>
+            <div class="price-tax">HT</div>
+          </div>
+          <a href="https://atm-outillage.fr/coffret-de-douilles-a-choc-longues-16pcs/" class="card-cta" target="_blank">Détails →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUIT : Coffret poids lourds XL 26pcs -->
+    <div class="product-card">
+      <div class="card-img-wrap">
+        <img src="https://atm-outillage.fr/wp-content/uploads/2024/07/1744241323414.png" alt="Coffret kit poids lourds XL 26pcs" loading="lazy" />
+        <span class="card-badge">26 pièces</span>
+      </div>
+      <div class="card-body">
+        <div class="card-ref">Réf. ATM-PL26</div>
+        <h3 class="card-name">Coffret Kit<br/>Poids Lourds XL 26pcs</h3>
+        <p class="card-desc">
+          Coffret professionnel conçu pour la mécanique poids lourds et agricole.
+          Douilles 3/4" et 1" en Cr-V phosphaté noir, résistant à la corrosion.
+          Clé à cliquet, extensions, barre coulissante et barre en L incluses.
+        </p>
+
+        <div class="specs">
+          <div class="spec-item">
+            <div class="spec-label">Matériau</div>
+            <div class="spec-val">Cr-V</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Pièces</div>
+            <div class="spec-val">26</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Douilles 3/4"</div>
+            <div class="spec-val">21–50 mm</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Douilles 1"</div>
+            <div class="spec-val">55–65 mm</div>
+          </div>
+        </div>
+
+        <div class="contents-title">Contenu</div>
+        <ul class="contents-list">
+          <li>17× douilles 3/4" (21–50mm)</li>
+          <li>3× douilles 1" (55–65mm)</li>
+          <li>1× clé à cliquet</li>
+          <li>1× adaptateur tableau de bord</li>
+          <li>1× extension</li>
+          <li>1× barre coulissante + barre L</li>
+        </ul>
+
+        <div class="card-footer">
+          <div class="price-block">
+            <div class="price-label">Prix public conseillé</div>
+            <div class="price-val">1 199 €</div>
+            <div class="price-tax">HT</div>
+          </div>
+          <a href="https://atm-outillage.fr/coffret-kit-poids-lourds-xl-26pcs/" class="card-cta" target="_blank">Détails →</a>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /product-grid -->
+</section>
+
+<div class="gold-divider"></div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!--  SECTION 3 — STOCKAGE                                          -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<section class="section" id="stockage">
+  <div class="section-header">
+    <div>
+      <div class="section-tag">Catégorie 03</div>
+      <h2 class="section-title">Stockage &<br/>Organisation</h2>
+      <p class="section-desc" style="margin-top:16px">
+        Solutions de rangement professionnelles pour organiser et sécuriser
+        votre outillage en atelier.
+      </p>
+    </div>
+    <div class="section-count">03</div>
+  </div>
+
+  <div class="product-grid cols-2">
+
+    <!-- PRODUIT : Servante 6 tiroirs 250pcs — FEATURED -->
+    <div class="product-card featured" style="grid-column: 1 / -1;">
+      <div class="card-img-wrap" style="max-height: 520px;">
+        <img src="https://atm-outillage.fr/wp-content/uploads/2025/03/mmexport1742577349178-scaled.jpg" alt="Servante à outils 6 tiroirs 250pcs" loading="lazy" />
+        <span class="card-badge">Best-seller</span>
+      </div>
+      <div class="card-body">
+        <div class="card-ref">Réf. ATM-S250</div>
+        <h3 class="card-name large">Servante à outils<br/>6 tiroirs — 250 pcs</h3>
+        <p class="card-desc">
+          Servante professionnelle conçue pour un usage intensif en atelier. Six tiroirs à
+          ouverture fluide avec système de frein pour la sécurité, plus une porte latérale
+          de rangement. Livrée avec 249 outils en acier Cr-V et Cr-Mo adaptés à la
+          mécanique, maintenance, assemblage et travaux de précision. Roulettes pivotantes
+          avec freins pour mobilité et stabilité.
+        </p>
+
+        <div class="specs cols-3">
+          <div class="spec-item">
+            <div class="spec-label">Tiroirs</div>
+            <div class="spec-val">6 + porte lat.</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Outils inclus</div>
+            <div class="spec-val">249 pcs</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Matériau outils</div>
+            <div class="spec-val">Cr-V + Cr-Mo</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Ouverture</div>
+            <div class="spec-val">Coulissante fluide</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Mobilité</div>
+            <div class="spec-val">Roulettes pivotantes</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Usage</div>
+            <div class="spec-val">Professionnel</div>
+          </div>
+        </div>
+
+        <div class="contents-title">Caractéristiques</div>
+        <ul class="contents-list">
+          <li>6 tiroirs + porte latérale</li>
+          <li>Frein de sécurité sur chaque tiroir</li>
+          <li>249 outils Cr-V / Cr-Mo</li>
+          <li>Roulettes avec freins</li>
+          <li>Structure acier robuste</li>
+          <li>Mécanique · Maintenance · Assemblage</li>
+        </ul>
+
+        <div class="card-footer">
+          <div class="price-block">
+            <div class="price-label">Prix public conseillé</div>
+            <div class="price-val large">2 990 €</div>
+            <div class="price-tax">HT — hors taxes</div>
+          </div>
+          <a href="https://atm-outillage.fr/servante-a-outil-6-tiroirs-250-pcs/" class="card-cta" target="_blank">
+            En savoir plus →
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /product-grid -->
+</section>
+
+<div class="gold-divider"></div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!--  CONTACT / FOOTER                                              -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<footer class="footer" id="contact">
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand-name"><span>ATM</span> Outillage</div>
+      <p class="footer-tagline">
+        Outillage professionnel de qualité pour les métiers de la mécanique,
+        de la maintenance et de l'industrie. Matériaux premium, performance durable.
+      </p>
+    </div>
+
+    <div>
+      <div class="footer-col-title">Navigation</div>
+      <ul class="footer-links">
+        <li><a href="https://atm-outillage.fr/" target="_blank">Accueil</a></li>
+        <li><a href="https://atm-outillage.fr/produits/" target="_blank">Tous les produits</a></li>
+        <li><a href="https://atm-outillage.fr/sav/" target="_blank">SAV</a></li>
+        <li><a href="https://atm-outillage.fr/contact/" target="_blank">Contact</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <div class="footer-col-title">Nous contacter</div>
+      <div class="contact-item">
+        <span class="contact-icon">🌐</span>
+        <a href="https://atm-outillage.fr" target="_blank">atm-outillage.fr</a>
+      </div>
+      <div class="contact-item">
+        <span class="contact-icon">📋</span>
+        <span>Formulaire de contact disponible sur le site</span>
+      </div>
+      <div class="contact-item">
+        <span class="contact-icon">🔧</span>
+        <span>Service après-vente disponible sur atm-outillage.fr/sav/</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div>© 2025–2026 ATM Outillage. Tous droits réservés.</div>
+    <div>Les prix sont indiqués HT (hors taxes) — Prix publics conseillés.</div>
+  </div>
+</footer>
+
+</body>
+</html>

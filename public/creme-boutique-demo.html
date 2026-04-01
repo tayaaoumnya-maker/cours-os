@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crème Boutique — Mode Féminine · Valenciennes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      /* ── Palette beige harmonieuse (5 tons) ── */
+      --bg-0:     #F4EFE9;   /* très clair — header, hero content */
+      --bg-1:     #EDE8DF;   /* base beige — page, produits */
+      --bg-2:     #E5DFD6;   /* légèrement plus chaud — trust bar, éditorial */
+      --bg-3:     #DDD7CE;   /* medium — témoignages, newsletter */
+      --bg-4:     #D4CEC5;   /* le plus profond — footer */
+
+      /* ── Aliases ── */
+      --white:    var(--bg-1);
+      --ivory:    var(--bg-2);
+      --nude:     var(--bg-3);
+      --nude-mid: #C4BDB6;
+      --stone:    #8A7F78;
+      --border:   #CEC8BF;
+      --text:     #1A1714;
+      --muted:    #7A736C;
+      --black:    #1A1714;
+      --accent:   #7A2535;
+      --accent-dk:#5E1B28;
+      --btn-sec:  #B8B2AB;
+      --ease:     .3s ease;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg-1); color: var(--text); font-size: 14px; font-weight: 300; line-height: 1.7; overflow-x: hidden; }
+
+    /* ── SECTION BACKGROUNDS ── */
+    .sec-bg-0 { background: var(--bg-0); }
+    .sec-bg-1 { background: var(--bg-1); }
+    .sec-bg-2 { background: var(--bg-2); }
+    .sec-bg-3 { background: var(--bg-3); }
+    .sec-bg-4 { background: var(--bg-4); }
+    h1,h2,h3,h4 { font-family: 'Cormorant Garamond', serif; font-weight: 400; line-height: 1.12; }
+    a { text-decoration: none; color: inherit; cursor: pointer; }
+
+    /* ── PAGE SYSTEM ── */
+    .page { display: none; animation: fadeIn .4s ease; }
+    .page.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+    /* ── UTILS ── */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
+    .eyebrow { display: block; font-size: 10px; font-weight: 400; letter-spacing: .22em; text-transform: uppercase; color: var(--stone); margin-bottom: 16px; }
+    .section-title { font-size: clamp(2rem, 3.5vw, 3.2rem); font-weight: 300; letter-spacing: .02em; }
+    .page-hero { padding: 80px 0 64px; text-align: center; border-bottom: 1px solid var(--border); margin-bottom: 64px; }
+    .page-hero h1 { font-size: clamp(2.4rem, 5vw, 4rem); font-weight: 300; margin-bottom: 12px; }
+    .page-hero h1 em { font-style: italic; }
+    .page-hero p { font-size: 13px; font-weight: 300; color: var(--stone); letter-spacing: .1em; text-transform: uppercase; }
+
+    /* ── ANNOUNCEMENT ── */
+    .announcement { background: var(--white); color: var(--muted); text-align: center; padding: 11px; font-size: 11px; font-weight: 300; letter-spacing: .16em; text-transform: uppercase; border-bottom: 1px solid var(--border); }
+    .announcement em { color: var(--text); font-style: normal; }
+
+    /* ── HEADER ── */
+    .header { position: sticky; top: 0; z-index: 200; background: var(--bg-0); border-bottom: 1px solid var(--border); }
+    .header-inner { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; height: 64px; padding: 0 40px; max-width: 1440px; margin: 0 auto; }
+    .nav { display: flex; gap: 36px; }
+    .nav a { font-size: 11px; font-weight: 400; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); transition: color var(--ease); padding-bottom: 2px; border-bottom: 1px solid transparent; }
+    .nav a:hover { color: var(--text); }
+    .nav a.active { color: var(--text); border-bottom-color: var(--text); }
+    .logo { font-family: 'Cormorant Garamond', serif; font-size: 17px; font-weight: 300; letter-spacing: .32em; text-transform: uppercase; color: var(--text); text-align: center; white-space: nowrap; }
+    .logo em { font-style: italic; }
+    .header-actions { display: flex; justify-content: flex-end; align-items: center; gap: 22px; }
+    .header-actions button { background: none; border: none; cursor: pointer; color: var(--text); padding: 4px; opacity: .6; transition: opacity var(--ease); display: flex; align-items: center; position: relative; }
+    .header-actions button:hover { opacity: 1; }
+    .cart-badge { position: absolute; top: -3px; right: -5px; background: var(--text); color: var(--white); font-size: 9px; width: 15px; height: 15px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 500; }
+    .hamburger { display: none; }
+
+    /* ── BUTTONS ── */
+    .btn { display: inline-block; font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 400; letter-spacing: .18em; text-transform: uppercase; padding: 15px 36px; transition: all var(--ease); cursor: pointer; border: none; }
+    .btn-dark { background: var(--accent); color: #EDE8DF; }
+    .btn-dark:hover { background: var(--accent-dk); }
+    .btn-outline { background: var(--btn-sec); color: var(--text); border: none; }
+    .btn-outline:hover { background: var(--nude-mid); }
+    .btn-outline-light { background: transparent; color: var(--text); border: 1px solid var(--border); }
+    .btn-outline-light:hover { border-color: var(--text); }
+    .btn-ghost-light { background: var(--btn-sec); color: var(--text); border: none; }
+    .btn-ghost-light:hover { background: var(--nude-mid); }
+
+    /* ── HOME HERO ── */
+    .hero { display: grid; grid-template-columns: 1fr 1fr; min-height: 88vh; }
+    .hero-image { position: relative; overflow: hidden; }
+    .hero-img-bg { position: absolute; inset: 0; background: url('https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=1400&q=90') center/cover no-repeat; transition: transform .9s ease; }
+    .hero:hover .hero-img-bg { transform: scale(1.02); }
+    .hero-label { position: absolute; bottom: 40px; left: 40px; font-size: 10px; font-weight: 300; letter-spacing: .2em; text-transform: uppercase; color: rgba(255,255,255,.75); }
+    .hero-content { display: flex; flex-direction: column; justify-content: center; padding: 72px 64px; background: var(--bg-0); }
+    .hero-title { font-size: clamp(3.2rem, 5vw, 5.4rem); font-weight: 300; letter-spacing: -.01em; margin-bottom: 28px; line-height: 1.06; }
+    .hero-title em { font-style: italic; }
+    .hero-desc { font-size: 14px; font-weight: 300; color: var(--muted); line-height: 1.9; max-width: 320px; margin-bottom: 44px; }
+    .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+
+    /* ── TRUST BAR ── */
+    .trust-bar { background: var(--bg-2); padding: 28px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .trust-items { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; }
+    .trust-item { display: flex; align-items: center; gap: 12px; padding: 8px 40px; }
+    .trust-sep { width: 1px; height: 28px; background: var(--nude-mid); }
+    .trust-item-text h4 { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--text); margin-bottom: 2px; }
+    .trust-item-text p { font-size: 11px; font-weight: 300; color: var(--stone); }
+
+    /* ── PRODUCTS GRID ── */
+    .products-filters { display: flex; gap: 36px; margin-bottom: 56px; flex-wrap: wrap; }
+    .filter-btn { background: none; border: none; font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 400; letter-spacing: .14em; text-transform: uppercase; color: var(--stone); cursor: pointer; padding: 6px 0; border-bottom: 1px solid transparent; transition: all var(--ease); }
+    .filter-btn.active, .filter-btn:hover { color: var(--text); border-color: var(--text); }
+    .products-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
+    .products-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+    .product-card { cursor: pointer; }
+    .product-img { position: relative; aspect-ratio: 3/4; overflow: hidden; background: var(--ivory); }
+    .product-img-bg { position: absolute; inset: 0; background-size: cover; background-position: center top; transition: transform .7s ease; }
+    .product-card:hover .product-img-bg { transform: scale(1.05); }
+    .p1 { background-image: url('https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=600&q=85'); }
+    .p2 { background-image: url('https://images.unsplash.com/photo-1564257631407-4deb1f99d992?w=600&q=85'); }
+    .p3 { background-image: url('https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600&q=85'); }
+    .p4 { background-image: url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600&q=85'); }
+    .p5 { background-image: url('https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=600&q=85'); }
+    .p6 { background-image: url('https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&q=85'); }
+    .p7 { background-image: url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=85'); }
+    .p8 { background-image: url('https://images.unsplash.com/photo-1601924994987-69e26d50dc26?w=600&q=85'); }
+    .p9  { background-image: url('https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=600&q=85'); }
+    .p10 { background-image: url('https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600&q=85'); }
+    .p11 { background-image: url('https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=600&q=85'); }
+    .p12 { background-image: url('https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=600&q=85'); }
+    .product-badge { position: absolute; top: 16px; left: 16px; font-family: 'Inter', sans-serif; font-size: 9px; font-weight: 400; letter-spacing: .14em; text-transform: uppercase; padding: 4px 10px; background: var(--text); color: var(--white); }
+    .product-badge.sale { background: var(--accent); }
+    .product-wishlist { position: absolute; top: 14px; right: 16px; background: none; border: none; font-size: 18px; cursor: pointer; opacity: 0; transition: opacity var(--ease); color: var(--text); line-height: 1; }
+    .product-card:hover .product-wishlist { opacity: 1; }
+    .product-quick-add { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(123,45,62,.92); color: #EDE8DF; border: none; padding: 15px; font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 400; letter-spacing: .18em; text-transform: uppercase; cursor: pointer; transform: translateY(100%); transition: transform .28s ease; }
+    .product-card:hover .product-quick-add { transform: translateY(0); }
+    .product-info { padding: 16px 0 40px; }
+    .product-cat { font-size: 10px; font-weight: 300; letter-spacing: .14em; text-transform: uppercase; color: var(--stone); margin-bottom: 6px; }
+    .product-name { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-weight: 400; margin-bottom: 8px; }
+    .product-price { font-size: 13px; font-weight: 300; }
+    .price-old { color: var(--stone); text-decoration: line-through; margin-left: 8px; }
+    .price-sale { color: var(--accent); }
+    .product-colors { display: flex; gap: 6px; margin-top: 10px; }
+    .color-dot { width: 12px; height: 12px; border-radius: 50%; border: 1px solid var(--border); cursor: pointer; transition: transform var(--ease); }
+    .color-dot:hover { transform: scale(1.3); }
+
+    /* ── CATEGORIES GRID ── */
+    .cats-grid-full { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; margin-bottom: 80px; }
+    .cat-card { position: relative; aspect-ratio: 2/3; overflow: hidden; cursor: pointer; }
+    .cat-bg { position: absolute; inset: 0; background-size: cover; background-position: center; transition: transform .7s ease; }
+    .cat-card:hover .cat-bg { transform: scale(1.05); }
+    .cat-bg-1 { background-image: url('https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=600&q=85'); }
+    .cat-bg-2 { background-image: url('https://images.unsplash.com/photo-1564257631407-4deb1f99d992?w=600&q=85'); }
+    .cat-bg-3 { background-image: url('https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600&q=85'); }
+    .cat-bg-4 { background-image: url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600&q=85'); }
+    .cat-bg-5 { background-image: url('https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&q=85'); }
+    .cat-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(20,18,16,.58) 0%, transparent 55%); display: flex; flex-direction: column; justify-content: flex-end; padding: 24px 20px; }
+    .cat-name { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 400; color: white; letter-spacing: .04em; margin-bottom: 4px; }
+    .cat-count { font-size: 10px; font-weight: 300; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.6); }
+
+    /* ── LOOKBOOK ── */
+    .look-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+    .look-item { position: relative; aspect-ratio: 3/4; overflow: hidden; cursor: pointer; }
+    .look-bg { position: absolute; inset: 0; background-size: cover; background-position: center; transition: transform .7s ease; }
+    .look-item:hover .look-bg { transform: scale(1.04); }
+    .l1 { background-image: url('https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=800&q=90'); }
+    .l2 { background-image: url('https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=800&q=90'); }
+    .l3 { background-image: url('https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=800&q=90'); }
+    .l4 { background-image: url('https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&q=90'); }
+    .l5 { background-image: url('https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&q=90'); }
+    .l6 { background-image: url('https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=800&q=90'); }
+    .look-overlay { position: absolute; inset: 0; background: rgba(20,18,16,0); display: flex; align-items: flex-end; padding: 28px; transition: background var(--ease); }
+    .look-item:hover .look-overlay { background: rgba(20,18,16,.28); }
+    .look-label { font-size: 10px; font-weight: 300; letter-spacing: .18em; text-transform: uppercase; color: white; opacity: 0; transition: opacity var(--ease); }
+    .look-item:hover .look-label { opacity: 1; }
+    .look-featured { grid-column: span 2; aspect-ratio: auto; min-height: 500px; }
+
+    /* ── ABOUT ── */
+    .about-split { display: grid; grid-template-columns: 1fr 1fr; gap: 96px; align-items: center; margin-bottom: 80px; }
+    .about-visual { position: relative; }
+    .about-img { aspect-ratio: 4/5; background: url('https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=800&q=90') center/cover; }
+    .about-img-2 { position: absolute; bottom: -36px; right: -36px; width: 52%; aspect-ratio: 1; background: url('https://images.unsplash.com/photo-1445205170230-053b83016050?w=500&q=90') center/cover; border: 10px solid var(--white); }
+    .about-content h2 { font-size: clamp(2rem, 3vw, 3rem); font-weight: 300; margin-bottom: 28px; }
+    .about-content h2 em { font-style: italic; }
+    .about-content p { color: var(--muted); font-size: 14px; font-weight: 300; line-height: 1.9; margin-bottom: 20px; }
+    .about-address-box { background: var(--ivory); border: 1px solid var(--border); padding: 24px 28px; margin: 32px 0; }
+    .about-address-box h4 { font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: var(--text); margin-bottom: 12px; }
+    .about-address-box p { font-size: 13px; font-weight: 300; color: var(--muted); line-height: 1.8; margin: 0; }
+    .about-address-box strong { color: var(--text); font-weight: 400; }
+    .about-stats { display: flex; gap: 48px; margin: 40px 0; padding: 36px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .stat-num { display: block; font-family: 'Cormorant Garamond', serif; font-size: 2.4rem; font-weight: 300; line-height: 1; margin-bottom: 8px; }
+    .stat-label { display: block; font-size: 10px; font-weight: 300; letter-spacing: .14em; text-transform: uppercase; color: var(--stone); }
+    .engagements-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 56px; text-align: center; padding: 64px 0; border-top: 1px solid var(--border); }
+    .engagement-item { display: flex; flex-direction: column; align-items: center; }
+    .engagement-line { width: 28px; height: 1px; background: var(--nude-mid); margin: 0 auto 32px; }
+    .engagement-item h3 { font-size: 1.2rem; font-weight: 400; margin-bottom: 14px; }
+    .engagement-item p { font-size: 13px; font-weight: 300; color: var(--muted); line-height: 1.8; max-width: 260px; }
+
+    /* ── CONTACT ── */
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; padding: 64px 0; border-top: 1px solid var(--border); }
+    .contact-info h3 { font-size: 1.4rem; font-weight: 400; margin-bottom: 24px; }
+    .contact-info p { font-size: 13px; font-weight: 300; color: var(--muted); line-height: 1.9; margin-bottom: 8px; }
+    .contact-info strong { color: var(--text); font-weight: 400; }
+    .contact-form { display: flex; flex-direction: column; gap: 16px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .form-field { display: flex; flex-direction: column; gap: 6px; }
+    .form-field label { font-size: 10px; font-weight: 400; letter-spacing: .14em; text-transform: uppercase; color: var(--stone); }
+    .form-field input, .form-field textarea, .form-field select { background: var(--ivory); border: 1px solid var(--border); padding: 14px 16px; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 300; color: var(--text); outline: none; transition: border-color var(--ease); width: 100%; }
+    .form-field input:focus, .form-field textarea:focus, .form-field select:focus { border-color: var(--text); }
+    .form-field textarea { resize: vertical; min-height: 100px; }
+
+    /* ── TESTI ── */
+    .testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 56px; }
+    .testi-card { padding-top: 36px; border-top: 1px solid var(--border); }
+    .testi-quote { font-family: 'Cormorant Garamond', serif; font-size: 4rem; font-weight: 300; color: var(--nude-mid); line-height: .75; margin-bottom: 22px; }
+    .testi-text { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 400; font-style: italic; color: var(--muted); line-height: 1.75; margin-bottom: 28px; }
+    .testi-sep { width: 28px; height: 1px; background: var(--border); margin-bottom: 20px; }
+    .testi-name { font-size: 11px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--text); }
+    .testi-location { font-size: 11px; font-weight: 300; color: var(--stone); margin-top: 4px; }
+    .testi-stars { font-size: 11px; letter-spacing: 2px; color: var(--stone); margin-top: 6px; }
+
+    /* ── EDITORIAL ── */
+    .editorial { display: grid; grid-template-columns: 1fr 1fr; min-height: 58vh; margin: 0 -40px; }
+    .editorial-img { position: relative; overflow: hidden; }
+    .editorial-img-bg { position: absolute; inset: 0; background: url('https://images.unsplash.com/photo-1483985988355-763728e1935b?w=900&q=90') center/cover no-repeat; transition: transform .8s ease; }
+    .editorial:hover .editorial-img-bg { transform: scale(1.02); }
+    .editorial-content { background: var(--bg-2); display: flex; flex-direction: column; justify-content: center; padding: 88px 72px; }
+    .editorial-content .eyebrow { color: var(--stone); }
+    .editorial-content h2 { font-size: clamp(2.4rem, 3.5vw, 4rem); font-weight: 300; color: var(--text); margin-bottom: 20px; line-height: 1.08; }
+    .editorial-content h2 em { font-style: italic; color: var(--stone); }
+    .editorial-content p { color: var(--muted); font-size: 14px; font-weight: 300; line-height: 1.85; max-width: 340px; margin-bottom: 44px; }
+    .editorial-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+
+    /* ── INSTAGRAM ── */
+    .insta-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 2px; margin: 0 -40px; }
+    .insta-item { position: relative; aspect-ratio: 1; overflow: hidden; cursor: pointer; }
+    .insta-bg { position: absolute; inset: 0; background-size: cover; background-position: center; transition: transform .5s ease; }
+    .insta-item:hover .insta-bg { transform: scale(1.07); }
+    .i1 { background-image: url('https://images.unsplash.com/photo-1483985988355-763728e1935b?w=400&q=85'); }
+    .i2 { background-image: url('https://images.unsplash.com/photo-1509631179647-0177331693ae?w=400&q=85'); }
+    .i3 { background-image: url('https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&q=85'); }
+    .i4 { background-image: url('https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=400&q=85'); }
+    .i5 { background-image: url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=85'); }
+    .i6 { background-image: url('https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=400&q=85'); }
+    .insta-hover { position: absolute; inset: 0; background: rgba(20,18,16,.28); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity var(--ease); }
+    .insta-item:hover .insta-hover { opacity: 1; }
+    .insta-hover-ring { width: 32px; height: 32px; border: 1px solid rgba(255,255,255,.8); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; color: white; }
+
+    /* ── NEWSLETTER STRIP ── */
+    .newsletter-strip { padding: 80px 40px; background: var(--bg-3); text-align: center; margin: 64px -40px 0; border-top: 1px solid var(--border); }
+    .newsletter-strip .eyebrow { color: var(--stone); }
+    .newsletter-strip h2 { font-size: clamp(2rem, 4vw, 3.6rem); font-weight: 300; color: var(--text); margin-bottom: 14px; line-height: 1.1; }
+    .newsletter-strip h2 em { font-style: italic; color: var(--stone); }
+    .newsletter-strip p { color: var(--muted); font-size: 13px; font-weight: 300; max-width: 360px; margin: 0 auto 36px; }
+    .newsletter-form { display: flex; max-width: 380px; margin: 0 auto; border-bottom: 1px solid var(--border); }
+    .newsletter-form input { flex: 1; padding: 14px 0; background: none; border: none; color: var(--text); font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 300; outline: none; }
+    .newsletter-form input::placeholder { color: var(--stone); }
+    .newsletter-form button { background: none; border: none; color: var(--muted); font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 400; letter-spacing: .18em; text-transform: uppercase; cursor: pointer; padding: 0 0 0 20px; white-space: nowrap; transition: color var(--ease); }
+    .newsletter-form button:hover { color: var(--text); }
+
+    /* ── FOOTER ── */
+    .footer { background: var(--bg-4); color: var(--muted); padding: 72px 0 32px; border-top: 1px solid var(--border); }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 56px; margin-bottom: 56px; }
+    .footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 17px; font-weight: 300; letter-spacing: .3em; text-transform: uppercase; color: var(--text); margin-bottom: 14px; }
+    .footer-logo em { font-style: italic; }
+    .footer-address { font-size: 12px; font-weight: 300; color: var(--muted); line-height: 1.8; margin-bottom: 20px; }
+    .footer-address strong { display: block; font-weight: 500; color: var(--text); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 6px; }
+    .footer-about { font-size: 13px; font-weight: 300; line-height: 1.85; color: var(--muted); margin-bottom: 24px; }
+    .footer-social { display: flex; gap: 20px; }
+    .social-link { font-size: 10px; font-weight: 300; letter-spacing: .1em; text-transform: uppercase; color: var(--stone); transition: color var(--ease); }
+    .social-link:hover { color: var(--text); }
+    .footer-col h5 { font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 500; letter-spacing: .22em; text-transform: uppercase; color: var(--text); margin-bottom: 24px; }
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { margin-bottom: 12px; }
+    .footer-col ul li a { font-size: 13px; font-weight: 300; color: var(--muted); transition: color var(--ease); }
+    .footer-col ul li a:hover { color: var(--text); }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 28px; border-top: 1px solid var(--border); flex-wrap: wrap; gap: 16px; }
+    .footer-copy { font-size: 11px; font-weight: 300; color: var(--stone); letter-spacing: .04em; }
+    .payment-badges { display: flex; gap: 8px; align-items: center; }
+    .payment-label { font-size: 10px; color: var(--stone); margin-right: 4px; }
+    .payment-badge { font-size: 10px; font-weight: 300; color: var(--muted); padding: 4px 10px; border: 1px solid var(--border); border-radius: 2px; }
+
+    /* ── PRODUCT MODAL ── */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(20,18,16,.6); z-index: 500; opacity: 0; pointer-events: none; transition: opacity .35s ease; backdrop-filter: blur(4px); }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal { position: fixed; top: 0; right: 0; bottom: 0; width: min(580px, 100vw); background: var(--bg-0); z-index: 501; transform: translateX(100%); transition: transform .4s cubic-bezier(.16,1,.3,1); overflow-y: auto; }
+    .modal.open { transform: translateX(0); }
+    .modal-img { aspect-ratio: 4/5; background-size: cover; background-position: center top; }
+    .modal-body { padding: 36px 40px 60px; }
+    .modal-close { position: fixed; top: 20px; right: 20px; background: var(--white); border: 1px solid var(--border); cursor: pointer; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; opacity: .8; transition: opacity var(--ease); z-index: 502; }
+    .modal-close:hover { opacity: 1; }
+    .modal-cat { font-size: 10px; font-weight: 300; letter-spacing: .16em; text-transform: uppercase; color: var(--stone); margin-bottom: 8px; }
+    .modal-name { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 400; margin-bottom: 8px; }
+    .modal-price { font-size: 16px; font-weight: 300; color: var(--text); margin-bottom: 24px; }
+    .modal-desc { font-size: 13px; font-weight: 300; color: var(--muted); line-height: 1.85; margin-bottom: 28px; padding-top: 24px; border-top: 1px solid var(--border); }
+    .modal-sizes-label { font-size: 10px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--text); margin-bottom: 12px; }
+    .modal-sizes { display: flex; gap: 8px; margin-bottom: 28px; flex-wrap: wrap; }
+    .size-btn { background: none; border: 1px solid var(--border); font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 300; padding: 10px 16px; cursor: pointer; transition: all var(--ease); color: var(--text); }
+    .size-btn:hover, .size-btn.active { background: var(--text); color: var(--white); border-color: var(--text); }
+    .modal-add { width: 100%; padding: 18px; background: var(--accent); color: #EDE8DF; border: none; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 400; letter-spacing: .18em; text-transform: uppercase; cursor: pointer; transition: background var(--ease); margin-bottom: 12px; }
+    .modal-add:hover { background: var(--accent-dk); }
+    .modal-wish { width: 100%; padding: 16px; background: transparent; color: var(--text); border: 1px solid var(--border); font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 300; letter-spacing: .14em; text-transform: uppercase; cursor: pointer; transition: border-color var(--ease); }
+    .modal-wish:hover { border-color: var(--text); }
+
+    /* ── MOBILE NAV ── */
+    .mobile-nav { position: fixed; inset: 0; background: var(--bg-0); z-index: 300; transform: translateX(-100%); transition: transform .4s cubic-bezier(.16,1,.3,1); padding: 100px 48px 48px; display: flex; flex-direction: column; gap: 28px; }
+    .mobile-nav.open { transform: translateX(0); }
+    .mobile-nav a { font-family: 'Cormorant Garamond', serif; font-size: 2.4rem; font-weight: 300; color: var(--text); }
+    .mobile-nav-close { position: absolute; top: 24px; right: 28px; background: none; border: none; cursor: pointer; font-size: 22px; color: var(--text); opacity: .5; }
+
+    /* ── TOAST ── */
+    .toast { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(16px); background: var(--text); color: rgba(250,250,248,.85); padding: 12px 28px; font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 300; letter-spacing: .14em; text-transform: uppercase; z-index: 999; opacity: 0; transition: all .3s ease; pointer-events: none; white-space: nowrap; }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ── DEMO BADGE ── */
+    .demo-badge { position: fixed; bottom: 24px; right: 24px; background: rgba(30,26,24,.9); color: rgba(250,250,248,.6); padding: 8px 18px; font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 300; letter-spacing: .14em; text-transform: uppercase; z-index: 998; pointer-events: none; }
+
+    /* ── SPACING HELPERS ── */
+    .mt-64 { margin-top: 64px; }
+    .mb-64 { margin-bottom: 64px; }
+    .mt-96 { margin-top: 96px; }
+    .mb-96 { margin-bottom: 96px; }
+    .text-center { text-align: center; }
+    .cta-center { text-align: center; margin-top: 56px; }
+    .section-gap { padding: 80px 0; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1100px) {
+      .cats-grid-full, .products-grid { grid-template-columns: repeat(3, 1fr); }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+    }
+    @media (max-width: 768px) {
+      .header-inner { grid-template-columns: auto 1fr auto; }
+      .nav { display: none; }
+      .hamburger { display: flex; }
+      .hero { grid-template-columns: 1fr; }
+      .hero-image { min-height: 55vw; }
+      .hero-content { padding: 56px 28px; }
+      .cats-grid-full, .products-grid, .products-grid-3 { grid-template-columns: repeat(2, 1fr); }
+      .about-split { grid-template-columns: 1fr; gap: 48px; }
+      .about-img-2 { display: none; }
+      .editorial { grid-template-columns: 1fr; margin: 0; }
+      .editorial-img { height: 50vw; }
+      .editorial-content { padding: 56px 36px; }
+      .look-grid { grid-template-columns: 1fr 1fr; }
+      .look-featured { grid-column: span 2; }
+      .testi-grid { grid-template-columns: 1fr; gap: 36px; }
+      .engagements-grid { grid-template-columns: 1fr; gap: 36px; }
+      .insta-grid { grid-template-columns: repeat(3, 1fr); margin: 0; }
+      .contact-grid { grid-template-columns: 1fr; gap: 48px; }
+      .trust-items { flex-direction: column; }
+      .trust-sep { width: 32px; height: 1px; margin: 4px 0; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .newsletter-strip { margin: 64px -20px 0; padding: 64px 24px; }
+      .container { padding: 0 20px; }
+    }
+    @media (max-width: 480px) {
+      .hero-btns { flex-direction: column; }
+      .cats-grid-full, .products-grid, .products-grid-3 { grid-template-columns: repeat(2, 1fr); }
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ────────────────────────────────────────────
+     ANNOUNCEMENT
+──────────────────────────────────────────── -->
+<div class="announcement">
+  Frais de port offerts en point relais dès 80€ <em>·</em> Retours gratuits 30 jours <em>·</em> Boutique <em>Valenciennes</em> — 60 rue Saint Géry
+</div>
+
+<!-- ────────────────────────────────────────────
+     HEADER (persistant sur toutes les pages)
+──────────────────────────────────────────── -->
+<header class="header">
+  <div class="header-inner">
+    <nav class="nav">
+      <a data-page="collections" onclick="go('collections')">Collections</a>
+      <a data-page="nouveautes" onclick="go('nouveautes')">Nouveautés</a>
+      <a data-page="lookbook" onclick="go('lookbook')">Lookbook</a>
+      <a data-page="about" onclick="go('about')">À propos</a>
+    </nav>
+    <a class="logo" onclick="go('home')"><em>Crème</em> Boutique</a>
+    <div class="header-actions">
+      <button onclick="toast('Recherche — disponible sur le site complet')">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+      <button onclick="toast('Vos favoris — 3 pièces sauvegardées')">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </button>
+      <button onclick="toast('Espace client — connexion requise')">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </button>
+      <button style="position:relative" onclick="toast('2 articles · 143,00 € dans votre panier')">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span class="cart-badge">2</span>
+      </button>
+      <button class="hamburger" onclick="toggleMob()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ── MOBILE NAV ── -->
+<div class="mobile-nav" id="mobileNav">
+  <button class="mobile-nav-close" onclick="toggleMob()">✕</button>
+  <a onclick="go('home');toggleMob()">Accueil</a>
+  <a onclick="go('collections');toggleMob()">Collections</a>
+  <a onclick="go('nouveautes');toggleMob()">Nouveautés</a>
+  <a onclick="go('lookbook');toggleMob()">Lookbook</a>
+  <a onclick="go('about');toggleMob()">À propos</a>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE — HOME
+═══════════════════════════════════════════ -->
+<div id="page-home" class="page active">
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-image">
+      <div class="hero-img-bg"></div>
+      <span class="hero-label">Collection Printemps 2026 · Valenciennes</span>
+    </div>
+    <div class="hero-content">
+      <span class="eyebrow">Nouvelle Arrivée</span>
+      <h1 class="hero-title">L'élégance<br><em>naturelle</em><br>vous appartient</h1>
+      <p class="hero-desc">Des pièces soigneusement sélectionnées pour la femme moderne — entre douceur, authenticité et style intemporel.</p>
+      <div class="hero-btns">
+        <button class="btn btn-dark" onclick="go('collections')">Découvrir la collection</button>
+        <button class="btn btn-outline" onclick="go('nouveautes')">Nos bestsellers</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust bar -->
+  <div class="trust-bar">
+    <div class="container">
+      <div class="trust-items">
+        <div class="trust-item">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--stone)" stroke-width="1.2" stroke-linecap="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          <div class="trust-item-text"><h4>Livraison offerte</h4><p>Dès 60€ en France</p></div>
+        </div>
+        <div class="trust-sep"></div>
+        <div class="trust-item">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--stone)" stroke-width="1.2" stroke-linecap="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+          <div class="trust-item-text"><h4>Retours gratuits</h4><p>Sous 30 jours</p></div>
+        </div>
+        <div class="trust-sep"></div>
+        <div class="trust-item">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--stone)" stroke-width="1.2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <div class="trust-item-text"><h4>Paiement sécurisé</h4><p>CB · PayPal · Apple Pay</p></div>
+        </div>
+        <div class="trust-sep"></div>
+        <div class="trust-item">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--stone)" stroke-width="1.2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <div class="trust-item-text"><h4>Boutique Valenciennes</h4><p>60 rue Saint Géry</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Featured products -->
+  <section class="section-gap sec-bg-0" style="padding-left:40px;padding-right:40px;margin:0 -40px;border-top:1px solid var(--border)">
+    <div class="container">
+      <div class="text-center mb-64">
+        <span class="eyebrow">Coup de cœur</span>
+        <h2 class="section-title">Nos pièces du moment</h2>
+      </div>
+      <div class="products-grid">
+        <div class="product-card" onclick="openModal('Robe Dorée Midi','Robe','89,00 €','Robe midi en viscose dorée, coupe évasée. Encolure en V subtilement travaillée. Fermeture dos invisible.','p1')">
+          <div class="product-img"><div class="product-img-bg p1"></div><span class="product-badge">Nouveau</span><button class="product-wishlist" onclick="event.stopPropagation();toast('Ajouté aux favoris')">♡</button><button class="product-quick-add" onclick="event.stopPropagation();toast('Robe Dorée Midi ajoutée au panier')">Ajouter au panier</button></div>
+          <div class="product-info"><p class="product-cat">Robe</p><h4 class="product-name">Robe Dorée Midi</h4><div class="product-price">89,00 €</div><div class="product-colors"><div class="color-dot" style="background:#D4A574"></div><div class="color-dot" style="background:#2E1C0E"></div><div class="color-dot" style="background:#F0EBE4"></div></div></div>
+        </div>
+        <div class="product-card" onclick="openModal('Blouse Lin Naturel','Top','54,00 €','Blouse en lin lavé 100% naturel. Col rond ample, manches longues avec poignets boutonnés.','p2')">
+          <div class="product-img"><div class="product-img-bg p2"></div><button class="product-wishlist" onclick="event.stopPropagation();toast('Ajouté aux favoris')">♡</button><button class="product-quick-add" onclick="event.stopPropagation();toast('Blouse Lin ajoutée au panier')">Ajouter au panier</button></div>
+          <div class="product-info"><p class="product-cat">Top</p><h4 class="product-name">Blouse Lin Naturel</h4><div class="product-price">54,00 €</div><div class="product-colors"><div class="color-dot" style="background:#EDE3D5"></div><div class="color-dot" style="background:#A88E74"></div><div class="color-dot" style="background:#6B8E6B"></div></div></div>
+        </div>
+        <div class="product-card" onclick="openModal('Veste Coton Sable','Veste','112,00 €','Veste ajustée en coton sablé brossé. Revers élégants, double boutonnage. Doublure soie.','p4')">
+          <div class="product-img"><div class="product-img-bg p4"></div><span class="product-badge">Nouveau</span><button class="product-wishlist" onclick="event.stopPropagation();toast('Ajouté aux favoris')">♡</button><button class="product-quick-add" onclick="event.stopPropagation();toast('Veste Coton Sable ajoutée au panier')">Ajouter au panier</button></div>
+          <div class="product-info"><p class="product-cat">Veste</p><h4 class="product-name">Veste Coton Sable</h4><div class="product-price">112,00 €</div><div class="product-colors"><div class="color-dot" style="background:#C8B89C"></div><div class="color-dot" style="background:#3A2A20"></div></div></div>
+        </div>
+        <div class="product-card" onclick="openModal('Foulard Cachemire Nude','Accessoire','42,00 €','Foulard en cachemire 100% peigné, finition bords roulottés. Douceur incomparable.','p8')">
+          <div class="product-img"><div class="product-img-bg p8"></div><span class="product-badge">Nouveau</span><button class="product-wishlist" onclick="event.stopPropagation();toast('Ajouté aux favoris')">♡</button><button class="product-quick-add" onclick="event.stopPropagation();toast('Foulard ajouté au panier')">Ajouter au panier</button></div>
+          <div class="product-info"><p class="product-cat">Accessoire</p><h4 class="product-name">Foulard Cachemire Nude</h4><div class="product-price">42,00 €</div><div class="product-colors"><div class="color-dot" style="background:#DDD0BE"></div><div class="color-dot" style="background:#A88E74"></div></div></div>
+        </div>
+      </div>
+      <div class="cta-center">
+        <button class="btn btn-outline" onclick="go('nouveautes')">Voir toutes les nouveautés</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Editorial banner -->
+  <div class="container">
+    <div class="editorial">
+      <div class="editorial-img"><div class="editorial-img-bg"></div></div>
+      <div class="editorial-content">
+        <span class="eyebrow">Offre limitée</span>
+        <h2>Soldes de<br>printemps —<br><em>jusqu'à −40%</em></h2>
+        <p>Une sélection de pièces incontournables à prix réduit. Valable jusqu'au 15 avril 2026.</p>
+        <div class="editorial-btns">
+          <button class="btn btn-ghost-light" onclick="go('nouveautes')">Voir les soldes</button>
+          <button class="btn btn-outline-light" onclick="go('lookbook')">Voir le lookbook</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Testimonials -->
+  <section class="section-gap sec-bg-3" style="padding-left:40px;padding-right:40px;margin:0 -40px">
+    <div class="container">
+      <div class="text-center mb-64">
+        <span class="eyebrow">Avis clients</span>
+        <h2 class="section-title">Ce qu'elles disent</h2>
+      </div>
+      <div class="testi-grid">
+        <div class="testi-card"><div class="testi-quote">"</div><p class="testi-text">La qualité est vraiment au rendez-vous. La robe midi est encore plus belle en vrai. Livraison rapide, emballage soigné.</p><div class="testi-sep"></div><div class="testi-name">Sophie M.</div><div class="testi-location">Valenciennes · Cliente depuis 2022</div><div class="testi-stars">★★★★★</div></div>
+        <div class="testi-card"><div class="testi-quote">"</div><p class="testi-text">Je recommande à 100% ! Les tailles sont fidèles, les matières agréables à porter. Service client adorable.</p><div class="testi-sep"></div><div class="testi-name">Camille D.</div><div class="testi-location">Lyon · Nouvelle cliente</div><div class="testi-stars">★★★★★</div></div>
+        <div class="testi-card"><div class="testi-quote">"</div><p class="testi-text">Enfin une boutique qui comprend la femme moderne. Des pièces intemporelles, des couleurs douces et un service client adorable.</p><div class="testi-sep"></div><div class="testi-name">Nadia K.</div><div class="testi-location">Bordeaux · Cliente depuis 2023</div><div class="testi-stars">★★★★★</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Instagram -->
+  <div style="background:var(--bg-2);padding:64px 0 0;margin:0 -40px;border-top:1px solid var(--border)">
+    <div class="container">
+      <div class="text-center mb-64">
+        <span class="eyebrow">Suivez-nous</span>
+        <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,3vw,2.6rem);font-weight:300">@cremeboutique</h2>
+      </div>
+    </div>
+  </div>
+  <div class="insta-grid">
+    <div class="insta-item" onclick="toast('@cremeboutique sur Instagram')"><div class="insta-bg i1"></div><div class="insta-hover"><div class="insta-hover-ring">+</div></div></div>
+    <div class="insta-item" onclick="toast('@cremeboutique sur Instagram')"><div class="insta-bg i2"></div><div class="insta-hover"><div class="insta-hover-ring">+</div></div></div>
+    <div class="insta-item" onclick="toast('@cremeboutique sur Instagram')"><div class="insta-bg i3"></div><div class="insta-hover"><div class="insta-hover-ring">+</div></div></div>
+    <div class="insta-item" onclick="toast('@cremeboutique sur Instagram')"><div class="insta-bg i4"></div><div class="insta-hover"><div class="insta-hover-ring">+</div></div></div>
+    <div class="insta-item" onclick="toast('@cremeboutique sur Instagram')"><div class="insta-bg i5"></div><div class="insta-hover"><div class="insta-hover-ring">+</div></div></div>
+    <div class="insta-item" onclick="toast('@cremeboutique sur Instagram')"><div class="insta-bg i6"></div><div class="insta-hover"><div class="insta-hover-ring">+</div></div></div>
+  </div>
+
+  <!-- Newsletter -->
+  <div class="container">
+    <div class="newsletter-strip">
+      <span class="eyebrow">Restez informée</span>
+      <h2>Les nouvelles pièces,<br><em>en avant-première</em></h2>
+      <p>−10% sur votre première commande + arrivages exclusifs.</p>
+      <form class="newsletter-form" onsubmit="handleNL(event)">
+        <input type="email" placeholder="Votre adresse email" required />
+        <button type="submit">S'inscrire →</button>
+      </form>
+    </div>
+  </div>
+
+</div><!-- /page-home -->
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE — COLLECTIONS
+═══════════════════════════════════════════ -->
+<div id="page-collections" class="page">
+  <div class="container">
+    <div class="page-hero">
+      <span class="eyebrow">Explorer</span>
+      <h1>Nos <em>collections</em></h1>
+      <p>Prêt-à-porter féminin · Printemps–Été 2026</p>
+    </div>
+
+    <!-- Categories -->
+    <div class="cats-grid-full mb-96">
+      <div class="cat-card" onclick="filterAndShow('Robes')"><div class="cat-bg cat-bg-1"></div><div class="cat-overlay"><div><div class="cat-name">Robes</div><div class="cat-count">48 pièces</div></div></div></div>
+      <div class="cat-card" onclick="filterAndShow('Tops')"><div class="cat-bg cat-bg-2"></div><div class="cat-overlay"><div><div class="cat-name">Tops & Blouses</div><div class="cat-count">62 pièces</div></div></div></div>
+      <div class="cat-card" onclick="filterAndShow('Pantalons')"><div class="cat-bg cat-bg-3"></div><div class="cat-overlay"><div><div class="cat-name">Pantalons</div><div class="cat-count">35 pièces</div></div></div></div>
+      <div class="cat-card" onclick="filterAndShow('Vestes')"><div class="cat-bg cat-bg-4"></div><div class="cat-overlay"><div><div class="cat-name">Vestes</div><div class="cat-count">27 pièces</div></div></div></div>
+      <div class="cat-card" onclick="filterAndShow('Accessoires')"><div class="cat-bg cat-bg-5"></div><div class="cat-overlay"><div><div class="cat-name">Accessoires</div><div class="cat-count">54 pièces</div></div></div></div>
+    </div>
+
+    <!-- All products with filters -->
+    <div class="text-center mb-64">
+      <span class="eyebrow">Toute la collection</span>
+      <h2 class="section-title">226 pièces disponibles</h2>
+    </div>
+    <div class="products-filters" id="collFilters">
+      <button class="filter-btn active" onclick="filterColl(this,'Tout')">Tout</button>
+      <button class="filter-btn" onclick="filterColl(this,'Robes')">Robes</button>
+      <button class="filter-btn" onclick="filterColl(this,'Tops')">Tops & Blouses</button>
+      <button class="filter-btn" onclick="filterColl(this,'Pantalons')">Pantalons</button>
+      <button class="filter-btn" onclick="filterColl(this,'Vestes')">Vestes</button>
+      <button class="filter-btn" onclick="filterColl(this,'Accessoires')">Accessoires</button>
+    </div>
+    <div class="products-grid" id="collGrid">
+      <div class="product-card" data-cat="Robes" onclick="openModal('Robe Dorée Midi','Robe','89,00 €','Robe midi en viscose dorée, coupe évasée. Encolure en V subtilement travaillée.','p1')"><div class="product-img"><div class="product-img-bg p1"></div><span class="product-badge">Nouveau</span><button class="product-wishlist" onclick="event.stopPropagation();toast('Ajouté aux favoris')">♡</button><button class="product-quick-add" onclick="event.stopPropagation();toast('Robe Dorée Midi ajoutée au panier')">Ajouter au panier</button></div><div class="product-info"><p class="product-cat">Robe</p><h4 class="product-name">Robe Dorée Midi</h4><div class="product-price">89,00 €</div><div class="product-colors"><div class="color-dot" style="background:#D4A574"></div><div class="color-dot" style="background:#2E1C0E"></div><div class="color-dot" style="background:#F0EBE4"></div></div></div></div>
+
+      <div class="product-card" data-cat="Tops" onclick="openModal('Blouse Lin Naturel','Top','54,00 €','Blouse en lin lavé 100% naturel. Col rond, manches longues.','p2')"><div class="product-img"><div class="product-img-bg p2"></div><button class="product-wishlist" onclick="event.stopPropagation();toast('Ajouté aux favoris')">♡</button><button class="product-quick-add" onclick="event.stopPropagation();toast('Blouse ajoutée au panier')">Ajouter au panier</button></div><div class="product-info"><p class="product-cat">Top</p><h4 class="product-name">Blouse Lin Naturel</h4><div class="product-price">54,00 €</div><div class="product-colors"><div class="color-dot" style="background:#EDE3D5"></div><div class="color-dot" style="background:#A88E74"></div><div class="color-dot" style="background:#6B8E6B"></div></div></div></div>
+
+      <div class="product-card" data-cat="Pantalons" onclick="openModal('Pantalon Wide Leg Ivoire','Pantalon','55,20 €','Pantalon taille haute en crêpe ivoire, coupe wide leg structurée.','p3')"><div class="product-img"><div class="product-img-bg p3"></div><span class="product-badge sale">−20%</span><button class="product-wishlist" onclick="event.stopPropagation();toast('Ajouté aux favoris')">♡</button><button class="product-quick-add" onclick="event.stopPropagation();toast('Pantalon ajouté au panier')">Ajouter au panier</button></div><div class="product-info"><p class="product-cat">Pantalon</p><h4 class="product-name">Pantalon Wide Leg Ivoire</h4><div class="product-price"><span class="price-sale">55,20 €</span><span class="price-old">69,00 €</span></div><div class="product-colors"><div class="color-dot" style="background:#F0EBE4"></div><div class="color-dot" style="background:#C8A882"></div></div></div></div>
+
+      <div class="product-card" data-cat="Vestes" onclick="openModal('Veste Coton Sable','Veste','112,00 €','Veste ajustée en coton sablé brossé. Revers élégants, doublure soie.','p4')"><div class="product-img"><div class="product-img-bg p4"></div><span class="product-badge">Nouveau</span><button class="product-wishlist" onclick="event.stopPropagation();toast('Ajouté aux favoris')">♡</button><button class="product-quick-add" onclick="event.stopPropagation();toast('Veste ajoutée au panier')">Ajouter au panier</button></div><div class="product-info"><p class="product-cat">Veste</p><h4 class="product-name">Veste Coton Sable</h4><div class="product-price">112,00 €</div><div class="product-colors"><div class="color-dot" style="background:#C8B89C"></div><div class="color-dot" style="background:#3A2A20"></div></div></div></div>
+
+      <div class="product-card" data-cat="Robes" onclick="openModal('Robe Florale Bohème','Robe','76,00 €','Robe longue en viscose imprimée floral discret. Col bardot, bretelles fines.','p5')"><div class="product-img"><div class="product-img-bg p5"></div><button class="product-wishlist" onclick="event.stopPropagation();toast('Ajouté aux favoris')">♡</button><button class="product-quick-add" onclick="event.stopPropagation();toast('Robe Florale ajoutée au panier')">Ajouter au panier</button></div><div class="product-info"><p class="product-cat">Robe</p><h4 class="product-name">Robe Florale Bohème</h4><div class="product-price">76,00 €</div><div class="product-colors"><div class="color-dot" style="background:#D4A07A"></div><div class="color-dot" style="background:#8E6B4E"></div></div></div></div>
+
+      <div class="product-card" data-cat="Accessoires" onclick="openModal('Sac Tressé Naturel','Accessoire','65,00 €','Sac en raphia naturel tressé à la main. Poignées cuir, doublure coton.','p6')"><div class="product-img"><div class="product-img-bg p6"></div><button class="product-wishlist" onclick="event.stopPropagation();toast('Ajouté aux favoris')">♡</button><button class="product-quick-add" onclick="event.stopPropagation();toast('Sac ajouté au panier')">Ajouter au panier</button></div><div class="product-info"><p class="product-cat">Accessoire</p><h4 class="product-name">Sac Tressé Naturel</h4><div class="product-price">65,00 €</div><div class="product-colors"><div class="color-dot" style="background:#C8A882"></div><div class="color-dot" style="background:#3A2A20"></div></div></div></div>
+
+      <div class="product-card" data-cat="Tops" onclick="openModal('Top Soie Ivoire','Top','50,15 €','Top en satin de soie ivoire. Bretelles fines, découpe dans le dos.','p7')"><div class="product-img"><div class="product-img-bg p7"></div><span class="product-badge sale">−15%</span><button class="product-wishlist" onclick="event.stopPropagation();toast('Ajouté aux favoris')">♡</button><button class="product-quick-add" onclick="event.stopPropagation();toast('Top Soie ajouté au panier')">Ajouter au panier</button></div><div class="product-info"><p class="product-cat">Top</p><h4 class="product-name">Top Soie Ivoire</h4><div class="product-price"><span class="price-sale">50,15 €</span><span class="price-old">59,00 €</span></div><div class="product-colors"><div class="color-dot" style="background:#F0ECE4"></div><div class="color-dot" style="background:#D4C4B0"></div></div></div></div>
+
+      <div class="product-card" data-cat="Accessoires" onclick="openModal('Foulard Cachemire Nude','Accessoire','42,00 €','Foulard en cachemire 100% peigné, finition bords roulottés.','p8')"><div class="product-img"><div class="product-img-bg p8"></div><span class="product-badge">Nouveau</span><button class="product-wishlist" onclick="event.stopPropagation();toast('Ajouté aux favoris')">♡</button><button class="product-quick-add" onclick="event.stopPropagation();toast('Foulard ajouté au panier')">Ajouter au panier</button></div><div class="product-info"><p class="product-cat">Accessoire</p><h4 class="product-name">Foulard Cachemire Nude</h4><div class="product-price">42,00 €</div><div class="product-colors"><div class="color-dot" style="background:#DDD0BE"></div><div class="color-dot" style="background:#A88E74"></div></div></div></div>
+
+      <div class="product-card" data-cat="Robes" onclick="openModal('Robe Épaules Nues','Robe','95,00 €','Robe à épaules dénudées en crêpe structuré. Longueur genou, fermeture zip dos.','p9')"><div class="product-img"><div class="product-img-bg p9"></div><span class="product-badge">Nouveau</span><button class="product-wishlist" onclick="event.stopPropagation();toast('Ajouté aux favoris')">♡</button><button class="product-quick-add" onclick="event.stopPropagation();toast('Robe ajoutée au panier')">Ajouter au panier</button></div><div class="product-info"><p class="product-cat">Robe</p><h4 class="product-name">Robe Épaules Nues</h4><div class="product-price">95,00 €</div><div class="product-colors"><div class="color-dot" style="background:#E8E0D8"></div><div class="color-dot" style="background:#3A2A20"></div></div></div></div>
+
+      <div class="product-card" data-cat="Tops" onclick="openModal('Chemise Oversize Écru','Top','68,00 €','Chemise oversize en coton écru. Col à pointes, boutons nacrés. À nouer ou portée loose.','p10')"><div class="product-img"><div class="product-img-bg p10"></div><button class="product-wishlist" onclick="event.stopPropagation();toast('Ajouté aux favoris')">♡</button><button class="product-quick-add" onclick="event.stopPropagation();toast('Chemise ajoutée au panier')">Ajouter au panier</button></div><div class="product-info"><p class="product-cat">Top</p><h4 class="product-name">Chemise Oversize Écru</h4><div class="product-price">68,00 €</div><div class="product-colors"><div class="color-dot" style="background:#F0EBE2"></div><div class="color-dot" style="background:#C0B8AC"></div></div></div></div>
+
+      <div class="product-card" data-cat="Pantalons" onclick="openModal('Jupe Midi Plissée','Pantalon','72,00 €','Jupe midi plissée en soie légère. Taille élastique, tombé fluide. Parfaite pour toutes occasions.','p11')"><div class="product-img"><div class="product-img-bg p11"></div><button class="product-wishlist" onclick="event.stopPropagation();toast('Ajouté aux favoris')">♡</button><button class="product-quick-add" onclick="event.stopPropagation();toast('Jupe ajoutée au panier')">Ajouter au panier</button></div><div class="product-info"><p class="product-cat">Jupe</p><h4 class="product-name">Jupe Midi Plissée</h4><div class="product-price">72,00 €</div><div class="product-colors"><div class="color-dot" style="background:#D8D0C4"></div><div class="color-dot" style="background:#B8A898"></div></div></div></div>
+
+      <div class="product-card" data-cat="Vestes" onclick="openModal('Manteau Camel Court','Veste','185,00 €','Manteau court en laine camel mélangée. Coupe droite, ceinture à nouer. Entretien délicat.','p12')"><div class="product-img"><div class="product-img-bg p12"></div><span class="product-badge">Exclusif</span><button class="product-wishlist" onclick="event.stopPropagation();toast('Ajouté aux favoris')">♡</button><button class="product-quick-add" onclick="event.stopPropagation();toast('Manteau ajouté au panier')">Ajouter au panier</button></div><div class="product-info"><p class="product-cat">Manteau</p><h4 class="product-name">Manteau Camel Court</h4><div class="product-price">185,00 €</div><div class="product-colors"><div class="color-dot" style="background:#C8A878"></div><div class="color-dot" style="background:#3A2A20"></div></div></div></div>
+    </div>
+  </div>
+</div><!-- /page-collections -->
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE — NOUVEAUTÉS
+═══════════════════════════════════════════ -->
+<div id="page-nouveautes" class="page">
+  <div class="container">
+    <div class="page-hero">
+      <span class="eyebrow">Semaine du 24 mars 2026</span>
+      <h1>Nouvelles <em>arrivées</em></h1>
+      <p>12 pièces ajoutées cette semaine · quantités limitées</p>
+    </div>
+
+    <!-- Sort & filters -->
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:48px;border-bottom:1px solid var(--border);padding-bottom:24px;">
+      <div class="products-filters" style="margin:0">
+        <button class="filter-btn active" onclick="filterNew(this,'Tout')">Tout</button>
+        <button class="filter-btn" onclick="filterNew(this,'Robes')">Robes</button>
+        <button class="filter-btn" onclick="filterNew(this,'Tops')">Tops</button>
+        <button class="filter-btn" onclick="filterNew(this,'Pantalons')">Pantalons</button>
+        <button class="filter-btn" onclick="filterNew(this,'Accessoires')">Accessoires</button>
+        <button class="filter-btn" onclick="filterNew(this,'Soldes')">Soldes</button>
+      </div>
+      <select style="background:none;border:1px solid var(--border);padding:8px 16px;font-family:'Inter',sans-serif;font-size:11px;font-weight:300;letter-spacing:.08em;color:var(--text);cursor:pointer;outline:none" onchange="toast('Tri appliqué : '+this.options[this.selectedIndex].text)">
+        <option>Nouveautés d'abord</option>
+        <option>Prix croissant</option>
+        <option>Prix décroissant</option>
+        <option>Meilleures ventes</option>
+      </select>
+    </div>
+
+    <div class="products-grid" id="newGrid">
+      <div class="product-card" data-cat="Robes" onclick="openModal('Robe Dorée Midi','Robe','89,00 €','Robe midi en viscose dorée, coupe évasée. Encolure en V subtilement travaillée.','p1')"><div class="product-img"><div class="product-img-bg p1"></div><span class="product-badge">Nouveau</span><button class="product-wishlist" onclick="event.stopPropagation();toast('Ajouté aux favoris')">♡</button><button class="product-quick-add" onclick="event.stopPropagation();toast('Robe Dorée Midi ajoutée au panier')">Ajouter au panier</button></div><div class="product-info"><p class="product-cat">Robe</p><h4 class="product-name">Robe Dorée Midi</h4><div class="product-price">89,00 €</div></div></div>
+
+      <div class="product-card" data-cat="Tops" onclick="openModal('Blouse Lin Naturel','Top','54,00 €','Blouse en lin lavé 100% naturel. Col rond, manches longues.','p2')"><div class="product-img"><div class="product-img-bg p2"></div><span class="product-badge">Nouveau</span><button class="product-wishlist" onclick="event.stopPropagation();toast('Ajouté aux favoris')">♡</button><button class="product-quick-add" onclick="event.stopPropagation();toast('Blouse ajoutée')">Ajouter au panier</button></div><div class="product-info"><p class="product-cat">Top</p><h4 class="product-name">Blouse Lin Naturel</h4><div class="product-price">54,00 €</div></div></div>
+
+      <div class="product-card" data-cat="Soldes" onclick="openModal('Pantalon Wide Leg Ivoire','Pantalon','55,20 €','Pantalon taille haute en crêpe ivoire, coupe wide leg.','p3')"><div class="product-img"><div class="product-img-bg p3"></div><span class="product-badge sale">−20%</span><button class="product-wishlist" onclick="event.stopPropagation();toast('Ajouté aux favoris')">♡</button><button class="product-quick-add" onclick="event.stopPropagation();toast('Pantalon ajouté')">Ajouter au panier</button></div><div class="product-info"><p class="product-cat">Pantalon</p><h4 class="product-name">Pantalon Wide Leg Ivoire</h4><div class="product-price"><span class="price-sale">55,20 €</span><span class="price-old">69,00 €</span></div></div></div>
+
+      <div class="product-card" data-cat="Robes" onclick="openModal('Veste Coton Sable','Veste','112,00 €','Veste ajustée en coton sablé brossé, doublure soie.','p4')"><div class="product-img"><div class="product-img-bg p4"></div><span class="product-badge">Nouveau</span><button class="product-wishlist" onclick="event.stopPropagation();toast('Ajouté aux favoris')">♡</button><button class="product-quick-add" onclick="event.stopPropagation();toast('Veste ajoutée')">Ajouter au panier</button></div><div class="product-info"><p class="product-cat">Veste</p><h4 class="product-name">Veste Coton Sable</h4><div class="product-price">112,00 €</div></div></div>
+
+      <div class="product-card" data-cat="Robes" onclick="openModal('Robe Florale Bohème','Robe','76,00 €','Robe longue en viscose, imprimé floral. Col bardot.','p5')"><div class="product-img"><div class="product-img-bg p5"></div><button class="product-wishlist" onclick="event.stopPropagation();toast('Ajouté aux favoris')">♡</button><button class="product-quick-add" onclick="event.stopPropagation();toast('Robe ajoutée')">Ajouter au panier</button></div><div class="product-info"><p class="product-cat">Robe</p><h4 class="product-name">Robe Florale Bohème</h4><div class="product-price">76,00 €</div></div></div>
+
+      <div class="product-card" data-cat="Accessoires" onclick="openModal('Sac Tressé Naturel','Accessoire','65,00 €','Sac en raphia tressé main, poignées cuir.','p6')"><div class="product-img"><div class="product-img-bg p6"></div><button class="product-wishlist" onclick="event.stopPropagation();toast('Ajouté aux favoris')">♡</button><button class="product-quick-add" onclick="event.stopPropagation();toast('Sac ajouté')">Ajouter au panier</button></div><div class="product-info"><p class="product-cat">Accessoire</p><h4 class="product-name">Sac Tressé Naturel</h4><div class="product-price">65,00 €</div></div></div>
+
+      <div class="product-card" data-cat="Soldes" onclick="openModal('Top Soie Ivoire','Top','50,15 €','Top en satin de soie ivoire, bretelles fines.','p7')"><div class="product-img"><div class="product-img-bg p7"></div><span class="product-badge sale">−15%</span><button class="product-wishlist" onclick="event.stopPropagation();toast('Ajouté aux favoris')">♡</button><button class="product-quick-add" onclick="event.stopPropagation();toast('Top ajouté')">Ajouter au panier</button></div><div class="product-info"><p class="product-cat">Top</p><h4 class="product-name">Top Soie Ivoire</h4><div class="product-price"><span class="price-sale">50,15 €</span><span class="price-old">59,00 €</span></div></div></div>
+
+      <div class="product-card" data-cat="Accessoires" onclick="openModal('Foulard Cachemire Nude','Accessoire','42,00 €','Foulard en cachemire 100% peigné, bords roulottés.','p8')"><div class="product-img"><div class="product-img-bg p8"></div><span class="product-badge">Nouveau</span><button class="product-wishlist" onclick="event.stopPropagation();toast('Ajouté aux favoris')">♡</button><button class="product-quick-add" onclick="event.stopPropagation();toast('Foulard ajouté')">Ajouter au panier</button></div><div class="product-info"><p class="product-cat">Accessoire</p><h4 class="product-name">Foulard Cachemire Nude</h4><div class="product-price">42,00 €</div></div></div>
+    </div>
+    <div class="cta-center mb-96">
+      <button class="btn btn-outline" onclick="toast('Chargement de 12 pièces supplémentaires…')">Charger plus</button>
+    </div>
+  </div>
+</div><!-- /page-nouveautes -->
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE — LOOKBOOK
+═══════════════════════════════════════════ -->
+<div id="page-lookbook" class="page">
+  <div class="container">
+    <div class="page-hero">
+      <span class="eyebrow">Printemps · Été 2026</span>
+      <h1>Le <em>Lookbook</em></h1>
+      <p>6 looks · Collection Bordeaux 2026</p>
+    </div>
+  </div>
+
+  <!-- Big featured look -->
+  <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:2px;margin-bottom:2px">
+    <div class="look-item look-featured" onclick="toast('Look N°1 — Robe Bordeaux + Sac Tressé + Foulard Nude')"><div class="look-bg l1"></div><div class="look-overlay"><span class="look-label" style="opacity:1;font-size:12px">Look N°1 — Collection Bordeaux · Shop the look</span></div></div>
+    <div class="look-item" onclick="openModal('Blouse Lin Naturel','Top','54,00 €','Blouse en lin lavé portée dans le Look N°2.','p2')"><div class="look-bg l2"></div><div class="look-overlay"><span class="look-label">Look N°2 — Voir la pièce</span></div></div>
+    <div class="look-item" onclick="openModal('Veste Coton Sable','Veste','112,00 €','Veste portée dans le Look N°3.','p4')"><div class="look-bg l3"></div><div class="look-overlay"><span class="look-label">Look N°3 — Voir la pièce</span></div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;margin-bottom:64px">
+    <div class="look-item" onclick="openModal('Pantalon Wide Leg Ivoire','Pantalon','55,20 €','Pantalon portée dans le Look N°4.','p3')"><div class="look-bg l4"></div><div class="look-overlay"><span class="look-label">Look N°4 — Voir la pièce</span></div></div>
+    <div class="look-item" onclick="openModal('Robe Florale Bohème','Robe','76,00 €','Robe portée dans le Look N°5.','p5')"><div class="look-bg l5"></div><div class="look-overlay"><span class="look-label">Look N°5 — Voir la pièce</span></div></div>
+    <div class="look-item" onclick="openModal('Top Soie Ivoire','Top','50,15 €','Top porté dans le Look N°6.','p7')"><div class="look-bg l6"></div><div class="look-overlay"><span class="look-label">Look N°6 — Voir la pièce</span></div></div>
+  </div>
+
+  <div class="container">
+    <!-- Looks details -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:48px;padding:64px 0;border-top:1px solid var(--border)">
+      <div>
+        <span class="eyebrow">Look N°1</span>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:300;margin-bottom:16px">Collection Bordeaux</h3>
+        <p style="font-size:13px;color:var(--muted);font-weight:300;line-height:1.8;margin-bottom:20px">Robe Bordeaux Midi · Sac Tressé Naturel · Foulard Cachemire Nude</p>
+        <button class="btn btn-outline" style="padding:12px 24px" onclick="toast('3 pièces ajoutées au panier')">Shopper ce look</button>
+      </div>
+      <div>
+        <span class="eyebrow">Look N°2</span>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:300;margin-bottom:16px">Le Quotidien Chic</h3>
+        <p style="font-size:13px;color:var(--muted);font-weight:300;line-height:1.8;margin-bottom:20px">Blouse Lin Naturel · Pantalon Wide Leg Ivoire · Sandales cuir naturel</p>
+        <button class="btn btn-outline" style="padding:12px 24px" onclick="toast('2 pièces ajoutées au panier')">Shopper ce look</button>
+      </div>
+      <div>
+        <span class="eyebrow">Look N°3</span>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:300;margin-bottom:16px">La Veste Iconique</h3>
+        <p style="font-size:13px;color:var(--muted);font-weight:300;line-height:1.8;margin-bottom:20px">Veste Coton Sable · Top Soie Ivoire · Jupe Midi Plissée</p>
+        <button class="btn btn-outline" style="padding:12px 24px" onclick="toast('3 pièces ajoutées au panier')">Shopper ce look</button>
+      </div>
+    </div>
+    <div class="cta-center mb-96">
+      <button class="btn btn-dark" onclick="go('collections')">Voir toute la collection</button>
+    </div>
+  </div>
+</div><!-- /page-lookbook -->
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE — À PROPOS
+═══════════════════════════════════════════ -->
+<div id="page-about" class="page">
+  <div class="container">
+    <div class="page-hero">
+      <span class="eyebrow">Notre histoire</span>
+      <h1>À <em>propos</em></h1>
+      <p>Valenciennes · Depuis 2020</p>
+    </div>
+
+    <!-- Story -->
+    <div class="about-split">
+      <div class="about-visual">
+        <div class="about-img"></div>
+        <div class="about-img-2"></div>
+      </div>
+      <div class="about-content">
+        <span class="eyebrow">La fondatrice</span>
+        <h2>La mode féminine,<br><em>sincère et sans filtre</em></h2>
+        <p>Crème Boutique est née d'un amour profond pour les matières naturelles, les coupes flatteuses et les pièces qui traversent les saisons sans jamais se démoder.</p>
+        <p>Chaque article est choisi avec soin, testé et sélectionné pour sa qualité, son confort et son élégance discrète. Ici, pas de fast fashion — seulement des vêtements que vous allez vraiment porter, encore et encore.</p>
+        <p>Fondée en 2020, Crème Boutique est aujourd'hui une référence de la mode féminine à Valenciennes, avec plus de 1 200 clientes fidèles à travers la France.</p>
+        <div class="about-stats">
+          <div><span class="stat-num">+1 200</span><span class="stat-label">Clientes fidèles</span></div>
+          <div><span class="stat-num">4.9</span><span class="stat-label">Note Google</span></div>
+          <div><span class="stat-num">5 ans</span><span class="stat-label">D'expertise</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Adresse box -->
+    <div class="about-address-box">
+      <h4>Notre boutique physique</h4>
+      <p><strong>60 rue Saint Géry</strong><br>59300 Valenciennes<br>Ouvert du lundi au samedi, 10h–19h<br>cremeboutique@outlook.fr</p>
+    </div>
+
+    <!-- Engagements -->
+    <div class="engagements-grid">
+      <div class="engagement-item"><div class="engagement-line"></div><h3>Matières naturelles</h3><p>Lin, coton bio, soie naturelle — des matières qui respectent votre peau et la planète.</p></div>
+      <div class="engagement-item"><div class="engagement-line"></div><h3>Production responsable</h3><p>Petites séries, ateliers européens sélectionnés pour leur savoir-faire et leurs conditions de travail.</p></div>
+      <div class="engagement-item"><div class="engagement-line"></div><h3>Intemporel avant tout</h3><p>Pas de tendances éphémères — uniquement des pièces pensées pour durer dans votre garde-robe.</p></div>
+    </div>
+
+    <!-- Contact -->
+    <div class="contact-grid">
+      <div class="contact-info">
+        <span class="eyebrow">Nous écrire</span>
+        <h3>On est là pour vous</h3>
+        <p><strong>Email</strong><br>cremeboutique@outlook.fr</p>
+        <p style="margin-top:16px"><strong>Boutique</strong><br>60 rue Saint Géry<br>59300 Valenciennes<br>Lun–Sam · 10h–19h</p>
+        <p style="margin-top:16px"><strong>Réseaux</strong><br>@cremeboutique.fr sur Instagram</p>
+      </div>
+      <div>
+        <span class="eyebrow">Formulaire de contact</span>
+        <form class="contact-form" onsubmit="handleContact(event)">
+          <div class="form-row">
+            <div class="form-field"><label>Prénom</label><input type="text" placeholder="Votre prénom" /></div>
+            <div class="form-field"><label>Nom</label><input type="text" placeholder="Votre nom" /></div>
+          </div>
+          <div class="form-field"><label>Email</label><input type="email" placeholder="votre@email.com" /></div>
+          <div class="form-field">
+            <label>Sujet</label>
+            <select>
+              <option>Ma commande</option>
+              <option>Retour / échange</option>
+              <option>Question produit</option>
+              <option>Partenariat</option>
+              <option>Autre</option>
+            </select>
+          </div>
+          <div class="form-field"><label>Message</label><textarea placeholder="Votre message…"></textarea></div>
+          <button type="submit" class="btn btn-dark" style="width:100%;text-align:center">Envoyer le message</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div><!-- /page-about -->
+
+
+<!-- ── FOOTER (persistant) ── -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo"><em>Crème</em> Boutique</div>
+        <div class="footer-address">
+          <strong>Boutique Valenciennes</strong>
+          60 rue Saint Géry<br>
+          59300 Valenciennes — Lun–Sam · 10h–19h
+        </div>
+        <p class="footer-about">Mode féminine soigneusement sélectionnée — élégance naturelle, qualité durable.</p>
+        <div class="footer-social">
+          <a class="social-link" onclick="toast('@cremeboutique.fr — Instagram')">Instagram</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Collections</h5>
+        <ul>
+          <li><a onclick="go('collections')">Toutes les collections</a></li>
+          <li><a onclick="filterAndShow('Robes')">Robes</a></li>
+          <li><a onclick="filterAndShow('Tops')">Tops & Blouses</a></li>
+          <li><a onclick="filterAndShow('Pantalons')">Pantalons & Jupes</a></li>
+          <li><a onclick="filterAndShow('Accessoires')">Accessoires</a></li>
+          <li><a onclick="go('nouveautes')">Soldes</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Service client</h5>
+        <ul>
+          <li><a onclick="toast('Suivi commande — connexion requise')">Ma commande</a></li>
+          <li><a onclick="toast('Livraison gratuite dès 60€ · Retours 30j')">Livraison & retours</a></li>
+          <li><a onclick="toast('Guide des tailles XS→XL')">Guide des tailles</a></li>
+          <li><a onclick="toast('24 questions fréquentes')">FAQ</a></li>
+          <li><a onclick="go('about')">Nous contacter</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Informations</h5>
+        <ul>
+          <li><a onclick="go('about')">Notre histoire</a></li>
+          <li><a onclick="go('lookbook')">Lookbook</a></li>
+          <li><a onclick="toast('Blog mode — 48 articles')">Blog mode</a></li>
+          <li><a onclick="toast('Conditions Générales de Vente')">CGV</a></li>
+          <li><a onclick="toast('Politique de confidentialité')">Mentions légales</a></li>
+          <li><a onclick="toast('RGPD — vos données')">RGPD</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2026 Crème Boutique · 60 rue Saint Géry, 59300 Valenciennes · Tous droits réservés</p>
+      <div class="payment-badges">
+        <span class="payment-label">Paiements :</span>
+        <div class="payment-badge">Visa</div>
+        <div class="payment-badge">Mastercard</div>
+        <div class="payment-badge">PayPal</div>
+        <div class="payment-badge">Apple Pay</div>
+        <div class="payment-badge">Klarna</div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ── DEMO BADGE ── -->
+<div class="demo-badge">Démo — Crème Boutique</div>
+
+<!-- ── PRODUCT MODAL ── -->
+<div class="modal-overlay" id="overlay" onclick="closeModal()"></div>
+<div class="modal" id="modal">
+  <button class="modal-close" onclick="closeModal()">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+  <div class="modal-img" id="mImg"></div>
+  <div class="modal-body">
+    <p class="modal-cat" id="mCat"></p>
+    <h2 class="modal-name" id="mName"></h2>
+    <p class="modal-price" id="mPrice"></p>
+    <p class="modal-desc" id="mDesc"></p>
+    <div class="modal-sizes-label">Choisir une taille</div>
+    <div class="modal-sizes">
+      <button class="size-btn" onclick="selSize(this)">XS</button>
+      <button class="size-btn" onclick="selSize(this)">S</button>
+      <button class="size-btn active" onclick="selSize(this)">M</button>
+      <button class="size-btn" onclick="selSize(this)">L</button>
+      <button class="size-btn" onclick="selSize(this)">XL</button>
+    </div>
+    <button class="modal-add" onclick="addCart()">Ajouter au panier</button>
+    <button class="modal-wish" onclick="toast('Ajouté à vos favoris')">Ajouter à mes favoris ♡</button>
+  </div>
+</div>
+
+<!-- ── TOAST ── -->
+<div class="toast" id="toastEl"></div>
+
+<script>
+  /* ── PAGE ROUTER ── */
+  function go(page) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + page).classList.add('active');
+    document.querySelectorAll('.nav a').forEach(a => {
+      a.classList.toggle('active', a.dataset.page === page);
+    });
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+
+  /* ── MOBILE NAV ── */
+  function toggleMob() {
+    document.getElementById('mobileNav').classList.toggle('open');
+  }
+
+  /* ── TOAST ── */
+  let _tt;
+  function toast(msg) {
+    const el = document.getElementById('toastEl');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(_tt);
+    _tt = setTimeout(() => el.classList.remove('show'), 2600);
+  }
+
+  /* ── PRODUCT MODAL ── */
+  const IMGS = {
+    p1:'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=800&q=90',
+    p2:'https://images.unsplash.com/photo-1564257631407-4deb1f99d992?w=800&q=90',
+    p3:'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=800&q=90',
+    p4:'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&q=90',
+    p5:'https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=800&q=90',
+    p6:'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=800&q=90',
+    p7:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=90',
+    p8:'https://images.unsplash.com/photo-1601924994987-69e26d50dc26?w=800&q=90',
+    p9:'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=800&q=90',
+    p10:'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&q=90',
+    p11:'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=800&q=90',
+    p12:'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=800&q=90',
+  };
+  let _curName = '';
+  function openModal(name, cat, price, desc, img) {
+    _curName = name;
+    document.getElementById('mName').textContent = name;
+    document.getElementById('mCat').textContent = cat;
+    document.getElementById('mPrice').textContent = price;
+    document.getElementById('mDesc').textContent = desc;
+    document.getElementById('mImg').style.backgroundImage = `url('${IMGS[img]}')`;
+    document.getElementById('overlay').classList.add('open');
+    document.getElementById('modal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal() {
+    document.getElementById('overlay').classList.remove('open');
+    document.getElementById('modal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function selSize(btn) {
+    document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  function addCart() {
+    const sz = document.querySelector('.size-btn.active')?.textContent || 'M';
+    closeModal();
+    toast(`${_curName} (taille ${sz}) ajouté au panier`);
+  }
+
+  /* ── FILTERS ── */
+  function filterColl(btn, cat) {
+    document.querySelectorAll('#collFilters .filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('#collGrid .product-card').forEach(c => {
+      c.style.display = (cat === 'Tout' || c.dataset.cat === cat) ? '' : 'none';
+    });
+  }
+  function filterNew(btn, cat) {
+    document.querySelectorAll('#newGrid').forEach(() => {});
+    document.querySelectorAll('[id="newGrid"] .product-card, #newGrid .product-card').forEach(c => {
+      c.style.display = (cat === 'Tout' || cat === 'Soldes' ? '' : c.dataset.cat === cat ? '' : 'none');
+    });
+    document.querySelectorAll('.products-filters .filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  function filterAndShow(cat) {
+    go('collections');
+    setTimeout(() => {
+      const btn = [...document.querySelectorAll('#collFilters .filter-btn')].find(b => b.textContent.startsWith(cat));
+      if (btn) filterColl(btn, cat);
+    }, 50);
+  }
+
+  /* ── NEWSLETTER ── */
+  function handleNL(e) {
+    e.preventDefault();
+    const v = e.target.querySelector('input').value;
+    toast(`Merci ! −10% envoyé à ${v}`);
+    e.target.querySelector('input').value = '';
+  }
+
+  /* ── CONTACT ── */
+  function handleContact(e) {
+    e.preventDefault();
+    closeModal();
+    toast('Message envoyé — réponse sous 24h');
+    e.target.reset();
+  }
+
+  /* ── KEYBOARD ── */
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+
+</body>
+</html>

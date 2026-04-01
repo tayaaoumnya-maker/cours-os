@@ -1,0 +1,140 @@
+{
+  "version": 1,
+  "skills": {
+    "Skill Development": {
+      "source": "anthropics/claude-code",
+      "sourceType": "github",
+      "computedHash": "8d262f08f33825947ea20204ebf5101e36056c98090251bd973a552ec8ef0c0c"
+    },
+    "ad-creative": {
+      "source": "coreyhaines31/marketingskills",
+      "sourceType": "github",
+      "computedHash": "5d8f869c7e683e4d4fc7aa7a2b0d370b0ad54a81d9cffb48736ffc47759b3f4d"
+    },
+    "ai-voice-cloning": {
+      "source": "inferen-sh/skills",
+      "sourceType": "github",
+      "computedHash": "5ca20b20c3cddabc8de09cea10dd817a22ec31e20826f0b0ee4cf294ec0722d1"
+    },
+    "canvas-design": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "computedHash": "a2fe47d24b3fd8e52faef731fff099c557e698083cd644b2e5695cc4dd8c7715"
+    },
+    "chrome-devtools": {
+      "source": "github/awesome-copilot",
+      "sourceType": "github",
+      "computedHash": "85d9c4ef94e00ddfc937d50aab72a307e80b98bc7e6744ec6e239ef68819c2d7"
+    },
+    "copy-editing": {
+      "source": "coreyhaines31/marketingskills",
+      "sourceType": "github",
+      "computedHash": "3c6241215420e69b36814270a47413b2de9593b5516f5942b7481092f6c63382"
+    },
+    "data-storytelling": {
+      "source": "wshobson/agents",
+      "sourceType": "github",
+      "computedHash": "eca30a8c6e0931beb9688484381eae2864358158edf6bfed1072927d2b2ff582"
+    },
+    "elevenlabs-tts": {
+      "source": "inferen-sh/skills",
+      "sourceType": "github",
+      "computedHash": "d4f43c5fa865590bf0b8f70994b1901022ce21cba1f45ff373bf60ed96a5433c"
+    },
+    "email-best-practices": {
+      "source": "resend/email-best-practices",
+      "sourceType": "github",
+      "computedHash": "7e6c8d495e66e88a20dc45d17d24b445d6c5c9072855c78d8800fff994bc813f"
+    },
+    "email-design": {
+      "source": "inferen-sh/skills",
+      "sourceType": "github",
+      "computedHash": "32e4ebb0f91e9aa9c0cf3c5b866a423460f94cab9386194aead0bf2718d4ac3b"
+    },
+    "linkedin-content": {
+      "source": "inferen-sh/skills",
+      "sourceType": "github",
+      "computedHash": "e5147cb713ce5ca56754edfcf494f57d582837dcb555477e92ada133dabf003e"
+    },
+    "logo-design-guide": {
+      "source": "inferen-sh/skills",
+      "sourceType": "github",
+      "computedHash": "88b6dab119da5e33c7a669f53cb3416ce1655f29c080c646c7e21cecd9198a81"
+    },
+    "marketing-automation": {
+      "source": "supercent-io/skills-template",
+      "sourceType": "github",
+      "computedHash": "9faeba2296cd2696b5c2407392fced5524812da07d0a2ec259b524d97bec8aae"
+    },
+    "marketing-ideas": {
+      "source": "coreyhaines31/marketingskills",
+      "sourceType": "github",
+      "computedHash": "6463f11419704994d58248c398b99c6b097eac24f72f4c86bea1565e435e222e"
+    },
+    "pricing-strategy": {
+      "source": "coreyhaines31/marketingskills",
+      "sourceType": "github",
+      "computedHash": "4312095789cc328883428b1f9bd61549ca44b376aeda8d62bb977efad017e594"
+    },
+    "programmatic-seo": {
+      "source": "coreyhaines31/marketingskills",
+      "sourceType": "github",
+      "computedHash": "40b8fe29a6c9cb0606e6fa77aff227cf275e3808adf66e5ef69e02dcf60a7303"
+    },
+    "prompt-engineering-patterns": {
+      "source": "wshobson/agents",
+      "sourceType": "github",
+      "computedHash": "53ca5b03a78c3d0c8117eaf330b73d83d06ed0d66789490ca8a263ce92849d22"
+    },
+    "referral-program": {
+      "source": "coreyhaines31/marketingskills",
+      "sourceType": "github",
+      "computedHash": "b04bb503500f180280fea269ccdf6f512862413ffa1c872605104cdb5d15bf9e"
+    },
+    "security-requirement-extraction": {
+      "source": "wshobson/agents",
+      "sourceType": "github",
+      "computedHash": "58355374dea00ec5a732711a0586adb06ca6d1ef148e6ca16950e4e0a0a9643e"
+    },
+    "seo": {
+      "source": "addyosmani/web-quality-skills",
+      "sourceType": "github",
+      "computedHash": "f1fed683b76913d26fbf1aa1e008e6932f7771701fc3a79925b042236aa4681a"
+    },
+    "seo-geo": {
+      "source": "resciencelab/opc-skills",
+      "sourceType": "github",
+      "computedHash": "56f90ba46b36563bb5461feb8462aed9283e74dfc4cdac2a98c42c4bc86a95be"
+    },
+    "skill-creator": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "computedHash": "b122f4d1e91aa1d83027e050b5b37c3156203ee85458d7b1360bc48167c9e02a"
+    },
+    "social-media-carousel": {
+      "source": "inferen-sh/skills",
+      "sourceType": "github",
+      "computedHash": "54851ee4bff619823e5a6ba91ea040ce41248f7eedcf830f4359433c65065287"
+    },
+    "storyboard-creation": {
+      "source": "inferen-sh/skills",
+      "sourceType": "github",
+      "computedHash": "f68fcff9beb3ef534bfe3768d3359994f4ff2846c274050d5cd702b4d1262f59"
+    },
+    "web-design-reviewer": {
+      "source": "github/awesome-copilot",
+      "sourceType": "github",
+      "computedHash": "10c6fad8b4f01dbeae969009d81d6c306c8a96d56077cad9bfe2a73a38f5dcbe"
+    },
+    "workflow-patterns": {
+      "source": "wshobson/agents",
+      "sourceType": "github",
+      "computedHash": "55e043c64a3b5255da0818d9723730d64a23c359744da56983edc7c1a1a4c628"
+    },
+    "writing-skills": {
+      "source": "obra/superpowers",
+      "sourceType": "github",
+      "computedHash": "7cd0c064b5a62ffdc9cfff539a7b4d8d4a7792c8f0d544436bea021f08632e7b"
+    }
+  }
+}

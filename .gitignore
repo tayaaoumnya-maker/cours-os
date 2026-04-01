@@ -1,0 +1,15 @@
+# Dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+
+# Local data & uploads (personal data — never commit)
+data/
+uploads/
+
+# Misc
+.DS_Store
+*.log
+tsconfig.tsbuildinfo

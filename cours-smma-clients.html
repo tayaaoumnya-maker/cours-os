@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cours SMMA — Trouver ses premiers clients</title>
+  <style>
+    :root {
+      --bg: #0f0f0f;
+      --surface: #1a1a1a;
+      --surface2: #222;
+      --border: #2e2e2e;
+      --accent: #c8ff00;
+      --accent2: #7fff7f;
+      --text: #e8e8e8;
+      --muted: #888;
+      --warning: #ffcc00;
+      --danger: #ff5555;
+      --info: #60a5fa;
+      --radius: 10px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(15,15,15,0.97);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+    }
+    .nav-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding: 10px 0;
+    }
+    .nav-inner::-webkit-scrollbar { display: none; }
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 500;
+      white-space: nowrap;
+      padding: 5px 10px;
+      border-radius: 6px;
+      transition: all .2s;
+      border: 1px solid transparent;
+    }
+    nav a:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+      background: rgba(200,255,0,.07);
+    }
+    .nav-title {
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 13px;
+      margin-right: 8px;
+      flex-shrink: 0;
+    }
+    .nav-sep { color: var(--border); font-size: 18px; }
+
+    /* ── LAYOUT ── */
+    main {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(135deg, #1a1a1a 0%, #111 100%);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 36px 40px;
+      margin-bottom: 48px;
+    }
+    .hero-tag {
+      display: inline-block;
+      background: rgba(200,255,0,.12);
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 20px;
+      border: 1px solid rgba(200,255,0,.3);
+      margin-bottom: 16px;
+    }
+    .hero h1 {
+      font-size: 28px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 12px;
+      line-height: 1.3;
+    }
+    .hero p {
+      color: var(--muted);
+      font-size: 14px;
+      max-width: 600px;
+    }
+    .hero-meta {
+      display: flex;
+      gap: 24px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .meta-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    /* ── SECTIONS ── */
+    section {
+      margin-bottom: 52px;
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 24px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .section-num {
+      background: var(--accent);
+      color: #000;
+      font-size: 11px;
+      font-weight: 800;
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    h2 {
+      font-size: 19px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--accent);
+      margin: 24px 0 12px;
+    }
+
+    /* ── CARDS ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 16px;
+    }
+    .card-title {
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    /* ── STEPS ── */
+    .steps { display: flex; flex-direction: column; gap: 12px; }
+    .step {
+      display: flex;
+      gap: 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      align-items: flex-start;
+    }
+    .step-num {
+      background: var(--accent);
+      color: #000;
+      font-size: 13px;
+      font-weight: 800;
+      min-width: 30px; height: 30px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .step-content { flex: 1; }
+    .step-label {
+      font-weight: 700;
+      color: #fff;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+    .step-desc { color: var(--muted); font-size: 13px; }
+
+    /* ── PLATFORM CARDS ── */
+    .platforms { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media(max-width: 600px) { .platforms { grid-template-columns: 1fr; } }
+    .platform-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+    .platform-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .platform-badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: rgba(200,255,0,.1);
+      color: var(--accent);
+      border: 1px solid rgba(200,255,0,.2);
+    }
+    .platform-badge.intl {
+      background: rgba(96,165,250,.1);
+      color: var(--info);
+      border-color: rgba(96,165,250,.2);
+    }
+    .platform-name { font-weight: 700; color: #fff; font-size: 15px; }
+    .platform-card ul { padding-left: 16px; color: var(--muted); font-size: 13px; }
+    .platform-card ul li { margin-bottom: 5px; }
+
+    /* ── TABLE ── */
+    .table-wrap { overflow-x: auto; border-radius: var(--radius); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--surface);
+      font-size: 13px;
+    }
+    th {
+      background: #252525;
+      padding: 12px 16px;
+      text-align: left;
+      font-weight: 700;
+      color: var(--accent);
+      font-size: 12px;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border);
+    }
+    td {
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--border);
+      color: var(--muted);
+      vertical-align: top;
+    }
+    td strong { color: var(--text); font-weight: 600; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #1e1e1e; }
+
+    /* ── CALLOUTS ── */
+    .callout {
+      border-left: 3px solid;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 14px 18px;
+      margin: 16px 0;
+      font-size: 13.5px;
+    }
+    .callout.tip { border-color: var(--accent); background: rgba(200,255,0,.05); }
+    .callout.warning { border-color: var(--warning); background: rgba(255,204,0,.05); }
+    .callout.danger { border-color: var(--danger); background: rgba(255,85,85,.05); }
+    .callout.info { border-color: var(--info); background: rgba(96,165,250,.05); }
+    .callout strong { color: #fff; }
+    .callout-title {
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .callout.tip .callout-title { color: var(--accent); }
+    .callout.warning .callout-title { color: var(--warning); }
+    .callout.danger .callout-title { color: var(--danger); }
+    .callout.info .callout-title { color: var(--info); }
+
+    /* ── LISTS ── */
+    ul.styled, ol.styled {
+      padding-left: 0;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    ul.styled li {
+      padding-left: 20px;
+      position: relative;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    ul.styled li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-weight: 700;
+    }
+    ol.styled { counter-reset: li; }
+    ol.styled li {
+      padding-left: 28px;
+      position: relative;
+      color: var(--muted);
+      font-size: 14px;
+      counter-increment: li;
+    }
+    ol.styled li::before {
+      content: counter(li);
+      position: absolute;
+      left: 0;
+      background: var(--accent);
+      color: #000;
+      font-size: 10px;
+      font-weight: 800;
+      width: 18px; height: 18px;
+      border-radius: 5px;
+      display: flex; align-items: center; justify-content: center;
+      top: 3px;
+    }
+    li strong { color: var(--text); }
+
+    /* ── HIGHLIGHT BOX ── */
+    .highlight {
+      background: linear-gradient(135deg, rgba(200,255,0,.08) 0%, rgba(200,255,0,.02) 100%);
+      border: 1px solid rgba(200,255,0,.2);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin: 16px 0;
+    }
+    .highlight p { color: var(--text); font-size: 14px; }
+
+    /* ── TOOL TIP ── */
+    .tool-rec {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(96,165,250,.1);
+      border: 1px solid rgba(96,165,250,.25);
+      border-radius: 6px;
+      padding: 3px 10px;
+      font-size: 12px;
+      color: var(--info);
+      font-weight: 600;
+    }
+
+    p { color: var(--muted); font-size: 14px; margin-bottom: 12px; }
+    p:last-child { margin-bottom: 0; }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media(max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
+
+    .tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 10px;
+      margin: 2px;
+    }
+    .tag-green { background: rgba(127,255,127,.1); color: var(--accent2); border: 1px solid rgba(127,255,127,.2); }
+    .tag-blue { background: rgba(96,165,250,.1); color: var(--info); border: 1px solid rgba(96,165,250,.2); }
+    .tag-yellow { background: rgba(255,204,0,.1); color: var(--warning); border: 1px solid rgba(255,204,0,.2); }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════ NAV ════════════════════ -->
+<nav>
+  <div class="nav-inner">
+    <span class="nav-title">SMMA</span>
+    <span class="nav-sep">|</span>
+    <a href="#etat-esprit">Mindset</a>
+    <a href="#branding">Branding</a>
+    <a href="#terrain">Terrain</a>
+    <a href="#diapos">Diaporamas</a>
+    <a href="#tarifs">Tarifs</a>
+    <a href="#plateformes">Plateformes</a>
+    <a href="#hack-profil">Hack profil</a>
+    <a href="#outils">Outils</a>
+    <a href="#pagespeed">PageSpeed</a>
+    <a href="#reseaux">Réseaux sociaux</a>
+  </div>
+</nav>
+
+<!-- ════════════════════ MAIN ════════════════════ -->
+<main>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-tag">Live SMMA</div>
+    <h1>Trouver ses premiers clients<br>et développer son agence</h1>
+    <p>Notes structurées du live. Stratégie terrain, plateformes freelance, tarification, outils et techniques pour démarrer sans preuve sociale.</p>
+    <div class="hero-meta">
+      <div class="meta-item"><span class="meta-dot"></span>Prospection terrain</div>
+      <div class="meta-item"><span class="meta-dot"></span>5 plateformes décryptées</div>
+      <div class="meta-item"><span class="meta-dot"></span>Modèle abonnement mensuel</div>
+      <div class="meta-item"><span class="meta-dot"></span>Techniques de boost profil</div>
+    </div>
+  </div>
+
+  <!-- ── 1. ÉTAT D'ESPRIT ── -->
+  <section id="etat-esprit">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <h2>État d'esprit — Créer des opportunités</h2>
+    </div>
+
+    <div class="highlight">
+      <p><strong>Principe fondamental :</strong> au démarrage, tu n'as pas de clients, pas de preuves sociales, et peut-être pas de "tchat" (aisance commerciale naturelle). La solution : <strong>être présent partout</strong> pour augmenter ses probabilités d'obtenir une opportunité.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Ce que dit le formateur sur son parcours</div>
+      <ul class="styled">
+        <li>S'est inscrit sur toutes les plateformes possibles avec un profil soigné sur chacune</li>
+        <li>A envoyé un maximum de messages à des clients potentiels sur chaque plateforme</li>
+        <li>Résultat avec le temps : clients qui viennent à lui sans démarche active (Parlement européen, maires, grandes sociétés, restaurants, clubs de paddle, taxis…)</li>
+        <li>Il a aujourd'hui trop de demandes et doit déléguer</li>
+      </ul>
+    </div>
+
+    <div class="callout tip">
+      <div class="callout-title">Leçon clé</div>
+      <strong>"Les gens disent que c'est de la chance. Non — tu augmentes tes probabilités d'obtenir une opportunité. Plus tu es présent partout, plus une personne peut te contacter."</strong> Il suffit d'une opportunité pour changer son business.
+    </div>
+
+    <div class="callout info">
+      <div class="callout-title">Sur la tchat (aisance commerciale)</div>
+      Avoir de la tchat aide, mais ce n'est pas obligatoire. Si tu es <strong>très bon dans ton domaine</strong> et que tu as des compétences réelles, tu n'en as pas besoin. Les clients finissent par venir à toi d'eux-mêmes.
+    </div>
+  </section>
+
+  <!-- ── 2. BRANDING ── -->
+  <section id="branding">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <h2>Branding — Ton image professionnelle</h2>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-label">Ton propre site web</div>
+          <div class="step-desc">Obligatoire. Il doit présenter tout ce que tu fais. Le client se projette : "s'il fait un bon site pour lui-même, il pourra faire un bon site pour moi." Il doit être <strong>beau et professionnel</strong>.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-label">Charte graphique cohérente</div>
+          <div class="step-desc">Choisir tes couleurs et les <strong>respecter partout</strong> : site, logo, flyers, réseaux sociaux, diaporamas. Exemple du formateur : blanc, noir, vert fluo. Ce n'est pas une obligation de choisir ces couleurs — chacun choisit selon sa stratégie.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-label">Photo de profil réelle (ta tête)</div>
+          <div class="step-desc">Sur toutes les plateformes, mettre sa vraie tête. "Ceux qui ont peur de mettre leur tête sur les réseaux, on vous voit dans la vraie vie de toute façon." Assumer son identité = professionnalisme.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <div class="step-label">Regrouper toutes les offres sur un seul site</div>
+          <div class="step-desc">Ne pas créer un site par service proposé. Un seul site agence qui présente toutes tes prestations.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 3. PROSPECTION TERRAIN ── -->
+  <section id="terrain">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <h2>Prospection terrain — Comment aborder un client en vrai</h2>
+    </div>
+
+    <p>Le formateur explique une approche en <strong>3 interactions</strong> pour transformer un prospect rencontré dans la rue en client.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-label">Premier contact physique</div>
+          <div class="step-desc">Tu vas dans un restaurant, chez un commerçant, etc. Tu engages une courte conversation. S'il montre un minimum d'intérêt, tu passes à l'étape suivante.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-label">Envoi du premier diaporama (présentation agence)</div>
+          <div class="step-desc">Tu lui envoies ou lui présentes en personne ton diaporama général (voir section Diaporamas). C'est une première preuve de professionnalisme.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-label">Deuxième contact — proposition d'un plan personnalisé</div>
+          <div class="step-desc">Tu le rappelles. Qu'il ait lu ou non le diapo, tu lui dis : <em>"Je vais vous préparer un plan détaillé sur comment vous ramener plus de clients et plus de chiffres, et je reviens vous voir en rendez-vous."</em></div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <div class="step-label">Rendez-vous — présentation du deuxième diaporama</div>
+          <div class="step-desc">Tu reviens avec un diapo 100% focalisé sur son entreprise (voir section Diaporamas). Tu peux y ajouter une maquette de son futur site (voir Tip ci-dessous).</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout tip">
+      <div class="callout-title">Technique de projection — Maquette du site incluse</div>
+      Dans le deuxième diaporama, <strong>rajoute une maquette rapide du site de son entreprise</strong> (logo, nom, couleurs de la société). Quand le client voit son nom et sa marque sur un site, il s'y attache mentalement — "le site est déjà à moi". Ça rend le refus psychologiquement plus difficile.
+    </div>
+
+    <div class="callout info">
+      <div class="callout-title">Se renseigner sur le secteur du client</div>
+      Avant chaque rendez-vous dans un secteur précis (restauration, paddle, taxi…), se renseigner un minimum sur ce secteur : vocabulaire, fonctionnement, enjeux. Ça montre que tu sais ce que tu fais et que tu peux réellement l'aider.
+    </div>
+  </section>
+
+  <!-- ── 4. DIAPORAMAS ── -->
+  <section id="diapos">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <h2>Les deux diaporamas</h2>
+    </div>
+
+    <p>Créés sur <span class="tool-rec">Figma</span> ou Canva, aux couleurs de ton agence.</p>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">🟡 Diaporama 1 — Présentation de ton agence</div>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">Générique, envoyé à tous les prospects</p>
+        <ul class="styled">
+          <li>Présentation de ton agence et de ton expertise</li>
+          <li>Plan général des services proposés</li>
+          <li>Chiffres clés / statistiques <em>(uniquement ceux que tu as réellement — si tu n'en as pas, ne pas en mettre)</em></li>
+          <li>Exemples de clients (local, international, B2B, B2C)</li>
+          <li>Présentation simple et soignée</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">🟢 Diaporama 2 — Stratégie pour son entreprise</div>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">Personnalisé, préparé avec ChatGPT</p>
+        <ul class="styled">
+          <li>Logo et nom de son entreprise intégrés</li>
+          <li>Analyse de marché et de la concurrence (préparée avec ChatGPT + infos réelles sur sa ville/secteur)</li>
+          <li>Stratégie proposée adaptée à son activité (ex : système de réservation en ligne pour un restaurant)</li>
+          <li>Fidélisation, suivi des performances</li>
+          <li>Pourquoi collaborer avec toi</li>
+          <li>Maquette rapide de son futur site (optionnel mais très efficace)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout tip">
+      <div class="callout-title">Pourquoi ça marche</div>
+      "Il y a très peu d'agences qui viennent sur le terrain avec des diaporamas. Ça te différencie et ça t'ajoute du professionnalisme." Se comporter comme une grande structure, pas comme un freelance lambda.
+    </div>
+  </section>
+
+  <!-- ── 5. TARIFS ── -->
+  <section id="tarifs">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <h2>Modèle de tarification — L'abonnement mensuel</h2>
+    </div>
+
+    <div class="callout danger">
+      <div class="callout-title">Règle absolue</div>
+      <strong>Oublie les tarifs fixes.</strong> Un site à 400 €, un logo à 20 € — ça ne permet pas de vivre sur le long terme. Toutes les agences actuelles fonctionnent sur des <strong>abonnements mensuels</strong>.
+    </div>
+
+    <h3>Pourquoi l'abonnement est supérieur</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Modèle</th>
+            <th>10 clients</th>
+            <th>Après les projets</th>
+            <th>Durabilité</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Tarif fixe</strong></td>
+            <td>10 × 1 000 € = 10 000 € one-shot</td>
+            <td>Fini — le client disparaît</td>
+            <td><span class="tag tag-yellow">Courte</span></td>
+          </tr>
+          <tr>
+            <td><strong>Abonnement mensuel</strong></td>
+            <td>10 × 150 €/mois = 1 500 €/mois</td>
+            <td>Continue et s'accumule sur des années</td>
+            <td><span class="tag tag-green">Long terme</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Comment structurer l'offre mensuelle</h3>
+    <div class="card">
+      <ul class="styled">
+        <li><strong>Inclure dans l'abonnement :</strong> gestion du site, gestion des ads, création de visuels pour les réseaux sociaux — Information non précisée exactement, à adapter selon ce que tu proposes</li>
+        <li><strong>"Offrir" la construction du site</strong> pour justifier l'engagement mensuel (exemple mentionné : 150 €/mois sur 2 ans)</li>
+        <li><strong>Engagement sur la durée :</strong> 1 an, 2 ans, 3 ans — à toi de négocier</li>
+        <li><strong>Mettre en avant la rentabilité :</strong> "Je vous ramène des clients, donc l'abonnement est largement rentable"</li>
+        <li><strong>Fourchette observée sur le marché :</strong> entre 200 € et 500 €/mois environ</li>
+      </ul>
+    </div>
+
+    <div class="callout tip">
+      <div class="callout-title">Argument de confiance</div>
+      Si tu es sûr de ton service, tu peux proposer : <em>"Si je ne vous ramène pas de clients ce mois-ci, je vous offre le mois ou je fais -50 %."</em>
+    </div>
+
+    <h3>Budget publicitaire (ads)</h3>
+    <div class="card">
+      <ul class="styled">
+        <li>Idéalement, <strong>inclure le budget pub dans l'abonnement mensuel</strong> pour que le client sache exactement ce qu'il paie tous les mois</li>
+        <li>Si le client peut ajouter du budget, s'adapter</li>
+        <li>Exemple mentionné : pour un restaurant en ville moyenne, 20 € vendredi + 20 € samedi (soit 40 €/semaine) ciblé localement</li>
+        <li>Le budget pub doit être proportionnel au tarif de l'abonnement — Information non précisée au-delà de ça</li>
+      </ul>
+    </div>
+
+    <h3>Processeur de paiement récurrent</h3>
+    <p>Non précisé dans le cours. Le formateur conseille de <strong>chercher "processeur de paiement mensuel" sur Internet</strong> pour trouver la solution adaptée.</p>
+  </section>
+
+  <!-- ── 6. PLATEFORMES ── -->
+  <section id="plateformes">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <h2>Plateformes pour trouver des clients en ligne</h2>
+    </div>
+
+    <div class="callout info">
+      <div class="callout-title">Règle valable sur toutes les plateformes</div>
+      <strong>Profil carré impeccable :</strong> belle photo de toi, bio complète, services présentés clairement. Un profil incomplet = zéro client, peu importe la plateforme.
+    </div>
+
+    <div class="platforms">
+
+      <div class="platform-card">
+        <div class="platform-header">
+          <div class="platform-name">Codeur.com</div>
+          <span class="platform-badge">France</span>
+        </div>
+        <ul>
+          <li>Clients qui cherchent des prestataires (sites, apps, Google Ads…)</li>
+          <li>Abonnement obligatoire pour candidater — abonnement minimum : ~31,90 €/mois mentionné</li>
+          <li>Jusqu'à 80 clients/mois accessibles</li>
+          <li>Se démarquer avec un bon message de candidature + profil soigné</li>
+          <li>Si pas de contenu réel : créer des faux sites démo pour montrer ses compétences (en présentant comme si c'étaient de vrais clients)</li>
+        </ul>
+      </div>
+
+      <div class="platform-card">
+        <div class="platform-header">
+          <div class="platform-name">Upwork</div>
+          <span class="platform-badge intl">International</span>
+        </div>
+        <ul>
+          <li>Plateforme internationale — clients du monde entier</li>
+          <li>Clients francophones présents (France, Belgique…)</li>
+          <li>Système de <strong>Connects</strong> pour candidater : chaque candidature coûte des connects (ex : 10 ou 15 connects)</li>
+          <li>Payer plus de connects = être mis plus en avant</li>
+          <li>300 connects ≈ 45 €</li>
+          <li>Des connects gratuits existent au départ (à explorer sur le site)</li>
+          <li>Abonnements disponibles avec connects inclus mensuellement</li>
+          <li>Projets variés : sites Shopify, logos, Google Ads, développement mobile…</li>
+        </ul>
+      </div>
+
+      <div class="platform-card">
+        <div class="platform-header">
+          <div class="platform-name">Malt</div>
+          <span class="platform-badge">France</span>
+        </div>
+        <ul>
+          <li>Fonctionnement inversé : <strong>les clients te contactent</strong></li>
+          <li>Créer un profil complet avec photo et services</li>
+          <li>Quand un client recherche "web développeur", ton profil peut apparaître</li>
+          <li><strong>Confirmer ta disponibilité régulièrement</strong> (une à deux fois par semaine depuis l'appli) — si tu ne le fais pas, tu es moins visible</li>
+          <li>Nécessite peu d'action après le setup — laisser tourner</li>
+          <li><em>Exemple formateur :</em> une cliente en Suisse l'a contacté via Malt → a mené à un contrat avec le Parlement européen</li>
+        </ul>
+      </div>
+
+      <div class="platform-card">
+        <div class="platform-header">
+          <div class="platform-name">Freelancer.com</div>
+          <span class="platform-badge intl">International</span>
+        </div>
+        <ul>
+          <li>"Fourre-tout" — projets très variés, budgets très variés</li>
+          <li>Des pépites possibles (ex : 5 000 € pour un site en 2 semaines)</li>
+          <li>Beaucoup de petits projets peu rémunérateurs aussi</li>
+          <li>Stratégie : rester actif, répondre, envoyer — à terme une opportunité peut tout changer</li>
+        </ul>
+      </div>
+
+      <div class="platform-card" style="grid-column: span 2;">
+        <div class="platform-header">
+          <div class="platform-name">Fiverr</div>
+          <span class="platform-badge intl">International</span>
+        </div>
+        <ul>
+          <li>Créer des offres avec 3 formules : Basic / Standard / Premium</li>
+          <li>Le formateur a créé un compte en live pour montrer comment ça fonctionne</li>
+          <li>Profil + packs de services à compléter soigneusement</li>
+          <li>Technique de boost : voir section suivante</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── 7. HACK PROFIL ── -->
+  <section id="hack-profil">
+    <div class="section-header">
+      <div class="section-num">7</div>
+      <h2>Hack — Booster son profil au démarrage</h2>
+    </div>
+
+    <p>Sur toutes les plateformes, les clients choisissent en priorité les freelances qui ont déjà des projets validés. Voici la technique utilisée pour créer de la preuve sociale artificielle au démarrage.</p>
+
+    <h3>Technique des faux projets (Upwork, Codeur.com…)</h3>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-label">Demander à un ami de poster une offre</div>
+          <div class="step-desc">Un ami crée une offre sur la plateforme (ex : "je veux un site pour mon restaurant") comme s'il était un vrai client.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-label">Candidater et se faire "accepter"</div>
+          <div class="step-desc">Tu postules à son offre avec ton profil. Il t'accepte. Tu "réalises" le projet (même fictif).</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-label">Récupérer la validation + l'argent</div>
+          <div class="step-desc">L'argent échangé revient de toute façon (c'est entre vous). Tu récupères la validation de projet sur ton profil.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <div class="step-label">Répéter</div>
+          <div class="step-desc">Faire une dizaine de projets fictifs de cette façon. Peut se faire seul avec des doubles comptes.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout warning">
+      <div class="callout-title">Résultat attendu</div>
+      Ton profil affiche 10 projets validés. Quand un vrai client compare ton profil avec un concurrent à 0 projet, il te choisit toi. "Ça marche sur tous les sites de ce genre."
+    </div>
+
+    <h3>Technique des faux avis (Fiverr)</h3>
+    <div class="card">
+      <ul class="styled">
+        <li>Mettre tes prestations à <strong>1 € symbolique</strong></li>
+        <li>Acheter tes propres prestations depuis des doubles comptes</li>
+        <li>Mettre <strong>5 étoiles à chaque fois</strong></li>
+        <li>Répéter plusieurs fois</li>
+        <li>Résultat : quand quelqu'un cherche "site Internet", ton profil avec des avis 5 étoiles apparaît en avant</li>
+      </ul>
+    </div>
+
+    <div class="callout warning">
+      <div class="callout-title">Note</div>
+      Ces techniques impliquent de perdre quelques euros de frais de plateforme. Le formateur considère que c'est un investissement rentable pour obtenir de vrais clients ensuite.
+    </div>
+  </section>
+
+  <!-- ── 8. OUTILS ── -->
+  <section id="outils">
+    <div class="section-header">
+      <div class="section-num">8</div>
+      <h2>Outils recommandés</h2>
+    </div>
+
+    <h3>Figma — Outil principal du formateur pour créer des sites</h3>
+    <div class="card">
+      <ul class="styled">
+        <li>Permet de tout faire : sites vitrines, systèmes de connexion, fidélité… <strong>sans coder</strong></li>
+        <li>Rendu visuel de qualité</li>
+        <li>Le formateur utilise le <strong>plan "Seat"</strong> (l'abonnement le plus cher mentionné — tarif non précisé dans le cours)</li>
+        <li>Une fois le site publié, il est en ligne à vie — pas besoin de maintenir un abonnement Figma pour que le site reste en ligne</li>
+        <li>Pour publier : acheter un nom de domaine (ex : Ionos ou OVH) → entrer les DNS fournis par Figma dans le gestionnaire de domaine → site en ligne</li>
+        <li>Le site peut être transféré au client si besoin</li>
+        <li>SEO toujours à 100 % sur PageSpeed Insights (argument de vente)</li>
+      </ul>
+    </div>
+
+    <div class="callout info">
+      <div class="callout-title">Figma ou autre outil ?</div>
+      Le formateur utilise Figma mais précise : <strong>"Si vous êtes plus à l'aise avec WordPress, Wix, Webflow ou le code — utilisez ce avec quoi vous êtes à l'aise."</strong> L'outil n'est pas ce qui compte, c'est d'être efficace.
+    </div>
+
+    <h3>Quand NE PAS utiliser Figma</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Cas d'usage</th><th>Outil conseillé</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Site vitrine, présentation simple</td>
+            <td><strong>Figma</strong> — idéal</td>
+          </tr>
+          <tr>
+            <td>Site avec paiement en ligne, processeur, e-commerce</td>
+            <td><strong>WordPress ou Shopify</strong> si débutant — Figma déconseillé pour les paiements</td>
+          </tr>
+          <tr>
+            <td>Site Shopify demandé par un client</td>
+            <td>Le client crée son compte Shopify, tu travailles dessus. Ou tu crées sur le tien et tu exportes le thème.</td>
+          </tr>
+          <tr>
+            <td>Client avec un site existant sur une autre plateforme</td>
+            <td>Proposer de refaire sur Figma, ou s'adapter à son outil</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Nom de domaine</h3>
+    <div class="card">
+      <ul class="styled">
+        <li><strong>Ionos</strong> : 1 €/an la première année, puis 15 €/an environ</li>
+        <li><strong>OVH</strong> : alternative mentionnée</li>
+        <li>Peut être "offert" au client dans l'offre (le client ne connaît pas le prix réel)</li>
+        <li>C'est soit toi soit le client qui paie — à définir dans l'offre</li>
+      </ul>
+    </div>
+
+    <h3>Autres outils mentionnés</h3>
+    <div class="card">
+      <ul class="styled">
+        <li><strong>ChatGPT</strong> — pour préparer les diaporamas personnalisés clients (analyse de marché, stratégie secteur)</li>
+        <li><strong>Canva</strong> — pour les posts Instagram et visuels de communication</li>
+        <li><strong>Figma</strong> — pour les maquettes et diaporamas</li>
+        <li><strong>Outscraper</strong> — mentionné dans un autre contexte (Information non précisée dans ce cours)</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ── 9. PAGESPEED ── -->
+  <section id="pagespeed">
+    <div class="section-header">
+      <div class="section-num">9</div>
+      <h2>PageSpeed Insights — Argument de vente</h2>
+    </div>
+
+    <p><strong>PageSpeed Insights</strong> est le site officiel de Google pour analyser les performances d'un site web. Le formateur l'utilise comme outil de vente dans deux situations.</p>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Situation 1 — Montrer la qualité de tes propres sites</div>
+        <p>Les sites créés avec Figma obtiennent un <strong>SEO à 100 %</strong> sur PageSpeed Insights. Tu peux montrer ça à un prospect pour prouver la qualité de ton travail.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Situation 2 — Auditer le site existant d'un prospect</div>
+        <p>Si un client a déjà un site qui fonctionne mal, tu analyses son site sur PageSpeed. Si tout est en rouge, tu lui montres les résultats et tu dis : <em>"J'ai audité votre site sur l'outil officiel Google — tout est en rouge. Je peux faire mieux."</em></p>
+      </div>
+    </div>
+
+    <div class="callout tip">
+      <div class="callout-title">Pourquoi ça marche</div>
+      "Si vous lui dites juste que son site est nul sans preuve, il pense que vous voulez lui vendre quelque chose. Mais avec une preuve visuelle venant de Google, il se dit que son site est vraiment mauvais." Ça sert aussi de <strong>proof</strong> (preuve de qualité) pour tes propres réalisations.
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-label">Aller sur PageSpeed Insights</div>
+          <div class="step-desc">Site officiel Google d'analyse de performance de sites web.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-label">Entrer l'URL du site du prospect</div>
+          <div class="step-desc">Coller l'adresse de son site actuel et lancer l'analyse.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-label">Montrer les résultats</div>
+          <div class="step-desc">Si performance, accessibilité, bonnes pratiques sont en rouge → argument de vente direct. "Regardez, il est nul. Moi mes sites sont à 100."</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 10. RÉSEAUX SOCIAUX ── -->
+  <section id="reseaux">
+    <div class="section-header">
+      <div class="section-num">10</div>
+      <h2>Réseaux sociaux — Présence sur le long terme</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Conseil du formateur</div>
+      <ul class="styled">
+        <li>Créer des comptes sur les réseaux sociaux (Instagram notamment)</li>
+        <li>Poster du contenu <strong>régulièrement</strong> en rapport avec le SMMA / digital marketing</li>
+        <li>Si tu es à l'aise, <strong>te filmer en train de parler du sujet</strong> — ça crée de l'autorité</li>
+        <li>"Les réseaux sociaux, c'est vraiment de la discipline" — régularité avant tout</li>
+      </ul>
+    </div>
+
+    <h3>Sur les influenceurs pour promouvoir son agence</h3>
+    <div class="card">
+      <ul class="styled">
+        <li>Choisir un influenceur en rapport avec ton domaine ou qui parle de business / entrepreneuriat</li>
+        <li>Vérifier que <strong>son audience correspond à ta cible</strong> (des gens qui ont des entreprises, pas uniquement des ados)</li>
+        <li>Éviter les influenceurs dont le contenu n'a aucun rapport avec le business</li>
+        <li>Exemples donnés : influenceurs qui parlent d'entreprise, qui font du contenu "business mature"</li>
+        <li>Le formateur ne cite pas de noms précis à recommander — Information non précisée</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- RÉCAP GLOBAL -->
+  <section>
+    <div class="section-header">
+      <div class="section-num">★</div>
+      <h2>Récapitulatif — Ce qu'il faut retenir</h2>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Thème</th><th>Point clé</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Mindset</strong></td>
+            <td>Être présent partout = augmenter ses probabilités. Une opportunité peut tout changer.</td>
+          </tr>
+          <tr>
+            <td><strong>Branding</strong></td>
+            <td>Site propre + charte graphique cohérente partout + vraie photo de profil.</td>
+          </tr>
+          <tr>
+            <td><strong>Prospection terrain</strong></td>
+            <td>3 interactions : contact → diapo 1 agence → diapo 2 personnalisé + maquette site.</td>
+          </tr>
+          <tr>
+            <td><strong>Tarifs</strong></td>
+            <td>Abonnements mensuels uniquement. Fourchette observée : 200–500 €/mois.</td>
+          </tr>
+          <tr>
+            <td><strong>Plateformes</strong></td>
+            <td>Codeur.com, Upwork, Malt, Freelancer.com, Fiverr — profil carré sur chacune.</td>
+          </tr>
+          <tr>
+            <td><strong>Boost profil</strong></td>
+            <td>Simuler des projets/avis avec des comptes amis ou doubles comptes.</td>
+          </tr>
+          <tr>
+            <td><strong>Outil sites</strong></td>
+            <td>Figma (formateur), ou tout outil avec lequel tu es à l'aise.</td>
+          </tr>
+          <tr>
+            <td><strong>Argument de vente</strong></td>
+            <td>PageSpeed Insights : montrer son SEO 100 % et le rouge du site concurrent.</td>
+          </tr>
+          <tr>
+            <td><strong>Long terme</strong></td>
+            <td>Réseaux sociaux réguliers + déléguer quand débordé.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </section>
+
+</main>
+</body>
+</html>

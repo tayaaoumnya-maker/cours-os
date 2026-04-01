@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GlowTravel — Le voyage qui illumine</title>
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap");
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: "Inter", sans-serif;
+    background: #0a0a0f;
+    color: #f0ede8;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 6%; height: 70px;
+    background: rgba(10,10,15,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255,210,120,0.1);
+  }
+
+  .logo {
+    font-family: "Playfair Display", serif;
+    font-size: 1.5rem; font-weight: 700;
+    background: linear-gradient(135deg, #ffd27a, #ffb347, #ff8c69);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    color: rgba(240,237,232,0.75); text-decoration: none;
+    font-size: 0.88rem; font-weight: 500; letter-spacing: 0.05em;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: #ffd27a; }
+
+  .nav-cta {
+    background: linear-gradient(135deg, #ffd27a, #ffb347) !important;
+    color: #0a0a0f !important;
+    padding: 0.5rem 1.2rem !important;
+    border-radius: 50px;
+    font-weight: 700 !important;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center;
+    position: relative;
+    padding: 0 5%;
+    overflow: hidden;
+  }
+
+  .glow-orb-1 {
+    position: absolute;
+    width: 700px; height: 700px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,210,122,0.12) 0%, transparent 70%);
+    top: 50%; left: 50%; transform: translate(-50%,-50%);
+    animation: breathe 5s ease-in-out infinite;
+  }
+
+  .glow-orb-2 {
+    position: absolute;
+    width: 400px; height: 400px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,140,105,0.08) 0%, transparent 70%);
+    top: 20%; right: 5%;
+    animation: float 7s ease-in-out infinite;
+  }
+
+  .glow-orb-3 {
+    position: absolute;
+    width: 300px; height: 300px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,200,80,0.06) 0%, transparent 70%);
+    bottom: 15%; left: 8%;
+    animation: float 9s ease-in-out infinite reverse;
+  }
+
+  @keyframes breathe {
+    0%,100% { opacity:0.5; transform: translate(-50%,-50%) scale(1); }
+    50% { opacity:1; transform: translate(-50%,-50%) scale(1.15); }
+  }
+
+  @keyframes float {
+    0%,100% { opacity:0.5; transform: translateY(0); }
+    50% { opacity:1; transform: translateY(-25px); }
+  }
+
+  .hero-content { position: relative; z-index: 1; }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: rgba(255,210,122,0.08);
+    border: 1px solid rgba(255,210,122,0.25);
+    color: #ffd27a;
+    font-size: 0.75rem; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 0.4rem 1.1rem; border-radius: 50px;
+    margin-bottom: 2rem;
+  }
+
+  .hero-title {
+    font-family: "Playfair Display", serif;
+    font-size: clamp(3rem, 7vw, 5.5rem);
+    font-weight: 700; line-height: 1.1;
+    margin-bottom: 1.5rem;
+  }
+
+  .glow-text {
+    background: linear-gradient(135deg, #ffd27a 0%, #ffb347 50%, #ff8c69 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 40px rgba(255,190,80,0.35));
+  }
+
+  .hero-sub {
+    font-size: 1.05rem; color: rgba(240,237,232,0.6);
+    max-width: 500px; margin: 0 auto 2.5rem;
+    line-height: 1.75; font-weight: 300;
+  }
+
+  .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+  .btn-gold {
+    background: linear-gradient(135deg, #ffd27a, #ffb347);
+    color: #0a0a0f; padding: 0.9rem 2.2rem;
+    border-radius: 50px; font-weight: 700; font-size: 0.95rem;
+    text-decoration: none; transition: all 0.3s;
+    box-shadow: 0 0 40px rgba(255,180,70,0.25);
+  }
+  .btn-gold:hover { box-shadow: 0 0 60px rgba(255,180,70,0.45); transform: translateY(-2px); }
+
+  .btn-ghost {
+    border: 1px solid rgba(255,210,122,0.35);
+    color: #ffd27a; padding: 0.9rem 2.2rem;
+    border-radius: 50px; font-size: 0.95rem;
+    text-decoration: none; transition: all 0.3s;
+  }
+  .btn-ghost:hover { background: rgba(255,210,122,0.08); border-color: rgba(255,210,122,0.6); }
+
+  /* SCROLL BAR */
+  .scroll-bar {
+    padding: 1.8rem 0; overflow: hidden;
+    border-top: 1px solid rgba(255,210,122,0.07);
+    border-bottom: 1px solid rgba(255,210,122,0.07);
+  }
+
+  .scroll-track {
+    display: flex; gap: 3rem;
+    animation: scroll 22s linear infinite;
+    white-space: nowrap;
+  }
+
+  @keyframes scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  .scroll-item {
+    display: flex; align-items: center; gap: 0.7rem;
+    color: rgba(240,237,232,0.35);
+    font-size: 0.78rem; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    flex-shrink: 0;
+  }
+
+  .scroll-dot {
+    width: 3px; height: 3px; border-radius: 50%;
+    background: #ffd27a; opacity: 0.6;
+  }
+
+  /* ARTICLES */
+  .articles-section {
+    max-width: 1180px; margin: 0 auto;
+    padding: 5rem 5%;
+  }
+
+  .section-header {
+    display: flex; align-items: center; gap: 1rem; margin-bottom: 3rem;
+  }
+
+  .section-line {
+    width: 28px; height: 1px;
+    background: linear-gradient(to right, #ffd27a, transparent);
+  }
+
+  .section-label-text {
+    color: #ffd27a; font-size: 0.72rem;
+    font-weight: 600; letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .articles-grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 1.2rem;
+  }
+
+  .card {
+    border-radius: 20px; overflow: hidden;
+    position: relative; cursor: pointer;
+    transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+  }
+  .card:hover { transform: translateY(-6px); }
+
+  .card-bg-japan {
+    min-height: 420px;
+    background: linear-gradient(145deg, #110d1f 0%, #1e1035 30%, #0f1e3a 70%, #080d1a 100%);
+    position: relative; display: flex; align-items: flex-end;
+  }
+
+  .card-bg-kyoto {
+    min-height: 195px;
+    background: linear-gradient(145deg, #0d1a08 0%, #1a2e10 50%, #0a1205 100%);
+    position: relative; display: flex; align-items: flex-end;
+  }
+
+  .card-bg-osaka {
+    min-height: 195px;
+    background: linear-gradient(145deg, #1a080d 0%, #2d0f1a 50%, #0f0508 100%);
+    position: relative; display: flex; align-items: flex-end;
+  }
+
+  .card-emoji {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 7rem; opacity: 0.1;
+    pointer-events: none;
+  }
+
+  .card-glow-japan {
+    position: absolute;
+    width: 250px; height: 250px;
+    background: radial-gradient(circle, rgba(200,80,100,0.2) 0%, transparent 70%);
+    top: 25%; left: 50%; transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  .card-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(8,8,15,0.97) 0%, rgba(8,8,15,0.2) 55%, transparent 100%);
+    padding: 1.5rem;
+    display: flex; flex-direction: column; justify-content: flex-end;
+  }
+
+  .card-tag {
+    display: inline-block;
+    background: rgba(255,210,122,0.12);
+    border: 1px solid rgba(255,210,122,0.25);
+    color: #ffd27a;
+    font-size: 0.65rem; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 0.2rem 0.65rem; border-radius: 50px;
+    margin-bottom: 0.7rem; width: fit-content;
+  }
+
+  .card-title {
+    font-family: "Playfair Display", serif;
+    font-size: 1.35rem; font-weight: 700;
+    color: #fff; line-height: 1.3;
+    margin-bottom: 0.6rem;
+  }
+
+  .card-title-sm {
+    font-family: "Playfair Display", serif;
+    font-size: 0.95rem; font-weight: 700;
+    color: #fff; line-height: 1.35;
+    margin-bottom: 0.5rem;
+  }
+
+  .card-meta {
+    display: flex; gap: 1.2rem;
+    font-size: 0.72rem; color: rgba(240,237,232,0.4);
+  }
+
+  /* EBOOK */
+  .ebook-wrap {
+    margin: 0 4% 5rem;
+    border-radius: 28px;
+    background: linear-gradient(135deg, #110e04 0%, #1c1708 60%, #110e04 100%);
+    border: 1px solid rgba(255,210,122,0.15);
+    padding: 4.5rem 6%;
+    display: grid; grid-template-columns: 1fr auto;
+    gap: 5rem; align-items: center;
+    position: relative; overflow: hidden;
+  }
+
+  .ebook-bg-glow {
+    position: absolute;
+    width: 500px; height: 500px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,210,122,0.06) 0%, transparent 70%);
+    right: -100px; top: 50%; transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+  .ebook-chip {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    color: #ffd27a; font-size: 0.72rem;
+    font-weight: 600; letter-spacing: 0.15em;
+    text-transform: uppercase; margin-bottom: 1.2rem;
+  }
+
+  .ebook-title {
+    font-family: "Playfair Display", serif;
+    font-size: 2.1rem; font-weight: 700;
+    line-height: 1.25; margin-bottom: 1.2rem;
+  }
+
+  .ebook-title em {
+    font-style: italic;
+    background: linear-gradient(135deg, #ffd27a, #ffb347);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .ebook-desc {
+    color: rgba(240,237,232,0.6); font-size: 0.92rem;
+    line-height: 1.75; margin-bottom: 2rem; max-width: 480px;
+  }
+
+  .ebook-list {
+    list-style: none; margin-bottom: 2.2rem;
+    display: flex; flex-direction: column; gap: 0.65rem;
+  }
+
+  .ebook-list li {
+    display: flex; align-items: center; gap: 0.8rem;
+    font-size: 0.88rem; color: rgba(240,237,232,0.75);
+  }
+
+  .ebook-list li::before {
+    content: "✦"; color: #ffd27a; font-size: 0.65rem; flex-shrink: 0;
+  }
+
+  .price-row {
+    display: flex; align-items: center;
+    gap: 1rem; margin-bottom: 1.8rem;
+  }
+
+  .price-was {
+    font-size: 0.95rem; color: rgba(240,237,232,0.3);
+    text-decoration: line-through;
+  }
+
+  .price-now { font-size: 2.2rem; font-weight: 700; color: #ffd27a; }
+
+  .price-pill {
+    background: rgba(255,80,80,0.15); border: 1px solid rgba(255,80,80,0.25);
+    color: #ff8080; font-size: 0.68rem; font-weight: 700;
+    padding: 0.2rem 0.6rem; border-radius: 50px; letter-spacing: 0.05em;
+  }
+
+  /* EBOOK COVER MOCK */
+  .ebook-cover {
+    width: 200px;
+    aspect-ratio: 0.68;
+    border-radius: 6px 18px 18px 6px;
+    background: linear-gradient(145deg, #ffd27a 0%, #ffb347 45%, #ff8c69 100%);
+    box-shadow:
+      0 0 80px rgba(255,170,60,0.25),
+      0 25px 70px rgba(0,0,0,0.6),
+      inset -3px 0 10px rgba(0,0,0,0.15);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 2.5rem 1.5rem; text-align: center;
+    position: relative; overflow: hidden; flex-shrink: 0;
+  }
+
+  .ebook-cover::before {
+    content: "";
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.18) 0%, transparent 55%);
+  }
+
+  .cover-flag { font-size: 3.2rem; margin-bottom: 1rem; position: relative; }
+  .cover-t { font-family: "Playfair Display", serif; font-size: 1.05rem; font-weight: 700; color: #0a0a0f; line-height: 1.3; margin-bottom: 0.4rem; position: relative; }
+  .cover-s { font-size: 0.62rem; color: rgba(10,10,15,0.6); font-weight: 500; letter-spacing: 0.05em; position: relative; }
+  .cover-a { position: absolute; bottom: 1rem; font-size: 0.62rem; color: rgba(10,10,15,0.45); font-style: italic; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid rgba(255,210,122,0.07);
+    padding: 2.5rem 6%;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 1rem;
+  }
+
+  .footer-logo {
+    font-family: "Playfair Display", serif; font-size: 1.15rem; font-weight: 700;
+    background: linear-gradient(135deg, #ffd27a, #ffb347);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .footer-copy { font-size: 0.76rem; color: rgba(240,237,232,0.3); }
+
+  .footer-links { display: flex; gap: 1.5rem; }
+  .footer-links a {
+    font-size: 0.76rem; color: rgba(240,237,232,0.35);
+    text-decoration: none; transition: color 0.2s;
+  }
+  .footer-links a:hover { color: #ffd27a; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">GlowTravel</div>
+  <ul class="nav-links">
+    <li><a href="#">Destinations</a></li>
+    <li><a href="#">Itinéraires</a></li>
+    <li><a href="#">Budgets</a></li>
+    <li><a href="#">Ebooks</a></li>
+    <li><a href="#" class="nav-cta">Guides PDF ✦</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="glow-orb-1"></div>
+  <div class="glow-orb-2"></div>
+  <div class="glow-orb-3"></div>
+  <div class="hero-content">
+    <div class="hero-badge">✦ Blog voyage &amp; guides authentiques</div>
+    <h1 class="hero-title">
+      Des voyages qui<br>
+      <span class="glow-text">illuminent</span>
+    </h1>
+    <p class="hero-sub">
+      Itinéraires testés, budgets réels, adresses authentiques.
+      Tout ce qu'il faut pour voyager sans stress et vivre des expériences inoubliables.
+    </p>
+    <div class="hero-btns">
+      <a href="#" class="btn-gold">Explorer les destinations →</a>
+      <a href="#" class="btn-ghost">Voir les guides PDF</a>
+    </div>
+  </div>
+</section>
+
+<!-- SCROLL BAR -->
+<div class="scroll-bar">
+  <div class="scroll-track">
+    <div class="scroll-item"><div class="scroll-dot"></div> Japon</div>
+    <div class="scroll-item"><div class="scroll-dot"></div> Maroc</div>
+    <div class="scroll-item"><div class="scroll-dot"></div> Bali</div>
+    <div class="scroll-item"><div class="scroll-dot"></div> Portugal</div>
+    <div class="scroll-item"><div class="scroll-dot"></div> Thaïlande</div>
+    <div class="scroll-item"><div class="scroll-dot"></div> Islande</div>
+    <div class="scroll-item"><div class="scroll-dot"></div> Grèce</div>
+    <div class="scroll-item"><div class="scroll-dot"></div> Dubaï</div>
+    <div class="scroll-item"><div class="scroll-dot"></div> Japon</div>
+    <div class="scroll-item"><div class="scroll-dot"></div> Maroc</div>
+    <div class="scroll-item"><div class="scroll-dot"></div> Bali</div>
+    <div class="scroll-item"><div class="scroll-dot"></div> Portugal</div>
+    <div class="scroll-item"><div class="scroll-dot"></div> Thaïlande</div>
+    <div class="scroll-item"><div class="scroll-dot"></div> Islande</div>
+    <div class="scroll-item"><div class="scroll-dot"></div> Grèce</div>
+    <div class="scroll-item"><div class="scroll-dot"></div> Dubaï</div>
+  </div>
+</div>
+
+<!-- ARTICLES -->
+<div class="articles-section">
+  <div class="section-header">
+    <div class="section-line"></div>
+    <span class="section-label-text">Articles à la une</span>
+  </div>
+
+  <div class="articles-grid">
+    <div class="card">
+      <div class="card-bg-japan">
+        <div class="card-emoji">🗾</div>
+        <div class="card-glow-japan"></div>
+        <div class="card-overlay">
+          <div class="card-tag">🇯🇵 Japon</div>
+          <h2 class="card-title">Itinéraire Japon 3 semaines : notre route complète avec budgets réels</h2>
+          <div class="card-meta">
+            <span>⏱ 12 min de lecture</span>
+            <span>💴 2 700€ tout compris</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:1.2rem;">
+      <div class="card">
+        <div class="card-bg-kyoto">
+          <div class="card-emoji" style="font-size:4.5rem;">⛩️</div>
+          <div class="card-overlay">
+            <div class="card-tag">🇯🇵 Kyoto</div>
+            <h3 class="card-title-sm">Que faire à Kyoto en 4 jours : temples, geishas et jardins zen</h3>
+            <div class="card-meta"><span>⏱ 8 min</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-bg-osaka">
+          <div class="card-emoji" style="font-size:4.5rem;">🏮</div>
+          <div class="card-overlay">
+            <div class="card-tag">🇯🇵 Osaka</div>
+            <h3 class="card-title-sm">Osaka en 4 jours : street food, néons et vie nocturne</h3>
+            <div class="card-meta"><span>⏱ 7 min</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EBOOK -->
+<div class="ebook-wrap">
+  <div class="ebook-bg-glow"></div>
+
+  <div style="position:relative;z-index:1;">
+    <div class="ebook-chip">✦ Guide PDF exclusif</div>
+    <h2 class="ebook-title">Le guide Japon qui m'aurait <em>économisé 600€</em> lors de mon premier voyage</h2>
+    <p class="ebook-desc">90 pages de bons plans testés, itinéraires jour par jour, budgets réels et adresses authentiques. Tout ce qu'il faut pour voyager au Japon sans se ruiner ni passer des semaines à chercher.</p>
+
+    <ul class="ebook-list">
+      <li>Itinéraire 21 jours testé en 2023, ville par ville</li>
+      <li>Budget jour par jour avec prix exacts</li>
+      <li>Les erreurs à éviter absolument</li>
+      <li>Transports : JR Pass, IC Card, tout expliqué</li>
+      <li>Check-list packing optimisée pour le Japon</li>
+    </ul>
+
+    <div class="price-row">
+      <span class="price-was">39€</span>
+      <span class="price-now">14,90€</span>
+      <span class="price-pill">LANCEMENT</span>
+    </div>
+
+    <a href="#" class="btn-gold">Télécharger le guide →</a>
+  </div>
+
+  <div class="ebook-cover" style="position:relative;z-index:1;">
+    <div class="cover-flag">🇯🇵</div>
+    <div class="cover-t">Guide Japon<br>3 Semaines</div>
+    <div class="cover-s">Itinéraire · Budgets · Bons plans</div>
+    <div class="cover-a">par GlowTravel</div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">GlowTravel</div>
+  <div class="footer-copy">© 2025 GlowTravel — Tous droits réservés</div>
+  <div class="footer-links">
+    <a href="#">À propos</a>
+    <a href="#">Contact</a>
+    <a href="#">Mentions légales</a>
+  </div>
+</footer>
+
+</body>
+</html>
