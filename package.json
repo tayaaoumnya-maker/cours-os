@@ -26,6 +26,9 @@
     "react-dropzone": "^14.2.3",
     "tailwind-merge": "^2.2.2"
   },
+  "engines": {
+    "node": "20.x"
+  },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.8",
     "@types/node": "^20",
