@@ -3810,7 +3810,6 @@ export default function ATMApp() {
                 </div>
                 )
               })()}
-              )}
             </div>
           )
         })()}
@@ -4262,6 +4261,7 @@ export default function ATMApp() {
           espèces:  { nb: 0, total: 0 },
           carte:    { nb: 0, total: 0 },
           virement: { nb: 0, total: 0 },
+          chèque:   { nb: 0, total: 0 },
         }
         todayOrders.forEach(o => { byMethod[o.paymentMethod].nb++; byMethod[o.paymentMethod].total += o.total })
         // TVA du jour
@@ -4298,8 +4298,8 @@ export default function ATMApp() {
                 {/* Par mode de paiement */}
                 <div className="space-y-2">
                   {(Object.entries(byMethod) as [PaymentMethod, { nb: number; total: number }][]).map(([method, data]) => {
-                    const icons: Record<PaymentMethod, string> = { espèces: "💵", carte: "💳", virement: "🏦" }
-                    const labels: Record<PaymentMethod, string> = { espèces: "Espèces", carte: "Carte", virement: "Virement" }
+                    const icons: Record<PaymentMethod, string> = { espèces: "💵", carte: "💳", virement: "🏦", chèque: "📝" }
+                    const labels: Record<PaymentMethod, string> = { espèces: "Espèces", carte: "Carte", virement: "Virement", chèque: "Chèque" }
                     return (
                       <div key={method} className="flex items-center justify-between p-3 rounded-xl bg-white/[0.03] border border-white/[0.05]">
                         <div className="flex items-center gap-2">

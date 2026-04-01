@@ -293,7 +293,7 @@ export default function CategoryPage() {
 
           {/* Image */}
           <div className="cat-lb-body" onClick={(e) => e.stopPropagation()}>
-            <img src={lightbox.imageFull} alt={lightbox.title} className="cat-lb-img" />
+            <img src={(lightbox as unknown as Record<string, string>).imageFull ?? lightbox.image} alt={lightbox.title} className="cat-lb-img" />
             {categoryProjects.length > 1 && (
               <>
                 <button className="cat-lb-nav prev" onClick={prev}>‹</button>
