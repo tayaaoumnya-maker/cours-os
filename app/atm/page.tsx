@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useMemo, useEffect, useRef } from "react"
+import { dbGetAll, dbSet } from "@/lib/supabase-atm"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -607,6 +608,9 @@ function FormulaModalContent({ initial, isNew, products, formatPrice, onSave, on
 // ─── Page principale ──────────────────────────────────────────────────────────
 
 export default function ATMApp() {
+  const initialized = useRef(false)
+  const [isLoading, setIsLoading]           = useState(true)
+
   const [view, setView]                     = useState<View>("vendre")
   const [products, setProducts]             = useState<Product[]>(() => LS.get("atm_products", INITIAL_PRODUCTS))
   const [orders, setOrders]                 = useState<Order[]>(() =>
@@ -743,39 +747,103 @@ export default function ATMApp() {
   )
   const [noteInput, setNoteInput]             = useState("")
 
-  // ─── Persistence localStorage ───────────────────────────────────────────────
-  useEffect(() => { LS.set("atm_products", products) }, [products])
-  useEffect(() => { LS.set("atm_orders", orders) }, [orders])
-  useEffect(() => { LS.set("atm_pending", pendingOrders) }, [pendingOrders])
-  useEffect(() => { LS.set("atm_formulas", formulas) }, [formulas])
-  useEffect(() => { LS.set("atm_shopName", shopName) }, [shopName])
-  useEffect(() => { LS.set("atm_shopSubtitle", shopSubtitle) }, [shopSubtitle])
-  useEffect(() => { LS.set("atm_shopAddress", shopAddress) }, [shopAddress])
-  useEffect(() => { LS.set("atm_shopPhone", shopPhone) }, [shopPhone])
-  useEffect(() => { LS.set("atm_currency", currency) }, [currency])
-  useEffect(() => { LS.set("atm_ticketLogo", ticketLogo) }, [ticketLogo])
-  useEffect(() => { LS.set("atm_ticketFooter", ticketFooter) }, [ticketFooter])
+  // ─── Persistence localStorage + Supabase ────────────────────────────────────
+  useEffect(() => { LS.set("atm_products", products);       if (initialized.current) dbSet("atm_products", products) }, [products])
+  useEffect(() => { LS.set("atm_orders", orders);           if (initialized.current) dbSet("atm_orders", orders) }, [orders])
+  useEffect(() => { LS.set("atm_pending", pendingOrders);   if (initialized.current) dbSet("atm_pending", pendingOrders) }, [pendingOrders])
+  useEffect(() => { LS.set("atm_formulas", formulas);       if (initialized.current) dbSet("atm_formulas", formulas) }, [formulas])
+  useEffect(() => { LS.set("atm_shopName", shopName);       if (initialized.current) dbSet("atm_shopName", shopName) }, [shopName])
+  useEffect(() => { LS.set("atm_shopSubtitle", shopSubtitle); if (initialized.current) dbSet("atm_shopSubtitle", shopSubtitle) }, [shopSubtitle])
+  useEffect(() => { LS.set("atm_shopAddress", shopAddress); if (initialized.current) dbSet("atm_shopAddress", shopAddress) }, [shopAddress])
+  useEffect(() => { LS.set("atm_shopPhone", shopPhone);     if (initialized.current) dbSet("atm_shopPhone", shopPhone) }, [shopPhone])
+  useEffect(() => { LS.set("atm_currency", currency);       if (initialized.current) dbSet("atm_currency", currency) }, [currency])
+  useEffect(() => { LS.set("atm_ticketLogo", ticketLogo);   if (initialized.current) dbSet("atm_ticketLogo", ticketLogo) }, [ticketLogo])
+  useEffect(() => { LS.set("atm_ticketFooter", ticketFooter); if (initialized.current) dbSet("atm_ticketFooter", ticketFooter) }, [ticketFooter])
   useEffect(() => { LS.set("atm_adminPin", adminPin) }, [adminPin])
   useEffect(() => { LS.set("atm_partenairePin", partenairePin) }, [partenairePin])
-  useEffect(() => { LS.set("atm_adminName", adminName) }, [adminName])
-  useEffect(() => { LS.set("atm_partenaireName", partenaireName) }, [partenaireName])
-  useEffect(() => { LS.set("atm_taxes", taxes) }, [taxes])
-  useEffect(() => { LS.set("atm_shopSiret", shopSiret) }, [shopSiret])
-  useEffect(() => { LS.set("atm_shopTva", shopTva) }, [shopTva])
-  useEffect(() => { LS.set("atm_shopNaf", shopNaf) }, [shopNaf])
-  useEffect(() => { LS.set("atm_fondDeCaisse", fondDeCaisse) }, [fondDeCaisse])
-  useEffect(() => { LS.set("atm_fondDate", fondDeCaisseDate) }, [fondDeCaisseDate])
-  useEffect(() => { LS.set("atm_clients", clients) }, [clients])
-  useEffect(() => { LS.set("atm_sorties", sortiesHistory) }, [sortiesHistory])
-  useEffect(() => { LS.set("atm_suppliers", suppliers) }, [suppliers])
-  useEffect(() => { LS.set("atm_favorites", favorites) }, [favorites])
-  useEffect(() => { LS.set("atm_notes", internalNotes) }, [internalNotes])
+  useEffect(() => { LS.set("atm_adminName", adminName);     if (initialized.current) dbSet("atm_adminName", adminName) }, [adminName])
+  useEffect(() => { LS.set("atm_partenaireName", partenaireName); if (initialized.current) dbSet("atm_partenaireName", partenaireName) }, [partenaireName])
+  useEffect(() => { LS.set("atm_taxes", taxes);             if (initialized.current) dbSet("atm_taxes", taxes) }, [taxes])
+  useEffect(() => { LS.set("atm_shopSiret", shopSiret);     if (initialized.current) dbSet("atm_shopSiret", shopSiret) }, [shopSiret])
+  useEffect(() => { LS.set("atm_shopTva", shopTva);         if (initialized.current) dbSet("atm_shopTva", shopTva) }, [shopTva])
+  useEffect(() => { LS.set("atm_shopNaf", shopNaf);         if (initialized.current) dbSet("atm_shopNaf", shopNaf) }, [shopNaf])
+  useEffect(() => { LS.set("atm_fondDeCaisse", fondDeCaisse); if (initialized.current) dbSet("atm_fondDeCaisse", fondDeCaisse) }, [fondDeCaisse])
+  useEffect(() => { LS.set("atm_fondDate", fondDeCaisseDate); if (initialized.current) dbSet("atm_fondDate", fondDeCaisseDate) }, [fondDeCaisseDate])
+  useEffect(() => { LS.set("atm_clients", clients);         if (initialized.current) dbSet("atm_clients", clients) }, [clients])
+  useEffect(() => { LS.set("atm_sorties", sortiesHistory);  if (initialized.current) dbSet("atm_sorties", sortiesHistory) }, [sortiesHistory])
+  useEffect(() => { LS.set("atm_suppliers", suppliers);     if (initialized.current) dbSet("atm_suppliers", suppliers) }, [suppliers])
+  useEffect(() => { LS.set("atm_favorites", favorites);     if (initialized.current) dbSet("atm_favorites", favorites) }, [favorites])
+  useEffect(() => { LS.set("atm_notes", internalNotes);     if (initialized.current) dbSet("atm_notes", internalNotes) }, [internalNotes])
   useEffect(() => { setToday(new Date().toDateString()) }, [])
 
   // PINs désactivés — réactivation possible depuis Paramètres
   useEffect(() => {
     LS.set("atm_adminPin", "")
     LS.set("atm_partenairePin", "")
+  }, [])
+
+  // ─── Chargement initial depuis Supabase ──────────────────────────────────────
+  useEffect(() => {
+    async function loadFromSupabase() {
+      const all = await dbGetAll()
+      if (Object.keys(all).length > 0) {
+        // Supabase a des données → override les states
+        if (all.atm_products) setProducts(all.atm_products as Product[])
+        if (all.atm_orders) setOrders(
+          (all.atm_orders as Order[]).map(o => ({ ...o, createdAt: new Date(o.createdAt) }))
+        )
+        if (all.atm_pending) setPendingOrders(
+          (all.atm_pending as PendingOrder[]).map(o => ({ ...o, savedAt: new Date(o.savedAt) }))
+        )
+        if (all.atm_formulas) setFormulas(all.atm_formulas as Formula[])
+        if (all.atm_shopName !== undefined) setShopName(all.atm_shopName as string)
+        if (all.atm_shopSubtitle !== undefined) setShopSubtitle(all.atm_shopSubtitle as string)
+        if (all.atm_shopAddress !== undefined) setShopAddress(all.atm_shopAddress as string)
+        if (all.atm_shopPhone !== undefined) setShopPhone(all.atm_shopPhone as string)
+        if (all.atm_currency !== undefined) setCurrency(all.atm_currency as string)
+        if (all.atm_ticketLogo !== undefined) setTicketLogo(all.atm_ticketLogo as string)
+        if (all.atm_ticketFooter !== undefined) setTicketFooter(all.atm_ticketFooter as string)
+        if (all.atm_adminName !== undefined) setAdminName(all.atm_adminName as string)
+        if (all.atm_partenaireName !== undefined) setPartenaireName(all.atm_partenaireName as string)
+        if (all.atm_taxes) setTaxes(all.atm_taxes as Tax[])
+        if (all.atm_shopSiret !== undefined) setShopSiret(all.atm_shopSiret as string)
+        if (all.atm_shopTva !== undefined) setShopTva(all.atm_shopTva as string)
+        if (all.atm_shopNaf !== undefined) setShopNaf(all.atm_shopNaf as string)
+        if (all.atm_fondDeCaisse !== undefined) setFondDeCaisse(all.atm_fondDeCaisse as number)
+        if (all.atm_fondDate !== undefined) setFondDeCaisseDate(all.atm_fondDate as string)
+        if (all.atm_clients) setClients(
+          (all.atm_clients as Client[]).map(c => ({ ...c, createdAt: new Date(c.createdAt) }))
+        )
+        if (all.atm_sorties) setSortiesHistory(
+          (all.atm_sorties as { productId: string; name: string; qty: number; orderId: string; at: string }[])
+            .map(s => ({ ...s, at: new Date(s.at) }))
+        )
+        if (all.atm_suppliers) setSuppliers(all.atm_suppliers as Supplier[])
+        if (all.atm_favorites) setFavorites(all.atm_favorites as string[])
+        if (all.atm_notes) setInternalNotes(
+          (all.atm_notes as InternalNote[]).map(n => ({ ...n, createdAt: new Date(n.createdAt) }))
+        )
+      } else {
+        // Première connexion → migration localStorage → Supabase
+        const keys = [
+          "atm_products", "atm_orders", "atm_pending", "atm_formulas",
+          "atm_shopName", "atm_shopSubtitle", "atm_shopAddress", "atm_shopPhone",
+          "atm_currency", "atm_ticketLogo", "atm_ticketFooter",
+          "atm_adminName", "atm_partenaireName", "atm_taxes",
+          "atm_shopSiret", "atm_shopTva", "atm_shopNaf",
+          "atm_fondDeCaisse", "atm_fondDate",
+          "atm_clients", "atm_sorties", "atm_suppliers", "atm_favorites", "atm_notes",
+        ]
+        for (const k of keys) {
+          const v = LS.get(k, null)
+          if (v !== null) await dbSet(k, v)
+        }
+      }
+      initialized.current = true
+      setIsLoading(false)
+    }
+    loadFromSupabase()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // formatPrice lié à la devise
@@ -1523,6 +1591,16 @@ export default function ATMApp() {
   ]
 
   // ─── Render ──────────────────────────────────────────────────────────────────
+
+  if (isLoading) return (
+    <div className="flex h-[100dvh] bg-[#09090f] items-center justify-center">
+      <div className="text-center">
+        <div className="text-4xl mb-4">🔧</div>
+        <div className="text-orange-400 font-semibold text-lg">Chargement…</div>
+        <div className="text-zinc-500 text-sm mt-1">Synchronisation des données</div>
+      </div>
+    </div>
+  )
 
   return (
     <div className="flex h-[100dvh] bg-[#09090f] text-white font-sans overflow-hidden">
