@@ -8,13 +8,17 @@ if (url && key) {
   supabase = createClient(url, key)
 }
 
-export async function dbGetAll(): Promise<Record<string, unknown>> {
-  if (!supabase) return {}
+// Retourne null si erreur réseau/Supabase indisponible
+// Retourne {} si Supabase est vide (première utilisation)
+// Retourne les données si tout va bien
+export async function dbGetAll(): Promise<Record<string, unknown> | null> {
+  if (!supabase) return null
   try {
-    const { data } = await supabase.from("atm_store").select("key, value")
+    const { data, error } = await supabase.from("atm_store").select("key, value")
+    if (error) return null
     return Object.fromEntries((data ?? []).map(r => [r.key, r.value]))
   } catch {
-    return {}
+    return null
   }
 }
 
