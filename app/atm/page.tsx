@@ -3798,9 +3798,9 @@ export default function ATMApp() {
                 const fmt2 = (n: number) => n.toLocaleString("fr-FR", { minimumFractionDigits: 2 })
                 return (
                 <div className="px-4 pb-4 pt-3 border-t border-white/[0.06] flex-shrink-0 space-y-2">
-                  <div className="flex justify-between text-xs text-black/60 px-1">
+                  <div className="flex justify-between text-xs text-white/50 px-1">
                     <span>HT {fmt2(vitrineHT)} € · TVA {fmt2(vitrineTVA)} €</span>
-                    <span className="font-bold">TTC {fmt2(vitrineTotal)} €</span>
+                    <span className="font-bold text-white/70">TTC {fmt2(vitrineTotal)} €</span>
                   </div>
                   <button onClick={() => setVitrineStep("paiement")}
                     className="w-full py-3 rounded-2xl bg-amber-500 hover:bg-amber-400 text-black font-black text-sm transition-colors flex items-center justify-center gap-3 shadow-lg shadow-amber-500/20">
