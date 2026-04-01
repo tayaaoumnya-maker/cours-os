@@ -20,7 +20,7 @@ const securityHeaders = [
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: https: http:",   // images depuis HTTPS/HTTP (logos produits)
       "font-src 'self'",
-      "connect-src 'self'",
+      "connect-src 'self' https://*.supabase.co",
       "frame-src 'none'",
       "object-src 'none'",
       "base-uri 'self'",
@@ -32,6 +32,15 @@ const securityHeaders = [
 const nextConfig = {
   experimental: {
     serverComponentsExternalPackages: ["pdf-parse"],
+  },
+  async redirects() {
+    return [
+      {
+        source: "/",
+        destination: "/atm",
+        permanent: false,
+      },
+    ]
   },
   async headers() {
     return [
