@@ -872,17 +872,10 @@ export default function ATMApp() {
     : Math.min(discountValue, cartSubtotal)
   const cartTotal        = cartSubtotal - discountAmount
 
-  // Calcul HT/TVA à partir des taux configurés (prix produit = TTC)
-  const cartHT = useMemo(() => {
-    const ratio = cartSubtotal > 0 ? cartTotal / cartSubtotal : 1
-    return cartItems.reduce((sum, { product, qty }) => {
-      const price = (cartPrices[product.id] ?? product.price)
-      const tax = product.taxId ? taxes.find(t => t.id === product.taxId) : null
-      const ht = tax ? price / (1 + tax.rate / 100) : price
-      return sum + ht * qty * ratio
-    }, 0)
-  }, [cartItems, cartPrices, taxes, cartTotal, cartSubtotal])
-  const cartTVA = cartTotal - cartHT
+  // Prix produits = HT — TVA fixe 20%
+  const cartHT  = cartTotal
+  const cartTVA = cartTotal * 0.2
+  const cartTTC = cartTotal * 1.2
 
   const lowStockProducts  = products.filter(p => p.stock <= p.alertThreshold && p.stock > 0)
   const outOfStockProducts = products.filter(p => p.stock === 0)
@@ -1046,7 +1039,7 @@ export default function ATMApp() {
       subtotal:      cartSubtotal,
       discountType,
       discountValue,
-      total:         cartTotal,
+      total:         cartTTC,
       paymentMethod: method,
       status:        "en cours",
       createdAt:     new Date(),
@@ -2634,7 +2627,7 @@ export default function ATMApp() {
                     </div>
                     <div className="flex items-center justify-between pt-1 border-t border-white/[0.06]">
                       <span className="text-sm text-white/50">Total TTC</span>
-                      <span className="text-xl font-bold text-amber-400">{formatPrice(cartTotal)}</span>
+                      <span className="text-xl font-bold text-amber-400">{formatPrice(cartTTC)}</span>
                     </div>
                   </div>
                   <div className="flex gap-2">
@@ -2675,7 +2668,7 @@ export default function ATMApp() {
                     <span className="font-bold text-sm">Voir le panier</span>
                   </div>
                   <div className="text-right">
-                    <div className="font-black text-base">{formatPrice(cartTotal)} TTC</div>
+                    <div className="font-black text-base">{formatPrice(cartTTC)} TTC</div>
                     <div className="text-[11px] font-medium opacity-70">HT {formatPrice(cartHT)}</div>
                   </div>
                 </button>
@@ -2728,7 +2721,7 @@ export default function ATMApp() {
                       </div>
                       <div className="flex items-center justify-between pt-1 border-t border-white/[0.06]">
                         <span className="text-white/50 text-sm">Total TTC</span>
-                        <span className="text-xl font-black text-amber-400">{formatPrice(cartTotal)}</span>
+                        <span className="text-xl font-black text-amber-400">{formatPrice(cartTTC)}</span>
                       </div>
                     </div>
                     <div className="grid grid-cols-2 gap-2">
@@ -3944,14 +3937,14 @@ export default function ATMApp() {
                     className="w-7 h-7 rounded-full bg-white/[0.06] hover:bg-white/10 flex items-center justify-center text-white/60 text-xs">←</button>
                   <div>
                     <h2 className="text-lg font-bold">💵 Paiement espèces</h2>
-                    <p className="text-sm text-white/40 mt-0.5">À encaisser : <span className="text-amber-400 font-bold">{formatPrice(cartTotal)}</span></p>
+                    <p className="text-sm text-white/40 mt-0.5">À encaisser : <span className="text-amber-400 font-bold">{formatPrice(cartTTC)}</span></p>
                   </div>
                 </div>
               ) : (
                 <>
                   <h2 className="text-lg font-bold">Mode de paiement</h2>
                   <p className="text-sm text-white/40 mt-0.5">
-                    Total à encaisser : <span className="text-amber-400 font-bold">{formatPrice(cartTotal)}</span>
+                    Total à encaisser : <span className="text-amber-400 font-bold">{formatPrice(cartTTC)}</span>
                     {discountValue > 0 && (
                       <span className="text-cyan-400 ml-1">
                         (−{discountType === "percent" ? `${discountValue}%` : `${discountValue} €`})
@@ -3977,7 +3970,7 @@ export default function ATMApp() {
                 </div>
                 {(() => {
                   const given = parseFloat(cashGivenInput.replace(",", "."))
-                  const change = isNaN(given) ? null : given - cartTotal
+                  const change = isNaN(given) ? null : given - cartTTC
                   return change !== null ? (
                     <div className={`p-4 rounded-xl border ${change >= 0 ? "bg-cyan-500/10 border-cyan-500/30" : "bg-red-500/10 border-red-500/30"}`}>
                       <p className="text-xs text-white/50 mb-1">Monnaie à rendre</p>
@@ -3995,7 +3988,7 @@ export default function ATMApp() {
                   }}
                   disabled={(() => {
                     const given = parseFloat(cashGivenInput.replace(",", "."))
-                    return cashGivenInput !== "" && (isNaN(given) || given < cartTotal)
+                    return cashGivenInput !== "" && (isNaN(given) || given < cartTTC)
                   })()}
                   className="w-full py-3.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-white font-bold text-base transition-colors disabled:opacity-40"
                 >
