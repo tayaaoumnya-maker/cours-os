@@ -307,6 +307,15 @@ function CatForm({ products, setProducts, editProduct, onClose, taxes, suppliers
   }
 
   const [showPA, setShowPA] = useState(!!editProduct?.purchasePrice)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  function handleImageFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = ev => { if (ev.target?.result) setImage(ev.target.result as string) }
+    reader.readAsDataURL(file)
+  }
 
   // Champ select stylisé en rangée avec flèche (comme dans l'image)
   function SelectRow({ label, value, onChange, options, placeholder }: {
@@ -342,17 +351,18 @@ function CatForm({ products, setProducts, editProduct, onClose, taxes, suppliers
       {/* Corps scrollable */}
       <div className="flex-1 overflow-y-auto px-5 py-6 space-y-6" style={{minHeight:0}}>
 
-        {/* Zone photo — cercle avec icône d'édition */}
+        {/* Zone photo — cercle avec import fichier */}
         <div className="flex flex-col items-center gap-2">
-          <button onClick={() => { const url = window.prompt("URL de l'image :", image); if (url !== null) setImage(url.trim()) }}
+          <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleImageFile} />
+          <button onClick={() => fileInputRef.current?.click()}
             className="relative flex flex-col items-center gap-2 group">
             <div className="w-20 h-20 rounded-full bg-amber-500/10 border-2 border-amber-500/20 flex items-center justify-center overflow-hidden transition-all group-hover:border-amber-500/50">
               {image
                 ? <img src={image} alt="" className="w-full h-full object-cover" />
-                : <span className="text-xl text-amber-400/60">✏️</span>
+                : <span className="text-xl text-amber-400/60">📷</span>
               }
             </div>
-            <span className="text-sm text-white/40 group-hover:text-white/70 transition-colors">Modifier</span>
+            <span className="text-sm text-white/40 group-hover:text-white/70 transition-colors">Importer une photo</span>
           </button>
         </div>
 
@@ -3797,15 +3807,17 @@ export default function ATMApp() {
                 const vitrineTVA = vitrineTotal - vitrineHT
                 const fmt2 = (n: number) => n.toLocaleString("fr-FR", { minimumFractionDigits: 2 })
                 return (
-                <div className="px-4 pb-4 pt-3 border-t border-white/[0.06] flex-shrink-0 space-y-2">
-                  <div className="flex justify-between text-xs text-white/50 px-1">
-                    <span>HT {fmt2(vitrineHT)} € · TVA {fmt2(vitrineTVA)} €</span>
-                    <span className="font-bold text-white/70">TTC {fmt2(vitrineTotal)} €</span>
-                  </div>
+                <div className="px-4 pb-4 pt-3 border-t border-white/[0.06] flex-shrink-0">
                   <button onClick={() => setVitrineStep("paiement")}
-                    className="w-full py-3 rounded-2xl bg-amber-500 hover:bg-amber-400 text-black font-black text-sm transition-colors flex items-center justify-center gap-3 shadow-lg shadow-amber-500/20">
-                    <span className="w-6 h-6 rounded-full bg-black/20 flex items-center justify-center text-xs font-black">{vitrineCount}</span>
-                    Passer la commande — {fmt2(vitrineTotal)} €
+                    className="w-full flex items-center justify-between px-5 py-3 rounded-2xl bg-amber-500 hover:bg-amber-400 text-black transition-all shadow-lg shadow-amber-500/20">
+                    <div className="flex items-center gap-3">
+                      <span className="w-7 h-7 rounded-full bg-black/20 flex items-center justify-center text-sm font-black">{vitrineCount}</span>
+                      <span className="font-bold text-sm">Passer la commande</span>
+                    </div>
+                    <div className="text-right">
+                      <div className="font-black text-base">{fmt2(vitrineTotal)} € TTC</div>
+                      <div className="text-[11px] font-medium opacity-70">HT {fmt2(vitrineHT)} € · TVA {fmt2(vitrineTVA)} €</div>
+                    </div>
                   </button>
                 </div>
                 )
