@@ -31,7 +31,7 @@ const securityHeaders = [
 
 const nextConfig = {
   experimental: {
-    serverComponentsExternalPackages: ["better-sqlite3", "pdf-parse"],
+    serverComponentsExternalPackages: ["pdf-parse"],
   },
   async headers() {
     return [
