@@ -4,6 +4,16 @@ import "./globals.css"
 export const metadata: Metadata = {
   title: "Cours OS",
   description: "Dashboard personnel — notes de cours SMMA & E-commerce",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "ATM",
+  },
+  icons: {
+    icon: "/icon-192.png",
+    apple: "/icon-192.png",
+  },
 }
 
 export default function RootLayout({
