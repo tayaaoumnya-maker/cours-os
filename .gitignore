@@ -6,8 +6,10 @@ node_modules/
 out/
 
 # Local data & uploads (personal data — never commit)
-data/
+data/*.db
 uploads/
+# Autoriser les fichiers de données statiques (non sensibles)
+!data/trust-aura/
 
 # Misc
 .DS_Store
