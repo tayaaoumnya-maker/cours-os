@@ -2936,9 +2936,9 @@ export default function ATMApp() {
         {/* ── CATALOGUE ────────────────────────────────────────────────────────── */}
         {view === "catalogue" && (
           <div className="flex-1 overflow-hidden flex flex-col">
-            <div className="px-6 pt-5 pb-4 border-b border-white/[0.06]">
+            <div className="px-3 sm:px-6 pt-4 sm:pt-5 pb-3 sm:pb-4 border-b border-white/[0.06]">
               <div className="flex items-center justify-between mb-3">
-                <h1 className="text-xl font-bold">Catalogue</h1>
+                <h1 className="text-lg sm:text-xl font-bold">Catalogue</h1>
                 <button onClick={() => { setCatAddMode(true); setCatEditProduct(null) }}
                   className="px-4 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-black text-sm font-bold transition-colors">
                   + Nouveau produit
@@ -2948,7 +2948,7 @@ export default function ATMApp() {
                 placeholder="Rechercher un produit..."
                 className="w-full max-w-xs bg-white/[0.05] border border-white/[0.08] rounded-lg px-3 py-2 text-sm placeholder-white/20 focus:outline-none focus:border-amber-500/50 transition-colors" />
             </div>
-            <div className="flex-1 overflow-y-auto p-6">
+            <div className="flex-1 overflow-y-auto p-3 sm:p-6">
               <div className="max-w-4xl mx-auto">
                 {catAddMode && (
                   <div className="mb-6 bg-[#12121f] border border-amber-500/30 rounded-2xl overflow-hidden" style={{height:"min(80vh, 720px)",display:"flex",flexDirection:"column"}}>
@@ -2960,38 +2960,38 @@ export default function ATMApp() {
                     <CatForm products={products} setProducts={setProducts} editProduct={catEditProduct} onClose={() => setCatEditProduct(null)} taxes={taxes} suppliers={suppliers} />
                   </div>
                 )}
-                <div className="bg-[#12121f] border border-white/[0.06] rounded-xl overflow-hidden">
-                  <table className="w-full text-sm">
+                <div className="bg-[#12121f] border border-white/[0.06] rounded-xl overflow-x-auto">
+                  <table className="w-full text-sm min-w-[400px]">
                     <thead>
                       <tr className="border-b border-white/[0.06] text-white/40 text-xs">
-                        <th className="px-4 py-3 text-left">Produit</th>
-                        <th className="px-4 py-3 text-left">Catégorie</th>
-                        <th className="px-4 py-3 text-right">Prix</th>
-                        <th className="px-4 py-3 text-right">Stock</th>
-                        <th className="px-4 py-3 text-center">Actions</th>
+                        <th className="px-3 py-3 text-left">Produit</th>
+                        <th className="px-3 py-3 text-left hidden sm:table-cell">Catégorie</th>
+                        <th className="px-3 py-3 text-right">Prix</th>
+                        <th className="px-3 py-3 text-right">Stock</th>
+                        <th className="px-3 py-3 text-center">Actions</th>
                       </tr>
                     </thead>
                     <tbody>
                       {products.filter(p => !catSearch || p.name.toLowerCase().includes(catSearch.toLowerCase())).map(product => (
                         <tr key={product.id} onClick={() => { setCatEditProduct(product); setCatAddMode(false) }} className="border-b border-white/[0.04] last:border-0 hover:bg-white/[0.04] cursor-pointer transition-colors">
-                          <td className="px-4 py-3">
-                            <div className="flex items-center gap-3">
-                              <div className="w-9 h-9 rounded-lg overflow-hidden bg-white/[0.04] flex-shrink-0">
+                          <td className="px-3 py-2">
+                            <div className="flex items-center gap-2">
+                              <div className="w-8 h-8 rounded-lg overflow-hidden bg-white/[0.04] flex-shrink-0">
                                 {product.image ? <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
-                                  : <div className="w-full h-full flex items-center justify-center text-lg opacity-40">{product.emoji}</div>}
+                                  : <div className="w-full h-full flex items-center justify-center text-base opacity-40">{product.emoji}</div>}
                               </div>
-                              <span className="font-medium">{product.name}</span>
+                              <span className="font-medium text-xs sm:text-sm leading-tight">{product.name}</span>
                             </div>
                           </td>
-                          <td className="px-4 py-3 text-white/40">{product.category}</td>
-                          <td className="px-4 py-3 text-right font-medium text-amber-400">{formatPrice(product.price)}</td>
-                          <td className="px-4 py-3 text-right">
-                            <span className={`font-bold ${product.stock === 0 ? "text-red-400" : product.stock <= product.alertThreshold ? "text-amber-400" : "text-cyan-400"}`}>
+                          <td className="px-3 py-2 text-white/40 text-xs hidden sm:table-cell">{product.category}</td>
+                          <td className="px-3 py-2 text-right font-medium text-amber-400 text-xs sm:text-sm whitespace-nowrap">{formatPrice(product.price)}</td>
+                          <td className="px-3 py-2 text-right">
+                            <span className={`font-bold text-xs sm:text-sm ${product.stock === 0 ? "text-red-400" : product.stock <= product.alertThreshold ? "text-amber-400" : "text-cyan-400"}`}>
                               {product.stock}
                             </span>
                           </td>
-                          <td className="px-4 py-3 text-center">
-                            <div className="flex items-center justify-center gap-2">
+                          <td className="px-3 py-2 text-center">
+                            <div className="flex items-center justify-center gap-1.5">
                               <button onClick={() => setFavorites(prev => prev.includes(product.id) ? prev.filter(id => id !== product.id) : [...prev, product.id])}
                                 className={`text-xs px-2 py-1 rounded-md transition-all ${favorites.includes(product.id) ? "bg-yellow-500/20 text-yellow-400" : "bg-white/[0.05] text-white/30 hover:text-yellow-400"}`}
                                 title={favorites.includes(product.id) ? "Retirer des favoris" : "Ajouter aux favoris"}>
