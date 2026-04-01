@@ -137,9 +137,10 @@ async function hashPin(pin: string): Promise<string> {
   return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("")
 }
 
-/** Valide qu'une URL est sûre (http/https uniquement — bloque javascript:, data:, etc.) */
+/** Valide qu'une URL est sûre (http/https ou data:image/ uniquement — bloque javascript:, etc.) */
 function isSafeUrl(url: string): boolean {
   if (!url) return false
+  if (url.startsWith("data:image/")) return true
   try {
     const u = new URL(url)
     return u.protocol === "https:" || u.protocol === "http:"
@@ -2953,7 +2954,7 @@ export default function ATMApp() {
                       <tr className="border-b border-white/[0.06] text-white/40 text-xs">
                         <th className="px-3 py-3 text-left">Produit</th>
                         <th className="px-3 py-3 text-left hidden sm:table-cell">Catégorie</th>
-                        <th className="px-3 py-3 text-right">Prix</th>
+                        <th className="px-3 py-3 text-right">Prix HT / TTC</th>
                         <th className="px-3 py-3 text-right">Stock</th>
                         <th className="px-3 py-3 text-center">Actions</th>
                       </tr>
@@ -2971,7 +2972,10 @@ export default function ATMApp() {
                             </div>
                           </td>
                           <td className="px-3 py-2 text-white/40 text-xs hidden sm:table-cell">{product.category}</td>
-                          <td className="px-3 py-2 text-right font-medium text-amber-400 text-xs sm:text-sm whitespace-nowrap">{formatPrice(product.price)}</td>
+                          <td className="px-3 py-2 text-right whitespace-nowrap">
+                            <span className="block font-medium text-amber-400 text-xs sm:text-sm">{formatPrice(product.price)} <span className="text-white/30 font-normal">HT</span></span>
+                            <span className="block text-[11px] text-white/40">{formatPrice(product.price * 1.2)} TTC</span>
+                          </td>
                           <td className="px-3 py-2 text-right">
                             <span className={`font-bold text-xs sm:text-sm ${product.stock === 0 ? "text-red-400" : product.stock <= product.alertThreshold ? "text-amber-400" : "text-cyan-400"}`}>
                               {product.stock}
@@ -3336,13 +3340,26 @@ export default function ATMApp() {
               <div className="bg-[#12121f] border border-white/[0.06] rounded-xl p-5 space-y-4">
                 <h2 className="text-sm font-bold text-white/70">🎨 Personnalisation du ticket</h2>
                 <div>
-                  <label className="block text-xs text-white/40 mb-1.5">URL du logo (ticket + sidebar + écran de connexion)</label>
-                  <input type="url" value={ticketLogo} onChange={e => { const v = e.target.value; if (!v || isSafeUrl(v)) setTicketLogo(v) }}
-                    placeholder="https://exemple.com/logo.png"
-                    className="w-full bg-white/[0.05] border border-white/[0.08] rounded-lg px-3 py-2.5 text-sm placeholder-white/20 text-white focus:outline-none focus:border-amber-500/50 transition-colors" />
+                  <label className="block text-xs text-white/40 mb-1.5">Logo (ticket + sidebar + écran de connexion)</label>
+                  <div className="flex items-center gap-3">
+                    <label className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-400 text-sm font-medium cursor-pointer transition-colors">
+                      📁 Importer une image
+                      <input type="file" accept="image/*" className="hidden" onChange={e => {
+                        const file = e.target.files?.[0]
+                        if (!file) return
+                        const reader = new FileReader()
+                        reader.onload = ev => { const result = ev.target?.result as string; if (result?.startsWith("data:image/")) setTicketLogo(result) }
+                        reader.readAsDataURL(file)
+                        e.target.value = ""
+                      }} />
+                    </label>
+                    {ticketLogo && (
+                      <button onClick={() => setTicketLogo("")} className="text-xs text-red-400/70 hover:text-red-400 transition-colors">Supprimer</button>
+                    )}
+                  </div>
                   {ticketLogo && (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={ticketLogo} alt="aperçu logo" className="mt-2 h-10 object-contain rounded opacity-70" />
+                    <img src={ticketLogo} alt="aperçu logo" className="mt-3 h-12 object-contain rounded opacity-80" />
                   )}
                 </div>
                 <div>
