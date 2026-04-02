@@ -1658,12 +1658,21 @@ export default function ATMApp() {
 
   // ─── Render ──────────────────────────────────────────────────────────────────
 
-  if (isLoading) return (
-    <div className="flex h-[100dvh] bg-[#09090f] items-center justify-center">
-      <div className="text-center">
-        <div className="text-4xl mb-4">🔧</div>
-        <div className="text-orange-400 font-semibold text-lg">Chargement…</div>
-        <div className="text-zinc-500 text-sm mt-1">Synchronisation des données</div>
+  // ─── Splash screen avec logo ────────────────────────────────────────────
+  const [showSplash, setShowSplash] = useState(true)
+  useEffect(() => {
+    if (!isLoading) {
+      const t = setTimeout(() => setShowSplash(false), 1800)
+      return () => clearTimeout(t)
+    }
+  }, [isLoading])
+
+  if (isLoading || showSplash) return (
+    <div className="flex h-[100dvh] bg-black items-center justify-center">
+      <div className="text-center animate-pulse">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/atm-logo.jpg" alt="ATM Outillage" className="h-32 w-auto mx-auto rounded-2xl shadow-2xl shadow-amber-500/20" />
+        {isLoading && <div className="text-zinc-500 text-xs mt-6 tracking-widest uppercase">Chargement…</div>}
       </div>
     </div>
   )
