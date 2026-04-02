@@ -597,9 +597,22 @@ export default function ATMApp() {
   const [products, setProducts]             = useState<Product[]>(() => {
     const prods = LS.get<Product[]>("atm_products", INITIAL_PRODUCTS)
     if (typeof window === "undefined") return prods
+    // Migration : récupère les images des anciens emplacements de stockage
+    const legacy = LS.get<Record<string, string>>("atm_product_images", {})
     return prods.map(p => {
+      // 1. Clé individuelle (nouveau format) — priorité max
       const saved = localStorage.getItem(`atm_img_${p.id}`)
-      return saved ? { ...p, image: saved } : p
+      if (saved) return { ...p, image: saved }
+      // 2. Ancienne clé groupée (premier fix) — migration automatique
+      if (legacy[p.id]) {
+        try { localStorage.setItem(`atm_img_${p.id}`, legacy[p.id]) } catch { /* quota */ }
+        return { ...p, image: legacy[p.id] }
+      }
+      // 3. Image déjà dans le produit (format original, avant tout fix)
+      if (p.image?.startsWith("data:image/")) {
+        try { localStorage.setItem(`atm_img_${p.id}`, p.image) } catch { /* quota */ }
+      }
+      return p
     })
   })
   const [orders, setOrders]                 = useState<Order[]>(() =>
