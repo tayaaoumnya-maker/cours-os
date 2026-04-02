@@ -5,7 +5,7 @@ import { dbGetAll, dbSet } from "@/lib/supabase-atm"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type Category = "Électroportatif" | "Outillage à main" | "Fixation" | "Consommables"
+type Category = string
 type PaymentMethod = "espèces" | "carte" | "virement" | "chèque"
 type DiscountType = "percent" | "fixed"
 
@@ -241,7 +241,7 @@ const STATUS_NEXT: Partial<Record<OrderStatus, OrderStatus>> = {
   "prêt":     "livré",
 }
 
-const CATEGORIES: (Category | "Tout")[] = ["Tout", "Électroportatif", "Outillage à main", "Fixation", "Consommables"]
+const DEFAULT_CATEGORIES: string[] = ["Électroportatif", "Outillage à main", "Fixation", "Consommables"]
 
 // ─── Composants UI de base ────────────────────────────────────────────────────
 
@@ -257,17 +257,18 @@ function Badge({ children, className = "" }: { children: React.ReactNode; classN
 
 // ─── Composant formulaire catalogue ──────────────────────────────────────────
 
-function CatForm({ products, setProducts, editProduct, onClose, taxes, suppliers }: {
+function CatForm({ products, setProducts, editProduct, onClose, taxes, suppliers, categories }: {
   products: Product[]
   setProducts: React.Dispatch<React.SetStateAction<Product[]>>
   editProduct?: Product | null
   onClose: () => void
   taxes: Tax[]
   suppliers: Supplier[]
+  categories: string[]
 }) {
-  const cats: Category[] = ["Électroportatif", "Outillage à main", "Fixation", "Consommables"]
+  const cats = categories
   const [name, setName]         = useState(editProduct?.name ?? "")
-  const [category, setCategory] = useState<Category>(editProduct?.category ?? "Électroportatif")
+  const [category, setCategory] = useState<Category>(editProduct?.category ?? categories[0] ?? "Divers")
   const [price, setPrice]       = useState(editProduct?.price?.toString() ?? "")
   const [stock, setStock]       = useState(editProduct?.stock?.toString() ?? "")
   const [unit, setUnit]         = useState(editProduct?.unit ?? "pièce")
@@ -618,6 +619,7 @@ export default function ATMApp() {
   const [orders, setOrders]                 = useState<Order[]>(() =>
     LS.get<Order[]>("atm_orders", []).map(o => ({ ...o, createdAt: new Date(o.createdAt) }))
   )
+  const [categories, setCategories]         = useState<string[]>(() => LS.get("atm_categories", DEFAULT_CATEGORIES))
   const [cart, setCart]                     = useState<Record<string, number>>({})
   const [categoryFilter, setCategoryFilter] = useState<Category | "Tout">("Tout")
   const [searchQuery, setSearchQuery]       = useState("")
@@ -751,18 +753,22 @@ export default function ATMApp() {
 
   // ─── Persistence localStorage + Supabase ────────────────────────────────────
   useEffect(() => {
-    // Images base64 → stockées dans des clés individuelles (atm_img_<id>) pour résister aux rechargements Supabase
+    // Images base64 → stockées dans des clés individuelles (atm_img_<id>) dans localStorage ET Supabase
     const productsForStorage = products.map(p => {
       if (p.image?.startsWith("data:image/")) {
-        // Nouvelle image base64 → sauvegarder individuellement, ne pas envoyer à Supabase
+        // Nouvelle image base64 → sauvegarder individuellement
         try { localStorage.setItem(`atm_img_${p.id}`, p.image) } catch { /* quota */ }
+        // Aussi sauvegarder dans Supabase pour persistance fiable
+        if (initialized.current && supabaseOk.current) dbSet(`atm_img_${p.id}`, p.image)
         return { ...p, image: undefined }
       } else if (p.image) {
         // Image URL → effacer toute base64 obsolète pour ce produit
         localStorage.removeItem(`atm_img_${p.id}`)
+        if (initialized.current && supabaseOk.current) dbSet(`atm_img_${p.id}`, null)
       } else if (initialized.current) {
         // Image explicitement supprimée par l'utilisateur (pas un simple chargement)
         localStorage.removeItem(`atm_img_${p.id}`)
+        if (supabaseOk.current) dbSet(`atm_img_${p.id}`, null)
       }
       return p
     })
@@ -794,6 +800,7 @@ export default function ATMApp() {
   useEffect(() => { LS.set("atm_suppliers", suppliers);     if (initialized.current && supabaseOk.current) dbSet("atm_suppliers", suppliers) }, [suppliers])
   useEffect(() => { LS.set("atm_favorites", favorites);     if (initialized.current && supabaseOk.current) dbSet("atm_favorites", favorites) }, [favorites])
   useEffect(() => { LS.set("atm_notes", internalNotes);     if (initialized.current && supabaseOk.current) dbSet("atm_notes", internalNotes) }, [internalNotes])
+  useEffect(() => { LS.set("atm_categories", categories);   if (initialized.current && supabaseOk.current) dbSet("atm_categories", categories) }, [categories])
   useEffect(() => { setToday(new Date().toDateString()) }, [])
 
   // PINs désactivés — réactivation possible depuis Paramètres
@@ -815,10 +822,19 @@ export default function ATMApp() {
         supabaseOk.current = true
         if (all.atm_products) {
           setProducts((all.atm_products as Product[]).map(p => {
-            const saved = localStorage.getItem(`atm_img_${p.id}`)
-            return saved ? { ...p, image: saved } : p
+            // Priorité : localStorage > Supabase > rien
+            const savedLocal = localStorage.getItem(`atm_img_${p.id}`)
+            if (savedLocal) return { ...p, image: savedLocal }
+            const savedSupabase = all[`atm_img_${p.id}`] as string | undefined
+            if (savedSupabase) {
+              // Restaurer aussi dans localStorage pour les prochains chargements
+              try { localStorage.setItem(`atm_img_${p.id}`, savedSupabase) } catch { /* quota */ }
+              return { ...p, image: savedSupabase }
+            }
+            return p
           }))
         }
+        if (all.atm_categories) setCategories(all.atm_categories as string[])
         if (all.atm_orders) setOrders(
           (all.atm_orders as Order[]).map(o => ({ ...o, createdAt: new Date(o.createdAt) }))
         )
@@ -864,10 +880,17 @@ export default function ATMApp() {
           "atm_shopSiret", "atm_shopTva", "atm_shopNaf",
           "atm_fondDeCaisse", "atm_fondDate",
           "atm_clients", "atm_sorties", "atm_suppliers", "atm_favorites", "atm_notes",
+          "atm_categories",
         ]
         for (const k of keys) {
           const v = LS.get(k, null)
           if (v !== null) await dbSet(k, v)
+        }
+        // Migrer aussi les images individuelles vers Supabase
+        const prods = LS.get<Product[]>("atm_products", [])
+        for (const p of prods) {
+          const img = localStorage.getItem(`atm_img_${p.id}`)
+          if (img) await dbSet(`atm_img_${p.id}`, img)
         }
       }
       initialized.current = true
@@ -2290,7 +2313,7 @@ export default function ATMApp() {
                   )}
                 </div>
                 <div className="flex gap-2 overflow-x-auto pb-1">
-                  {CATEGORIES.map(cat => (
+                  {["Tout", ...categories].map(cat => (
                     <button
                       key={cat}
                       onClick={() => setCategoryFilter(cat)}
@@ -2973,6 +2996,7 @@ export default function ATMApp() {
                   onClose={() => { setCatAddMode(false); setCatEditProduct(null) }}
                   taxes={taxes}
                   suppliers={suppliers}
+                  categories={categories}
                 />
               )}
             </div>
@@ -3173,6 +3197,54 @@ export default function ATMApp() {
                     onChange={e => { const f = e.target.files?.[0]; if (f) { importData(f); e.target.value = "" } }} />
                 </div>
                 <p className="text-[11px] text-white/25">Le fichier contient produits, commandes, formules et tous les paramètres.</p>
+              </div>
+
+              {/* ── Catégories ── */}
+              <div className="bg-[#12121f] border border-white/[0.06] rounded-xl p-5 space-y-4">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-sm font-bold text-white/70">🗂 Catégories</h2>
+                  <button onClick={() => {
+                    const name = prompt("Nom de la nouvelle catégorie :")
+                    if (name?.trim()) setCategories(prev => [...prev, name.trim()])
+                  }}
+                    className="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-black text-xs font-bold transition-colors">
+                    + Ajouter
+                  </button>
+                </div>
+                <p className="text-xs text-white/40">Renommez ou réorganisez vos catégories de produits.</p>
+                <div className="space-y-2">
+                  {categories.map((cat, i) => (
+                    <div key={i} className="flex items-center gap-2">
+                      <input
+                        value={cat}
+                        onFocus={e => { e.target.dataset.oldName = cat }}
+                        onChange={e => {
+                          const newName = e.target.value
+                          setCategories(prev => prev.map((c, j) => j === i ? newName : c))
+                        }}
+                        onBlur={e => {
+                          const oldName = e.target.dataset.oldName
+                          const newName = e.target.value.trim()
+                          if (newName && oldName && newName !== oldName) {
+                            // Renommer la catégorie dans tous les produits existants
+                            setProducts(prev => prev.map(p => p.category === oldName ? { ...p, category: newName } : p))
+                          }
+                        }}
+                        className="flex-1 bg-white/[0.05] border border-white/[0.08] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500/50 transition-colors"
+                      />
+                      <button onClick={() => {
+                        if (!confirm(`Supprimer la catégorie "${cat}" ?`)) return
+                        setCategories(prev => prev.filter((_, j) => j !== i))
+                      }}
+                        className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-red-500/20 text-white/30 hover:text-red-400 transition-all text-sm">
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                  {categories.length === 0 && (
+                    <p className="text-xs text-white/30 text-center py-2">Aucune catégorie. Ajoutez-en une ci-dessus.</p>
+                  )}
+                </div>
               </div>
 
               {/* ── Formules ── */}
@@ -3443,14 +3515,14 @@ export default function ATMApp() {
                 {/* ─── Formulaire ajouter produit ─── */}
                 {stockAddMode && (
                   <div className="bg-[#12121f] border border-amber-500/30 rounded-2xl overflow-hidden" style={{height:"min(80vh, 720px)",display:"flex",flexDirection:"column"}}>
-                    <CatForm products={products} setProducts={setProducts} onClose={() => setStockAddMode(false)} taxes={taxes} suppliers={suppliers} />
+                    <CatForm products={products} setProducts={setProducts} onClose={() => setStockAddMode(false)} taxes={taxes} suppliers={suppliers} categories={categories} />
                   </div>
                 )}
 
                 {/* ─── Formulaire modifier produit ─── */}
                 {stockEditProduct && (
                   <div className="bg-[#12121f] border border-amber-500/30 rounded-2xl overflow-hidden" style={{height:"min(80vh, 720px)",display:"flex",flexDirection:"column"}}>
-                    <CatForm products={products} setProducts={setProducts} editProduct={stockEditProduct} onClose={() => setStockEditProduct(null)} taxes={taxes} suppliers={suppliers} />
+                    <CatForm products={products} setProducts={setProducts} editProduct={stockEditProduct} onClose={() => setStockEditProduct(null)} taxes={taxes} suppliers={suppliers} categories={categories} />
                   </div>
                 )}
 

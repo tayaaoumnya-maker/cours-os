@@ -25,9 +25,14 @@ export async function dbGetAll(): Promise<Record<string, unknown> | null> {
 export async function dbSet(key: string, value: unknown): Promise<void> {
   if (!supabase) return
   try {
-    await supabase
-      .from("atm_store")
-      .upsert({ key, value, updated_at: new Date().toISOString() })
+    if (value === null || value === undefined) {
+      // Supprimer la clé si la valeur est null
+      await supabase.from("atm_store").delete().eq("key", key)
+    } else {
+      await supabase
+        .from("atm_store")
+        .upsert({ key, value, updated_at: new Date().toISOString() })
+    }
   } catch {
     // silently fail — localStorage est le fallback
   }
