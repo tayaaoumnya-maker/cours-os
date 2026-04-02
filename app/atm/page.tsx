@@ -595,6 +595,24 @@ export default function ATMApp() {
   const [isLoading, setIsLoading]           = useState(true)
 
   const [view, setView]                     = useState<View>("vendre")
+
+  // ─── Swipe navigation mobile ──────────────────────────────────────────────
+  const SWIPE_VIEWS: View[] = ["vendre", "activite", "clients", "catalogue", "stock", "notes", "parametres"]
+  const touchStartX = useRef(0)
+  const touchStartY = useRef(0)
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX
+    touchStartY.current = e.touches[0].clientY
+  }
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const dx = e.changedTouches[0].clientX - touchStartX.current
+    const dy = e.changedTouches[0].clientY - touchStartY.current
+    if (Math.abs(dx) < 80 || Math.abs(dy) > Math.abs(dx) * 0.6) return // seuil + ignorer scroll vertical
+    const idx = SWIPE_VIEWS.indexOf(view)
+    if (idx === -1) return
+    if (dx < 0 && idx < SWIPE_VIEWS.length - 1) setView(SWIPE_VIEWS[idx + 1]) // swipe gauche → section suivante
+    if (dx > 0 && idx > 0) setView(SWIPE_VIEWS[idx - 1]) // swipe droite → section précédente
+  }
   const [products, setProducts]             = useState<Product[]>(() => {
     const prods = LS.get<Product[]>("atm_products", INITIAL_PRODUCTS)
     if (typeof window === "undefined") return prods
@@ -1895,7 +1913,7 @@ export default function ATMApp() {
       </aside>
 
       {/* Main content */}
-      <div className="flex-1 overflow-hidden flex flex-col pt-12 md:pt-0">
+      <div className="flex-1 overflow-hidden flex flex-col pt-12 md:pt-0" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
 
         {/* ── ACTIVITÉ (dashboard + commandes) ────────────────────────────────── */}
         {view === "activite" && (
