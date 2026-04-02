@@ -594,7 +594,11 @@ export default function ATMApp() {
   const [isLoading, setIsLoading]           = useState(true)
 
   const [view, setView]                     = useState<View>("vendre")
-  const [products, setProducts]             = useState<Product[]>(() => LS.get("atm_products", INITIAL_PRODUCTS))
+  const [products, setProducts]             = useState<Product[]>(() => {
+    const prods = LS.get<Product[]>("atm_products", INITIAL_PRODUCTS)
+    const imgs  = LS.get<Record<string, string>>("atm_product_images", {})
+    return prods.map(p => imgs[p.id] ? { ...p, image: imgs[p.id] } : p)
+  })
   const [orders, setOrders]                 = useState<Order[]>(() =>
     LS.get<Order[]>("atm_orders", []).map(o => ({ ...o, createdAt: new Date(o.createdAt) }))
   )
@@ -730,7 +734,17 @@ export default function ATMApp() {
   const [noteInput, setNoteInput]             = useState("")
 
   // ─── Persistence localStorage + Supabase ────────────────────────────────────
-  useEffect(() => { LS.set("atm_products", products);       if (initialized.current && supabaseOk.current) dbSet("atm_products", products) }, [products])
+  useEffect(() => {
+    // Sépare les images base64 (volumineuses) pour éviter le dépassement du quota localStorage et Supabase
+    const imgs: Record<string, string> = {}
+    const productsForStorage = products.map(p => {
+      if (p.image?.startsWith("data:image/")) { imgs[p.id] = p.image; return { ...p, image: undefined } }
+      return p
+    })
+    LS.set("atm_product_images", imgs)
+    LS.set("atm_products", productsForStorage)
+    if (initialized.current && supabaseOk.current) dbSet("atm_products", productsForStorage)
+  }, [products])
   useEffect(() => { LS.set("atm_orders", orders);           if (initialized.current && supabaseOk.current) dbSet("atm_orders", orders) }, [orders])
   useEffect(() => { LS.set("atm_pending", pendingOrders);   if (initialized.current && supabaseOk.current) dbSet("atm_pending", pendingOrders) }, [pendingOrders])
   useEffect(() => { LS.set("atm_formulas", formulas);       if (initialized.current && supabaseOk.current) dbSet("atm_formulas", formulas) }, [formulas])
@@ -775,7 +789,10 @@ export default function ATMApp() {
       } else if (Object.keys(all).length > 0) {
         // Supabase a des données → les charger dans les states
         supabaseOk.current = true
-        if (all.atm_products) setProducts(all.atm_products as Product[])
+        if (all.atm_products) {
+          const imgs = LS.get<Record<string, string>>("atm_product_images", {})
+          setProducts((all.atm_products as Product[]).map(p => imgs[p.id] ? { ...p, image: imgs[p.id] } : p))
+        }
         if (all.atm_orders) setOrders(
           (all.atm_orders as Order[]).map(o => ({ ...o, createdAt: new Date(o.createdAt) }))
         )
