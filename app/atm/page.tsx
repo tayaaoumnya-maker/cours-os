@@ -2959,7 +2959,30 @@ export default function ATMApp() {
 
         {/* ── CATALOGUE ────────────────────────────────────────────────────────── */}
         {view === "catalogue" && (
-          <div className="flex-1 overflow-hidden flex flex-col">
+          <div className="flex-1 overflow-hidden flex flex-col relative">
+            {/* Drawer latéral — slide depuis la droite */}
+            <div
+              className="absolute inset-y-0 right-0 z-30 flex flex-col bg-[#0e0e1a] border-l border-amber-500/30 shadow-2xl transition-transform duration-300 ease-in-out"
+              style={{ width: "min(420px, 100%)", transform: (catAddMode || catEditProduct) ? "translateX(0)" : "translateX(100%)" }}
+            >
+              {(catAddMode || catEditProduct) && (
+                <CatForm
+                  products={products}
+                  setProducts={setProducts}
+                  editProduct={catEditProduct}
+                  onClose={() => { setCatAddMode(false); setCatEditProduct(null) }}
+                  taxes={taxes}
+                  suppliers={suppliers}
+                />
+              )}
+            </div>
+            {/* Backdrop semi-transparent sur mobile */}
+            {(catAddMode || catEditProduct) && (
+              <div
+                className="absolute inset-0 z-20 bg-black/40 sm:hidden"
+                onClick={() => { setCatAddMode(false); setCatEditProduct(null) }}
+              />
+            )}
             <div className="px-3 sm:px-6 pt-4 sm:pt-5 pb-3 sm:pb-4 border-b border-white/[0.06]">
               <div className="flex items-center justify-between mb-3">
                 <h1 className="text-lg sm:text-xl font-bold">Catalogue</h1>
@@ -2974,16 +2997,6 @@ export default function ATMApp() {
             </div>
             <div className="flex-1 overflow-y-auto p-3 sm:p-6">
               <div className="max-w-4xl mx-auto">
-                {catAddMode && (
-                  <div className="mb-6 bg-[#12121f] border border-amber-500/30 rounded-2xl overflow-hidden" style={{height:"min(80vh, 720px)",display:"flex",flexDirection:"column"}}>
-                    <CatForm products={products} setProducts={setProducts} onClose={() => setCatAddMode(false)} taxes={taxes} suppliers={suppliers} />
-                  </div>
-                )}
-                {catEditProduct && (
-                  <div className="mb-6 bg-[#12121f] border border-amber-500/30 rounded-2xl overflow-hidden" style={{height:"min(80vh, 720px)",display:"flex",flexDirection:"column"}}>
-                    <CatForm products={products} setProducts={setProducts} editProduct={catEditProduct} onClose={() => setCatEditProduct(null)} taxes={taxes} suppliers={suppliers} />
-                  </div>
-                )}
                 <div className="bg-[#12121f] border border-white/[0.06] rounded-xl overflow-x-auto">
                   <table className="w-full text-sm min-w-[400px]">
                     <thead>
