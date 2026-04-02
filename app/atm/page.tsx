@@ -596,8 +596,11 @@ export default function ATMApp() {
   const [view, setView]                     = useState<View>("vendre")
   const [products, setProducts]             = useState<Product[]>(() => {
     const prods = LS.get<Product[]>("atm_products", INITIAL_PRODUCTS)
-    const imgs  = LS.get<Record<string, string>>("atm_product_images", {})
-    return prods.map(p => imgs[p.id] ? { ...p, image: imgs[p.id] } : p)
+    if (typeof window === "undefined") return prods
+    return prods.map(p => {
+      const saved = localStorage.getItem(`atm_img_${p.id}`)
+      return saved ? { ...p, image: saved } : p
+    })
   })
   const [orders, setOrders]                 = useState<Order[]>(() =>
     LS.get<Order[]>("atm_orders", []).map(o => ({ ...o, createdAt: new Date(o.createdAt) }))
@@ -735,13 +738,21 @@ export default function ATMApp() {
 
   // ─── Persistence localStorage + Supabase ────────────────────────────────────
   useEffect(() => {
-    // Sépare les images base64 (volumineuses) pour éviter le dépassement du quota localStorage et Supabase
-    const imgs: Record<string, string> = {}
+    // Images base64 → stockées dans des clés individuelles (atm_img_<id>) pour résister aux rechargements Supabase
     const productsForStorage = products.map(p => {
-      if (p.image?.startsWith("data:image/")) { imgs[p.id] = p.image; return { ...p, image: undefined } }
+      if (p.image?.startsWith("data:image/")) {
+        // Nouvelle image base64 → sauvegarder individuellement, ne pas envoyer à Supabase
+        try { localStorage.setItem(`atm_img_${p.id}`, p.image) } catch { /* quota */ }
+        return { ...p, image: undefined }
+      } else if (p.image) {
+        // Image URL → effacer toute base64 obsolète pour ce produit
+        localStorage.removeItem(`atm_img_${p.id}`)
+      } else if (initialized.current) {
+        // Image explicitement supprimée par l'utilisateur (pas un simple chargement)
+        localStorage.removeItem(`atm_img_${p.id}`)
+      }
       return p
     })
-    LS.set("atm_product_images", imgs)
     LS.set("atm_products", productsForStorage)
     if (initialized.current && supabaseOk.current) dbSet("atm_products", productsForStorage)
   }, [products])
@@ -790,8 +801,10 @@ export default function ATMApp() {
         // Supabase a des données → les charger dans les states
         supabaseOk.current = true
         if (all.atm_products) {
-          const imgs = LS.get<Record<string, string>>("atm_product_images", {})
-          setProducts((all.atm_products as Product[]).map(p => imgs[p.id] ? { ...p, image: imgs[p.id] } : p))
+          setProducts((all.atm_products as Product[]).map(p => {
+            const saved = localStorage.getItem(`atm_img_${p.id}`)
+            return saved ? { ...p, image: saved } : p
+          }))
         }
         if (all.atm_orders) setOrders(
           (all.atm_orders as Order[]).map(o => ({ ...o, createdAt: new Date(o.createdAt) }))
