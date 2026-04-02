@@ -976,6 +976,7 @@ export default function ATMApp() {
     const sevenDaysAgo = new Date(); sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7); sevenDaysAgo.setHours(0, 0, 0, 0)
     return orders.filter(o => {
       if (activitePeriod === "7j" && o.createdAt < sevenDaysAgo) return false
+      if (activiteStatus === "tout" && o.status === "annulé") return false
       if (activiteStatus !== "tout" && o.status !== activiteStatus) return false
       if (orderSearch !== "" && !o.id.toLowerCase().includes(orderSearch.toLowerCase()) && !(o.table && o.table.toLowerCase().includes(orderSearch.toLowerCase()))) return false
       return true
