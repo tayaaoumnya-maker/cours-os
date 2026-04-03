@@ -1237,6 +1237,8 @@ export default function ATMApp() {
   const [showExportMenu, setShowExportMenu] = useState(false)
   const [showClearConfirm, setShowClearConfirm] = useState(false)
   const [showClearSortiesConfirm, setShowClearSortiesConfirm] = useState(false)
+  const [sortiesSelectMode, setSortiesSelectMode] = useState(false)
+  const [sortiesSelected, setSortiesSelected] = useState<Set<number>>(new Set())
 
   function exportVentes() {
     const rows = orders.map(o => [
@@ -3784,15 +3786,41 @@ export default function ATMApp() {
                   <div className="bg-[#12121f] border border-white/[0.08] rounded-xl p-5">
                     <div className="flex items-center justify-between mb-4">
                       <h2 className="text-sm font-bold text-white/80">📤 Historique des sorties</h2>
-                      <button onClick={() => setShowClearSortiesConfirm(true)}
-                        className="text-xs text-red-400 hover:text-red-300 transition-colors">
-                        🗑 Effacer
-                      </button>
+                      <div className="flex items-center gap-2">
+                        {sortiesSelectMode ? (
+                          <>
+                            <span className="text-xs text-white/40">{sortiesSelected.size} sélectionné(s)</span>
+                            {sortiesSelected.size > 0 && (
+                              <button onClick={() => setShowClearSortiesConfirm(true)}
+                                className="text-xs px-2.5 py-1 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-colors">
+                                🗑 Supprimer ({sortiesSelected.size})
+                              </button>
+                            )}
+                            <button onClick={() => {
+                              const all = new Set(sortiesHistory.map((_, i) => i))
+                              setSortiesSelected(prev => prev.size === sortiesHistory.length ? new Set() : all)
+                            }}
+                              className="text-xs text-amber-400 hover:text-amber-300 transition-colors">
+                              {sortiesSelected.size === sortiesHistory.length ? "Désélectionner" : "Tout sélectionner"}
+                            </button>
+                            <button onClick={() => { setSortiesSelectMode(false); setSortiesSelected(new Set()) }}
+                              className="text-xs text-white/40 hover:text-white/70 transition-colors">
+                              Annuler
+                            </button>
+                          </>
+                        ) : (
+                          <button onClick={() => { setSortiesSelectMode(true); setSortiesSelected(new Set()) }}
+                            className="text-xs text-red-400 hover:text-red-300 transition-colors">
+                            🗑 Effacer
+                          </button>
+                        )}
+                      </div>
                     </div>
                     <div className="overflow-x-auto">
                       <table className="w-full text-sm">
                         <thead>
                           <tr className="text-white/30 text-xs border-b border-white/[0.06]">
+                            {sortiesSelectMode && <th className="pb-2 w-8" />}
                             <th className="pb-2 text-left">Produit</th>
                             <th className="pb-2 text-right">Qté sortie</th>
                             <th className="pb-2 text-right hidden sm:table-cell">Commande</th>
@@ -3801,7 +3829,25 @@ export default function ATMApp() {
                         </thead>
                         <tbody>
                           {sortiesHistory.slice(0, 30).map((s, i) => (
-                            <tr key={i} className="border-b border-white/[0.04] last:border-0">
+                            <tr key={i}
+                              className={`border-b border-white/[0.04] last:border-0 transition-colors ${sortiesSelectMode ? "cursor-pointer hover:bg-white/[0.04]" : ""} ${sortiesSelected.has(i) ? "bg-red-500/10" : ""}`}
+                              onClick={() => {
+                                if (!sortiesSelectMode) return
+                                setSortiesSelected(prev => {
+                                  const next = new Set(prev)
+                                  next.has(i) ? next.delete(i) : next.add(i)
+                                  return next
+                                })
+                              }}>
+                              {sortiesSelectMode && (
+                                <td className="py-2 w-8">
+                                  <div className={`w-4 h-4 rounded border-2 flex items-center justify-center transition-all ${
+                                    sortiesSelected.has(i) ? "bg-red-500 border-red-500" : "border-white/20"
+                                  }`}>
+                                    {sortiesSelected.has(i) && <span className="text-white text-[10px]">✓</span>}
+                                  </div>
+                                </td>
+                              )}
                               <td className="py-2 text-white/70 truncate max-w-[140px]">{s.name}</td>
                               <td className="py-2 text-right text-red-400 font-bold">−{s.qty}</td>
                               <td className="py-2 text-right text-white/30 text-xs hidden sm:table-cell">{s.orderId}</td>
@@ -4856,9 +4902,12 @@ export default function ATMApp() {
           <div className="relative bg-[#1a1a35] border border-white/[0.12] rounded-2xl shadow-2xl w-full max-w-sm p-6" onClick={e => e.stopPropagation()}>
             <div className="text-center mb-5">
               <div className="text-3xl mb-3">📤</div>
-              <h3 className="text-lg font-bold text-white mb-2">Effacer l'historique des sorties ?</h3>
+              <h3 className="text-lg font-bold text-white mb-2">Supprimer {sortiesSelected.size} sortie(s) ?</h3>
               <p className="text-sm text-white/50">
-                Toutes les sorties de stock seront supprimées définitivement. Cette action est irréversible.
+                {sortiesSelected.size === sortiesHistory.length
+                  ? "Toutes les sorties seront supprimées définitivement."
+                  : `${sortiesSelected.size} entrée(s) sélectionnée(s) seront supprimées définitivement.`
+                } Cette action est irréversible.
               </p>
             </div>
             <div className="flex gap-3">
@@ -4867,11 +4916,13 @@ export default function ATMApp() {
                 Annuler
               </button>
               <button onClick={() => {
-                setSortiesHistory([])
+                setSortiesHistory(prev => prev.filter((_, i) => !sortiesSelected.has(i)))
+                setSortiesSelected(new Set())
+                setSortiesSelectMode(false)
                 setShowClearSortiesConfirm(false)
               }}
                 className="flex-1 py-2.5 rounded-xl bg-red-500 hover:bg-red-400 text-white font-bold text-sm transition-colors">
-                Effacer tout
+                Supprimer
               </button>
             </div>
           </div>
