@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useEffect, useRef } from "react"
 import { dbGetAll, dbSet } from "@/lib/supabase-atm"
+import html2canvas from "html2canvas"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -596,23 +597,6 @@ export default function ATMApp() {
 
   const [view, setView]                     = useState<View>("vendre")
 
-  // ─── Swipe navigation mobile ──────────────────────────────────────────────
-  const SWIPE_VIEWS: View[] = ["vendre", "activite", "clients", "catalogue", "stock", "notes", "parametres"]
-  const touchStartX = useRef(0)
-  const touchStartY = useRef(0)
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX
-    touchStartY.current = e.touches[0].clientY
-  }
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    const dx = e.changedTouches[0].clientX - touchStartX.current
-    const dy = e.changedTouches[0].clientY - touchStartY.current
-    if (Math.abs(dx) < 80 || Math.abs(dy) > Math.abs(dx) * 0.6) return // seuil + ignorer scroll vertical
-    const idx = SWIPE_VIEWS.indexOf(view)
-    if (idx === -1) return
-    if (dx < 0 && idx < SWIPE_VIEWS.length - 1) setView(SWIPE_VIEWS[idx + 1]) // swipe gauche → section suivante
-    if (dx > 0 && idx > 0) setView(SWIPE_VIEWS[idx - 1]) // swipe droite → section précédente
-  }
   const [products, setProducts]             = useState<Product[]>(() => {
     const prods = LS.get<Product[]>("atm_products", INITIAL_PRODUCTS)
     if (typeof window === "undefined") return prods
@@ -640,6 +624,23 @@ export default function ATMApp() {
   const [categories, setCategories]         = useState<string[]>(() => LS.get("atm_categories", DEFAULT_CATEGORIES))
   const [cart, setCart]                     = useState<Record<string, number>>({})
   const [categoryFilter, setCategoryFilter] = useState<Category | "Tout">("Tout")
+  // ─── Swipe entre catégories (vue Vendre uniquement) ─────────────────────────
+  const catTouchX = useRef(0)
+  const catTouchY = useRef(0)
+  const handleCatSwipeStart = (e: React.TouchEvent) => {
+    catTouchX.current = e.touches[0].clientX
+    catTouchY.current = e.touches[0].clientY
+  }
+  const handleCatSwipeEnd = (e: React.TouchEvent) => {
+    const dx = e.changedTouches[0].clientX - catTouchX.current
+    const dy = e.changedTouches[0].clientY - catTouchY.current
+    if (Math.abs(dx) < 60 || Math.abs(dy) > Math.abs(dx) * 0.5) return
+    const allCats = ["Tout", ...categories]
+    const idx = allCats.indexOf(categoryFilter)
+    if (idx === -1) return
+    if (dx < 0 && idx < allCats.length - 1) setCategoryFilter(allCats[idx + 1])
+    if (dx > 0 && idx > 0) setCategoryFilter(allCats[idx - 1])
+  }
   const [searchQuery, setSearchQuery]       = useState("")
   const [favorites, setFavorites]           = useState<string[]>(() => LS.get("atm_favorites", []))
   const [tableInput, setTableInput]         = useState("")
@@ -706,6 +707,7 @@ export default function ATMApp() {
   const [formulas, setFormulas]               = useState<Formula[]>(() => LS.get("atm_formulas", []))
   const [formulaModal, setFormulaModal]       = useState<Formula | "new" | null>(null)
   const [formulaTab, setFormulaTab]           = useState<"produits" | "formules">("produits")
+  const [vendreAddProduct, setVendreAddProduct] = useState(false)
   // Paramètres boutique
   const [shopName, setShopName]               = useState(() => LS.get("atm_shopName", "ATM Outillage"))
   const [shopSubtitle, setShopSubtitle]       = useState(() => LS.get("atm_shopSubtitle", "Vente de matériel & outillage"))
@@ -1233,6 +1235,7 @@ export default function ATMApp() {
 
   // ── Export CSV ────────────────────────────────────────────────────────────
   const [showExportMenu, setShowExportMenu] = useState(false)
+  const [showClearConfirm, setShowClearConfirm] = useState(false)
 
   function exportVentes() {
     const rows = orders.map(o => [
@@ -1539,7 +1542,7 @@ export default function ATMApp() {
   <title>Ticket ${escHtml(order.id)}</title>
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family:'Courier New',Courier,monospace; font-size:12px; background:#fff; color:#111; max-width:320px; margin:20px auto; padding:16px 20px 28px; }
+    body { font-family:'Courier New',Courier,monospace; font-size:12px; background:#fff; color:#111; max-width:380px; margin:20px auto; padding:16px 24px 28px; }
     .c { text-align:center; }
     .sep { border:none; border-top:1px solid #ccc; margin:8px 0; }
     table { width:100%; border-collapse:collapse; }
@@ -1562,34 +1565,52 @@ export default function ATMApp() {
     ${order.comment ? `<br><em style="color:#888">&ldquo;${escHtml(order.comment)}&rdquo;</em>` : ""}
   </div>
   <hr class="sep">
+  <div style="display:flex;justify-content:space-between;font-weight:800;font-size:11px;padding-bottom:4px;margin-bottom:6px;border-bottom:1px solid #bbb">
+    <span>Articles</span><span>Total T</span>
+  </div>
   <table>
-    <tr style="font-weight:800;font-size:11px;border-bottom:1px solid #bbb">
-      <td style="padding-bottom:4px">Articles</td>
-      <td style="text-align:right;padding-bottom:4px">Total T</td>
-    </tr>
     ${itemRows}
   </table>
   <hr class="sep">
   <table>
     ${discountRows}
-    <tr><td style="font-size:12px;padding:2px 0">Total HT</td><td style="text-align:right;font-size:12px;padding:2px 0">${fmt(totalHT)} €</td></tr>
-    <tr style="border-top:1px solid #111"><td style="font-size:15px;font-weight:800;padding-top:5px">Total</td><td style="text-align:right;font-size:15px;font-weight:800;padding-top:5px">${fmt(order.total)} €</td></tr>
   </table>
+  <div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0">
+    <span>Total HT</span><span>${fmt(totalHT)} €</span>
+  </div>
   <hr class="sep">
-  <table>
-    <tr><td style="font-size:12px;padding:2px 0">${escHtml(paymentLabel[order.paymentMethod])}${order.paymentMethod === "espèces" && cashGiven > 0 ? ` (remis ${fmt(cashGiven)} €)` : ""}</td><td style="text-align:right;font-size:12px;padding:2px 0">${fmt(order.total)} €</td></tr>
-    <tr><td style="font-size:12px;padding:2px 0">Rendu</td><td style="text-align:right;font-size:12px;padding:2px 0">${fmt(rendu)} €</td></tr>
-  </table>
+  <div style="display:flex;justify-content:space-between;font-size:15px;font-weight:800;padding:6px 0">
+    <span>Total</span><span>${fmt(order.total)} €</span>
+  </div>
+  <hr class="sep">
+  <div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0">
+    <span>${escHtml(paymentLabel[order.paymentMethod])}${order.paymentMethod === "espèces" && cashGiven > 0 ? ` (remis ${fmt(cashGiven)} €)` : ""}</span><span>${fmt(order.total)} €</span>
+  </div>
+  <div style="display:flex;justify-content:space-between;font-size:12px;padding:2px 0">
+    <span>Rendu</span><span>${fmt(rendu)} €</span>
+  </div>
   ${hasTaxes ? `<hr class="sep">
-  <table>
-    <tr style="font-weight:800;font-size:11px;border-bottom:1px solid #bbb">
-      <td style="padding-bottom:3px">Taux</td>
-      <td style="text-align:right;padding-bottom:3px">Taxe</td>
-      <td style="text-align:right;padding-bottom:3px">HT</td>
-      <td style="text-align:right;padding-bottom:3px">TTC</td>
-    </tr>
-    ${taxRows}
-  </table>` : ""}
+  <div style="display:flex;font-weight:800;font-size:11px;padding-bottom:4px;margin-bottom:6px;border-bottom:1px solid #bbb">
+    <span style="flex:1">Taux</span>
+    <span style="flex:1;text-align:right">Taxe</span>
+    <span style="flex:1;text-align:right">HT</span>
+    <span style="flex:1;text-align:right">TTC</span>
+  </div>
+  ${Object.values(taxEntries).map(e =>
+    `<div style="display:flex;font-size:11px;padding:2px 0;color:#555">
+      <span style="flex:1">${escHtml(String(e.idx))} ${escHtml(e.name.replace("TVA ", ""))}</span>
+      <span style="flex:1;text-align:right">${fmt(e.tvaAmt)}</span>
+      <span style="flex:1;text-align:right">${fmt(e.htAmt)}</span>
+      <span style="flex:1;text-align:right">${fmt(e.ttcAmt)}</span>
+    </div>`
+  ).join("")}
+  <hr class="sep" style="margin:4px 0">
+  <div style="display:flex;font-weight:800;font-size:11px;padding:2px 0">
+    <span style="flex:1">Total</span>
+    <span style="flex:1;text-align:right">${fmt(totalTVA)}</span>
+    <span style="flex:1;text-align:right">${fmt(totalHT)}</span>
+    <span style="flex:1;text-align:right">${fmt(order.total)}</span>
+  </div>` : ""}
   <hr class="sep">
   <div style="font-size:10px;color:#555;line-height:1.9">
     <div style="display:flex;justify-content:space-between"><span>Caisse :</span><span>${escHtml(shopName || "ATM Outillage")} (#1)</span></div>
@@ -1603,44 +1624,89 @@ export default function ATMApp() {
   </div>
   <hr class="sep">
   <div class="c" style="font-size:10px;color:#888;margin-top:4px">${escHtml(ticketFooter || "Merci de votre confiance !")}</div>
-  ${autoprint ? `<script>window.onload=function(){setTimeout(function(){window.print()},300)}<\/script>` : `<button class="btn" onclick="window.print()">🖨️ Imprimer</button>`}
+  <button class="btn" onclick="window.print()">🖨️ Imprimer</button>
+  <button class="btn" style="background:#333;margin-top:8px" onclick="window.close()">← Retour à l&apos;application</button>
 </body>
 </html>`
   }
 
   function printReceipt(order: Order) {
     const w = window.open("", "_blank", "width=420,height=720")
-    if (w) { w.document.write(buildReceiptHTML(order, true)); w.document.close() }
-  }
-
-  function downloadReceipt(order: Order) {
-    const w = window.open("", "_blank", "width=420,height=720")
     if (w) { w.document.write(buildReceiptHTML(order, false)); w.document.close() }
   }
 
-  async function shareReceipt(order: Order) {
-    const payLabel: Record<PaymentMethod, string> = { espèces: "Espèces", carte: "Carte bancaire", chèque: "Chèque", virement: "Virement" }
-    const lines = [
-      `🧾 Ticket — ${shopName || "ATM Outillage"}`,
-      `📅 ${order.createdAt.toLocaleDateString("fr-FR")} ${formatTime(order.createdAt)}`,
-      `N° ${order.id}`,
-      order.table ? `👤 ${order.table}` : "",
-      ``,
-      ...order.items.map(i => `${i.quantity}× ${i.name}  ${(i.unitPrice * i.quantity).toFixed(2).replace(".", ",")} €`),
-      ``,
-      order.discountValue > 0 ? `Remise : −${(order.subtotal - order.total).toFixed(2).replace(".", ",")} €` : "",
-      `💰 TOTAL : ${order.total.toFixed(2).replace(".", ",")} €`,
-      `💳 ${payLabel[order.paymentMethod]}`,
-      ``,
-      ticketFooter || "Merci de votre confiance !",
-    ].filter(l => l !== undefined && l !== null)
+  async function generateTicketPng(order: Order): Promise<Blob> {
+    const html = buildReceiptHTML(order, false)
+    const iframe = document.createElement("iframe")
+    iframe.style.cssText = "position:fixed;left:-9999px;top:0;width:440px;height:10000px;border:none"
+    document.body.appendChild(iframe)
+    const iDoc = iframe.contentDocument || iframe.contentWindow?.document
+    if (!iDoc) { document.body.removeChild(iframe); throw new Error("iframe") }
+    iDoc.open(); iDoc.write(html); iDoc.close()
 
-    const text = lines.join("\n")
-    if (navigator.share) {
-      try { await navigator.share({ title: `Ticket ${order.id}`, text }) } catch { /* annulé */ }
-    } else {
-      await navigator.clipboard.writeText(text)
-      alert("✅ Ticket copié dans le presse-papiers !")
+    await new Promise(r => setTimeout(r, 1000))
+    iDoc.querySelectorAll("button, .btn").forEach(el => (el as HTMLElement).style.display = "none")
+    const body = iDoc.body
+    iframe.style.height = body.scrollHeight + "px"
+    await new Promise(r => setTimeout(r, 300))
+
+    const contentWidth = Math.max(body.scrollWidth, 420)
+    const canvas = await html2canvas(body, {
+      scale: 3,
+      useCORS: true,
+      backgroundColor: "#ffffff",
+      width: contentWidth,
+      windowWidth: contentWidth,
+      scrollX: 0,
+      scrollY: 0,
+    })
+    document.body.removeChild(iframe)
+
+    return new Promise((resolve, reject) => {
+      canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error("toBlob failed")), "image/png")
+    })
+  }
+
+  async function downloadReceipt(order: Order) {
+    try {
+      const blob = await generateTicketPng(order)
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement("a")
+      a.href = url
+      a.download = `ticket-${order.id}.png`
+      a.target = "_blank"
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      setTimeout(() => URL.revokeObjectURL(url), 10000)
+    } catch (err) {
+      console.error("PNG error:", err)
+      const w = window.open("", "_blank", "width=420,height=720")
+      if (w) { w.document.write(buildReceiptHTML(order, false)); w.document.close() }
+    }
+  }
+
+  async function shareReceipt(order: Order) {
+    try {
+      const blob = await generateTicketPng(order)
+      const file = new File([blob], `ticket-${order.id}.png`, { type: "image/png" })
+      if (navigator.share && navigator.canShare?.({ files: [file] })) {
+        await navigator.share({ title: `Ticket ${order.id}`, files: [file] })
+      } else {
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement("a")
+        a.href = url
+        a.download = file.name
+        a.target = "_blank"
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+        setTimeout(() => URL.revokeObjectURL(url), 10000)
+      }
+    } catch (err) {
+      console.error("Share PNG error:", err)
+      const w = window.open("", "_blank", "width=420,height=720")
+      if (w) { w.document.write(buildReceiptHTML(order, false)); w.document.close() }
     }
   }
 
@@ -1922,7 +1988,7 @@ export default function ATMApp() {
       </aside>
 
       {/* Main content */}
-      <div className="flex-1 overflow-hidden flex flex-col pt-12 md:pt-0" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+      <div className="flex-1 overflow-hidden flex flex-col pt-12 md:pt-0">
 
         {/* ── ACTIVITÉ (dashboard + commandes) ────────────────────────────────── */}
         {view === "activite" && (
@@ -1989,6 +2055,10 @@ export default function ATMApp() {
                           {item.label}
                         </button>
                       ))}
+                      <button onClick={() => { setShowExportMenu(false); setShowClearConfirm(true) }}
+                        className="w-full text-left px-4 py-3 text-xs font-medium hover:bg-red-500/20 transition-colors text-red-400 hover:text-red-300">
+                        🗑 Effacer l'historique
+                      </button>
                     </div>
                   )}
                 </div>
@@ -2314,15 +2384,22 @@ export default function ATMApp() {
                 <div className="flex items-center justify-between mb-4">
                   <h1 className="text-xl font-bold">Vendre</h1>
                   {/* Onglets Produits / Formules */}
-                  <div className="flex bg-white/[0.06] rounded-lg p-0.5">
-                    <button onClick={() => setFormulaTab("produits")}
-                      className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all ${formulaTab === "produits" ? "bg-amber-500 text-black" : "text-white/50 hover:text-white"}`}>
-                      Produits
-                    </button>
-                    <button onClick={() => setFormulaTab("formules")}
-                      className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all flex items-center gap-1.5 ${formulaTab === "formules" ? "bg-amber-500 text-black" : "text-white/50 hover:text-white"}`}>
-                      Formules
-                      {formulas.length > 0 && <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-black ${formulaTab === "formules" ? "bg-black/20" : "bg-amber-500/80 text-black"}`}>{formulas.length}</span>}
+                  <div className="flex items-center gap-2">
+                    <div className="flex bg-white/[0.06] rounded-lg p-0.5">
+                      <button onClick={() => setFormulaTab("produits")}
+                        className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all ${formulaTab === "produits" ? "bg-amber-500 text-black" : "text-white/50 hover:text-white"}`}>
+                        Produits
+                      </button>
+                      <button onClick={() => setFormulaTab("formules")}
+                        className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all flex items-center gap-1.5 ${formulaTab === "formules" ? "bg-amber-500 text-black" : "text-white/50 hover:text-white"}`}>
+                        Formules
+                        {formulas.length > 0 && <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-black ${formulaTab === "formules" ? "bg-black/20" : "bg-amber-500/80 text-black"}`}>{formulas.length}</span>}
+                      </button>
+                    </div>
+                    <button onClick={() => setVendreAddProduct(true)}
+                      className="w-8 h-8 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 text-sm font-bold transition-all border border-amber-500/20 flex items-center justify-center"
+                      title="Ajouter un produit">
+                      +
                     </button>
                   </div>
                 </div>
@@ -2359,15 +2436,42 @@ export default function ATMApp() {
 
               {/* Grid Formules */}
               {formulaTab === "formules" && (
-                <div className="flex-1 overflow-y-auto p-5">
+                <div className="flex-1 overflow-y-auto p-5 relative">
+                  {/* Drawer ajout produit */}
+                  {vendreAddProduct && (
+                    <>
+                      <div className="absolute inset-0 z-20 bg-black/40" onClick={() => setVendreAddProduct(false)} />
+                      <div className="absolute inset-y-0 right-0 z-30 flex flex-col bg-[#0e0e1a] border-l border-amber-500/30 shadow-2xl" style={{ width: "min(420px, 100%)" }}>
+                        <CatForm
+                          products={products}
+                          setProducts={setProducts}
+                          onClose={() => setVendreAddProduct(false)}
+                          taxes={taxes}
+                          suppliers={suppliers}
+                          categories={categories}
+                        />
+                      </div>
+                    </>
+                  )}
                   {formulas.length === 0 ? (
                     <div className="flex flex-col items-center justify-center h-full text-center">
                       <span className="text-5xl mb-3 opacity-20">📦</span>
                       <p className="text-white/40 font-medium">Aucune formule créée</p>
                       <p className="text-white/20 text-sm mt-1">Créez des packs depuis la section Catalogue</p>
+                      <button onClick={() => setVendreAddProduct(true)}
+                        className="mt-4 px-4 py-2 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 text-sm font-semibold transition-all border border-amber-500/20">
+                        + Ajouter un produit
+                      </button>
                     </div>
                   ) : (
                     <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+                      {/* Carte ajout produit */}
+                      <button
+                        onClick={() => setVendreAddProduct(true)}
+                        className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-white/10 hover:border-amber-500/40 bg-white/[0.02] hover:bg-amber-500/5 transition-all min-h-[160px]">
+                        <span className="text-3xl mb-2 opacity-40">➕</span>
+                        <p className="text-xs font-semibold text-white/40">Ajouter un produit</p>
+                      </button>
                       {formulas.map(formula => {
                         const autoPrice = formula.items.reduce((s, { productId, qty }) => {
                           const p = products.find(x => x.id === productId)
@@ -2411,7 +2515,23 @@ export default function ATMApp() {
               )}
 
               {/* Grid Produits */}
-              {formulaTab === "produits" && <div className={`flex-1 overflow-y-auto p-5 ${cartItems.length > 0 ? "pb-28 md:pb-5" : ""}`}>
+              {formulaTab === "produits" && <div className={`relative flex-1 overflow-y-auto p-5 ${cartItems.length > 0 ? "pb-28 md:pb-5" : ""}`} onTouchStart={handleCatSwipeStart} onTouchEnd={handleCatSwipeEnd}>
+                {/* Drawer ajout produit */}
+                {vendreAddProduct && (
+                  <>
+                    <div className="absolute inset-0 z-20 bg-black/40" onClick={() => setVendreAddProduct(false)} />
+                    <div className="absolute inset-y-0 right-0 z-30 flex flex-col bg-[#0e0e1a] border-l border-amber-500/30 shadow-2xl" style={{ width: "min(420px, 100%)" }}>
+                      <CatForm
+                        products={products}
+                        setProducts={setProducts}
+                        onClose={() => setVendreAddProduct(false)}
+                        taxes={taxes}
+                        suppliers={suppliers}
+                        categories={categories}
+                      />
+                    </div>
+                  </>
+                )}
                 {filteredProducts.length === 0 ? (
                   <div className="flex flex-col items-center justify-center h-full text-center">
                     <span className="text-5xl mb-3 opacity-30">🔍</span>
@@ -4341,7 +4461,7 @@ export default function ATMApp() {
                 onClick={() => downloadReceipt(receiptOrder)}
                 className="w-full py-2.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.10] text-white/70 font-semibold text-sm transition-colors flex items-center justify-center gap-2"
               >
-                ⬇️ Télécharger PDF
+                ⬇️ Enregistrer l'image
               </button>
               {!receiptIsDuplicate && (
                 <button
@@ -4688,6 +4808,35 @@ export default function ATMApp() {
                   Ajouter au panier
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal confirmation effacer historique ventes */}
+      {showClearConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={() => setShowClearConfirm(false)}>
+          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
+          <div className="relative bg-[#1a1a35] border border-white/[0.12] rounded-2xl shadow-2xl w-full max-w-sm p-6" onClick={e => e.stopPropagation()}>
+            <div className="text-center mb-5">
+              <div className="text-3xl mb-3">🗑</div>
+              <h3 className="text-lg font-bold text-white mb-2">Effacer l'historique des ventes ?</h3>
+              <p className="text-sm text-white/50">
+                Toutes les commandes seront supprimées définitivement. Cette action est irréversible.
+              </p>
+            </div>
+            <div className="flex gap-3">
+              <button onClick={() => setShowClearConfirm(false)}
+                className="flex-1 py-2.5 rounded-xl bg-white/[0.06] hover:bg-white/10 text-white/60 text-sm font-medium transition-colors">
+                Annuler
+              </button>
+              <button onClick={() => {
+                setOrders([])
+                setShowClearConfirm(false)
+              }}
+                className="flex-1 py-2.5 rounded-xl bg-red-500 hover:bg-red-400 text-white font-bold text-sm transition-colors">
+                Effacer tout
+              </button>
             </div>
           </div>
         </div>
