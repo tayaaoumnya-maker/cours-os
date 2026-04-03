@@ -1521,8 +1521,8 @@ export default function ATMApp() {
 
     // Remise
     const discountRows = discountAmt > 0 ? `
-      <tr><td style="color:#555;font-size:11px;padding:2px 0">Sous-total</td><td style="text-align:right;color:#555;font-size:11px;padding:2px 0">${fmt(order.subtotal)} €</td></tr>
-      <tr><td style="color:#0891b2;font-size:11px;padding:2px 0">${order.discountType === "percent" ? `Remise ${order.discountValue}%` : "Remise"}</td><td style="text-align:right;color:#0891b2;font-size:11px;padding:2px 0">−${fmt(discountAmt)} €</td></tr>` : ""
+      <tr><td style="color:#000;font-size:11px;padding:2px 0">Sous-total</td><td style="text-align:right;color:#000;font-size:11px;padding:2px 0">${fmt(order.subtotal)} €</td></tr>
+      <tr><td style="color:#000;font-size:11px;padding:2px 0">${order.discountType === "percent" ? `Remise ${order.discountValue}%` : "Remise"}</td><td style="text-align:right;color:#000;font-size:11px;padding:2px 0">−${fmt(discountAmt)} €</td></tr>` : ""
 
     // Tableau TVA
     const taxRows = hasTaxes ? Object.values(taxEntries).map(e =>
@@ -1545,7 +1545,7 @@ export default function ATMApp() {
   <title>Ticket ${escHtml(order.id)}</title>
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family:'Courier New',Courier,monospace; font-size:12px; background:#fff; color:#111; max-width:380px; margin:20px auto; padding:16px 24px 28px; }
+    body { font-family:'Courier New',Courier,monospace; font-size:12px; background:#fff; color:#000; max-width:380px; margin:20px auto; padding:16px 24px 28px; font-weight:700; }
     .c { text-align:center; }
     .sep { border:none; border-top:1px solid #ccc; margin:8px 0; }
     table { width:100%; border-collapse:collapse; }
@@ -1558,14 +1558,14 @@ export default function ATMApp() {
   <div class="c" style="margin-bottom:10px">
     ${safeLogoUrl ? `<img src="${escHtml(safeLogoUrl)}" alt="" style="max-height:60px;max-width:200px;object-fit:contain;display:block;margin:0 auto 8px">` : ""}
     <strong style="font-size:14px">${escHtml(shopName || "Ma boutique")}</strong>
-    ${shopAddress ? `<br><span style="font-size:10px;color:#555">${escHtml(shopAddress)}</span>` : ""}
-    ${shopPhone ? `<br><span style="font-size:10px;color:#555">${escHtml(shopPhone)}</span>` : ""}
+    ${shopAddress ? `<br><span style="font-size:10px;color:#000">${escHtml(shopAddress)}</span>` : ""}
+    ${shopPhone ? `<br><span style="font-size:10px;color:#000">${escHtml(shopPhone)}</span>` : ""}
   </div>
   <hr class="sep">
-  <div class="c" style="font-size:10px;color:#555;margin-bottom:6px">
+  <div class="c" style="font-size:10px;color:#000;margin-bottom:6px">
     Ticket ${escHtml(order.id)} — ${order.createdAt.toLocaleDateString("fr-FR")} ${order.createdAt.toLocaleTimeString("fr-FR")}
-    ${order.table ? `<br>Client : <strong style="color:#111">${escHtml(order.table)}</strong>` : ""}
-    ${order.comment ? `<br><em style="color:#888">&ldquo;${escHtml(order.comment)}&rdquo;</em>` : ""}
+    ${order.table ? `<br>Client : <strong style="color:#000">${escHtml(order.table)}</strong>` : ""}
+    ${order.comment ? `<br><em style="color:#000">&ldquo;${escHtml(order.comment)}&rdquo;</em>` : ""}
   </div>
   <hr class="sep">
   <div style="display:flex;justify-content:space-between;font-weight:800;font-size:11px;padding-bottom:4px;margin-bottom:6px;border-bottom:1px solid #bbb">
@@ -1600,7 +1600,7 @@ export default function ATMApp() {
     <span style="flex:1;text-align:right">TTC</span>
   </div>
   ${Object.values(taxEntries).map(e =>
-    `<div style="display:flex;font-size:11px;padding:2px 0;color:#555">
+    `<div style="display:flex;font-size:11px;padding:2px 0;color:#000">
       <span style="flex:1">${escHtml(String(e.idx))} ${escHtml(e.name.replace("TVA ", ""))}</span>
       <span style="flex:1;text-align:right">${fmt(e.tvaAmt)}</span>
       <span style="flex:1;text-align:right">${fmt(e.htAmt)}</span>
@@ -1615,7 +1615,7 @@ export default function ATMApp() {
     <span style="flex:1;text-align:right">${fmt(order.total)}</span>
   </div>` : ""}
   <hr class="sep">
-  <div style="font-size:10px;color:#555;line-height:1.9">
+  <div style="font-size:10px;color:#000;line-height:1.9">
     <div style="display:flex;justify-content:space-between"><span>Caisse :</span><span>${escHtml(shopName || "ATM Outillage")} (#1)</span></div>
     <div style="display:flex;justify-content:space-between"><span>Vendeur :</span><span>${escHtml(userName)}</span></div>
     <div style="display:flex;justify-content:space-between"><span>Nombre d&apos;impression :</span><span>1</span></div>
@@ -1626,7 +1626,7 @@ export default function ATMApp() {
     <div style="display:flex;justify-content:space-between"><span>ID :</span><span>${escHtml(order.id)}</span></div>
   </div>
   <hr class="sep">
-  <div class="c" style="font-size:10px;color:#888;margin-top:4px">${escHtml(ticketFooter || "Merci de votre confiance !")}</div>
+  <div class="c" style="font-size:10px;color:#000;margin-top:4px">${escHtml(ticketFooter || "Merci de votre confiance !")}</div>
   <button class="btn" onclick="window.print()">🖨️ Imprimer</button>
   <button class="btn" style="background:#333;margin-top:8px" onclick="window.close()">← Retour à l&apos;application</button>
 </body>
