@@ -1737,7 +1737,7 @@ export default function ATMApp() {
     <div className="flex h-[100dvh] bg-black items-center justify-center">
       <div className="text-center animate-pulse">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/atm-logo.jpg" alt="ATM Outillage" className="h-32 w-auto mx-auto rounded-2xl shadow-2xl shadow-amber-500/20" />
+        <img src="/atm-logo.jpg" alt="ATM Outillage" className="h-56 w-auto mx-auto rounded-3xl shadow-2xl shadow-amber-500/20" />
         {isLoading && <div className="text-zinc-500 text-xs mt-6 tracking-widest uppercase">Chargement…</div>}
       </div>
     </div>
