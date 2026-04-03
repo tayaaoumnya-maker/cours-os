@@ -678,7 +678,7 @@ export default function ATMApp() {
   const [cartComment, setCartComment]         = useState("")
   const [showAdminMenu, setShowAdminMenu]     = useState(false)
   const [userRole, setUserRole]               = useState<UserRole>("Administrateur")
-  const [isLoggedIn, setIsLoggedIn]           = useState(true) // Login désactivé en dev — à réactiver au déploiement
+  const [isLoggedIn, setIsLoggedIn]           = useState(false)
   const [loginStep, setLoginStep]             = useState<"choose" | "pin">("choose")
   const [loginRole, setLoginRole]             = useState<UserRole>("Administrateur")
   const [loginInput, setLoginInput]           = useState("")
