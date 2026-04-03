@@ -4319,22 +4319,22 @@ export default function ATMApp() {
                   <img src={ticketLogo} alt="logo" className="h-12 object-contain mx-auto mb-2" />
                 )}
                 <div className="text-lg font-black tracking-widest uppercase">{shopName || "ATM Outillage"}</div>
-                {shopSubtitle && <div className="text-[11px] text-gray-400 mt-0.5">{shopSubtitle}</div>}
-                {shopAddress && <div className="text-[10px] text-gray-400 mt-0.5">{shopAddress}</div>}
-                {shopPhone && <div className="text-[10px] text-gray-400 mt-0.5">{shopPhone}</div>}
+                {shopSubtitle && <div className="text-[11px] text-gray-600 mt-0.5">{shopSubtitle}</div>}
+                {shopAddress && <div className="text-[10px] text-gray-600 mt-0.5">{shopAddress}</div>}
+                {shopPhone && <div className="text-[10px] text-gray-600 mt-0.5">{shopPhone}</div>}
               </div>
 
               <div className="border-t border-dashed border-gray-300 my-3" />
 
               {/* Infos commande */}
-              <div className="text-[11px] text-gray-500 space-y-0.5 mb-3">
+              <div className="text-[11px] text-gray-700 space-y-0.5 mb-3">
                 <div>N° <span className="font-bold text-gray-700">{receiptOrder.id}</span></div>
                 <div>{receiptOrder.createdAt.toLocaleDateString("fr-FR")} — {formatTime(receiptOrder.createdAt)}</div>
                 {receiptOrder.table && (
                   <div>Client : <span className="font-semibold text-gray-700">{receiptOrder.table}</span></div>
                 )}
                 {receiptOrder.comment && (
-                  <div className="mt-1 italic text-gray-400">"{receiptOrder.comment}"</div>
+                  <div className="mt-1 italic text-gray-600">"{receiptOrder.comment}"</div>
                 )}
               </div>
 
@@ -4344,7 +4344,7 @@ export default function ATMApp() {
               <div className="space-y-1.5 mb-3">
                 {receiptOrder.items.map(item => (
                   <div key={item.productId} className="flex justify-between text-[12px]">
-                    <span className="text-gray-600 truncate max-w-[160px]">{item.quantity}× {item.name}</span>
+                    <span className="text-gray-800 truncate max-w-[160px]">{item.quantity}× {item.name}</span>
                     <span className="font-semibold ml-2 flex-shrink-0">{formatPrice(item.quantity * item.unitPrice)}</span>
                   </div>
                 ))}
@@ -4356,7 +4356,7 @@ export default function ATMApp() {
               <div className="space-y-1 mb-3">
                 {receiptOrder.discountValue > 0 && (
                   <>
-                    <div className="flex justify-between text-[11px] text-gray-400">
+                    <div className="flex justify-between text-[11px] text-gray-600">
                       <span>Sous-total</span>
                       <span>{formatPrice(receiptOrder.subtotal)}</span>
                     </div>
@@ -4395,11 +4395,11 @@ export default function ATMApp() {
                 const totalHt = receiptOrder.total - totalTva
                 return (
                   <div className="space-y-0.5 mb-3">
-                    <div className="flex justify-between text-[10px] text-gray-400">
+                    <div className="flex justify-between text-[10px] text-gray-600">
                       <span>Total HT</span><span>{formatPrice(totalHt)}</span>
                     </div>
                     {tvaLines.map(l => (
-                      <div key={l.name} className="flex justify-between text-[10px] text-gray-400">
+                      <div key={l.name} className="flex justify-between text-[10px] text-gray-600">
                         <span>dont {l.name}</span><span>{formatPrice(l.amount)}</span>
                       </div>
                     ))}
@@ -4408,14 +4408,14 @@ export default function ATMApp() {
               })()}
 
               {/* Paiement & rendu monnaie */}
-              <div className="text-[11px] text-gray-500 mb-3">
+              <div className="text-[11px] text-gray-700 mb-3">
                 Paiement : <span className="font-semibold text-gray-700">
                   {PAYMENT_METHODS.find(p => p.id === receiptOrder.paymentMethod)?.icon}{" "}
                   {{ espèces: "Espèces", carte: "Carte bancaire", chèque: "Chèque", virement: "Virement" }[receiptOrder.paymentMethod]}
                 </span>
                 {receiptOrder.cashGiven !== undefined && (
                   <div className="mt-1 space-y-0.5">
-                    <div className="flex justify-between text-[11px] text-gray-500">
+                    <div className="flex justify-between text-[11px] text-gray-700">
                       <span>Remis</span><span className="font-semibold text-gray-700">{formatPrice(receiptOrder.cashGiven)}</span>
                     </div>
                     <div className="flex justify-between text-[11px] text-green-600 font-bold">
@@ -4427,8 +4427,8 @@ export default function ATMApp() {
 
               <div className="border-t border-dashed border-gray-300 my-3" />
 
-              {shopSiret && <div className="text-center text-[10px] text-gray-400 mb-1">SIRET : {shopSiret}</div>}
-              <div className="text-center text-[11px] text-gray-400 pb-1">
+              {shopSiret && <div className="text-center text-[10px] text-gray-600 mb-1">SIRET : {shopSiret}</div>}
+              <div className="text-center text-[11px] text-gray-600 pb-1">
                 {ticketFooter || "Merci de votre confiance !"}
                 {receiptOrder.isTestMode && <div className="mt-1 text-amber-400 font-bold">⚗️ COMMANDE TEST</div>}
               </div>
