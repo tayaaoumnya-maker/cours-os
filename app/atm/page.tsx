@@ -805,8 +805,8 @@ export default function ATMApp() {
   useEffect(() => { LS.set("atm_currency", currency);       if (initialized.current && supabaseOk.current) dbSet("atm_currency", currency) }, [currency])
   useEffect(() => { LS.set("atm_ticketLogo", ticketLogo);   if (initialized.current && supabaseOk.current) dbSet("atm_ticketLogo", ticketLogo) }, [ticketLogo])
   useEffect(() => { LS.set("atm_ticketFooter", ticketFooter); if (initialized.current && supabaseOk.current) dbSet("atm_ticketFooter", ticketFooter) }, [ticketFooter])
-  useEffect(() => { LS.set("atm_adminPin", adminPin) }, [adminPin])
-  useEffect(() => { LS.set("atm_partenairePin", partenairePin) }, [partenairePin])
+  useEffect(() => { LS.set("atm_adminPin", adminPin);           if (initialized.current && supabaseOk.current) dbSet("atm_adminPin", adminPin) }, [adminPin])
+  useEffect(() => { LS.set("atm_partenairePin", partenairePin); if (initialized.current && supabaseOk.current) dbSet("atm_partenairePin", partenairePin) }, [partenairePin])
   useEffect(() => { LS.set("atm_adminName", adminName);     if (initialized.current && supabaseOk.current) dbSet("atm_adminName", adminName) }, [adminName])
   useEffect(() => { LS.set("atm_partenaireName", partenaireName); if (initialized.current && supabaseOk.current) dbSet("atm_partenaireName", partenaireName) }, [partenaireName])
   useEffect(() => { LS.set("atm_taxes", taxes);             if (initialized.current && supabaseOk.current) dbSet("atm_taxes", taxes) }, [taxes])
@@ -823,11 +823,7 @@ export default function ATMApp() {
   useEffect(() => { LS.set("atm_categories", categories);   if (initialized.current && supabaseOk.current) dbSet("atm_categories", categories) }, [categories])
   useEffect(() => { setToday(new Date().toDateString()) }, [])
 
-  // PINs désactivés — réactivation possible depuis Paramètres
-  useEffect(() => {
-    LS.set("atm_adminPin", "")
-    LS.set("atm_partenairePin", "")
-  }, [])
+  // PINs persistés via useEffect lignes 808-809
 
   // ─── Chargement initial depuis Supabase ──────────────────────────────────────
   useEffect(() => {
@@ -871,6 +867,8 @@ export default function ATMApp() {
         if (all.atm_ticketFooter !== undefined) setTicketFooter(all.atm_ticketFooter as string)
         if (all.atm_adminName !== undefined) setAdminName(all.atm_adminName as string)
         if (all.atm_partenaireName !== undefined) setPartenaireName(all.atm_partenaireName as string)
+        if (all.atm_adminPin !== undefined) setAdminPin(all.atm_adminPin as string)
+        if (all.atm_partenairePin !== undefined) setPartenairePin(all.atm_partenairePin as string)
         if (all.atm_taxes) setTaxes(all.atm_taxes as Tax[])
         if (all.atm_shopSiret !== undefined) setShopSiret(all.atm_shopSiret as string)
         if (all.atm_shopTva !== undefined) setShopTva(all.atm_shopTva as string)
@@ -896,7 +894,7 @@ export default function ATMApp() {
           "atm_products", "atm_orders", "atm_pending", "atm_formulas",
           "atm_shopName", "atm_shopSubtitle", "atm_shopAddress", "atm_shopPhone",
           "atm_currency", "atm_ticketLogo", "atm_ticketFooter",
-          "atm_adminName", "atm_partenaireName", "atm_taxes",
+          "atm_adminName", "atm_partenaireName", "atm_adminPin", "atm_partenairePin", "atm_taxes",
           "atm_shopSiret", "atm_shopTva", "atm_shopNaf",
           "atm_fondDeCaisse", "atm_fondDate",
           "atm_clients", "atm_sorties", "atm_suppliers", "atm_favorites", "atm_notes",
