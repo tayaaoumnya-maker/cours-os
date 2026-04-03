@@ -717,10 +717,10 @@ export default function ATMApp() {
   const [currency, setCurrency]               = useState(() => LS.get("atm_currency", "€"))
   const [ticketLogo, setTicketLogo]           = useState(() => LS.get("atm_ticketLogo", ""))
   const [ticketFooter, setTicketFooter]       = useState(() => LS.get("atm_ticketFooter", "Merci de votre confiance !"))
-  const [adminPin, setAdminPin]               = useState("")
-  const [partenairePin, setPartenairePin]     = useState("")
-  const [adminName, setAdminName]             = useState(() => LS.get("atm_adminName", "Administrateur"))
-  const [partenaireName, setPartenaireName]   = useState(() => LS.get("atm_partenaireName", "Partenaire"))
+  const [adminPin, setAdminPin]               = useState(() => LS.get("atm_adminPin", "14be5664fac7e989d43197607d0bc0b4a3da3a3452cf8b744c21cc8d7bb924b2"))
+  const [partenairePin, setPartenairePin]     = useState(() => LS.get("atm_partenairePin", "3741c5562077db7e90d5937bfb34fbb4c84866369f5aa5838751db216681e340"))
+  const [adminName, setAdminName]             = useState(() => LS.get("atm_adminName", "Jihad"))
+  const [partenaireName, setPartenaireName]   = useState(() => LS.get("atm_partenaireName", "Yaha"))
   const [testMode, setTestMode]               = useState(false)
   const [taxes, setTaxes]                     = useState<Tax[]>(() => LS.get("atm_taxes", [
     { id: "t1", name: "TVA 20%", rate: 20 },
