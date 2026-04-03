@@ -4303,7 +4303,7 @@ export default function ATMApp() {
             >✕</button>
 
             {/* Ticket papier */}
-            <div className="bg-white text-gray-900 rounded-t-2xl px-6 pt-6 pb-4 font-mono">
+            <div className="bg-white text-gray-900 rounded-t-2xl px-6 pt-6 pb-4 font-mono font-bold">
 
               {/* Bandeau DUPLICATA */}
               {receiptIsDuplicate && (
