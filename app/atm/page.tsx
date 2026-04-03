@@ -1236,6 +1236,7 @@ export default function ATMApp() {
   // ── Export CSV ────────────────────────────────────────────────────────────
   const [showExportMenu, setShowExportMenu] = useState(false)
   const [showClearConfirm, setShowClearConfirm] = useState(false)
+  const [showClearSortiesConfirm, setShowClearSortiesConfirm] = useState(false)
 
   function exportVentes() {
     const rows = orders.map(o => [
@@ -3781,7 +3782,13 @@ export default function ATMApp() {
                 {/* ─── Historique des sorties ─── */}
                 {sortiesHistory.length > 0 && (
                   <div className="bg-[#12121f] border border-white/[0.08] rounded-xl p-5">
-                    <h2 className="text-sm font-bold text-white/80 mb-4">📤 Historique des sorties</h2>
+                    <div className="flex items-center justify-between mb-4">
+                      <h2 className="text-sm font-bold text-white/80">📤 Historique des sorties</h2>
+                      <button onClick={() => setShowClearSortiesConfirm(true)}
+                        className="text-xs text-red-400 hover:text-red-300 transition-colors">
+                        🗑 Effacer
+                      </button>
+                    </div>
                     <div className="overflow-x-auto">
                       <table className="w-full text-sm">
                         <thead>
@@ -4833,6 +4840,35 @@ export default function ATMApp() {
               <button onClick={() => {
                 setOrders([])
                 setShowClearConfirm(false)
+              }}
+                className="flex-1 py-2.5 rounded-xl bg-red-500 hover:bg-red-400 text-white font-bold text-sm transition-colors">
+                Effacer tout
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal confirmation effacer historique sorties */}
+      {showClearSortiesConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={() => setShowClearSortiesConfirm(false)}>
+          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
+          <div className="relative bg-[#1a1a35] border border-white/[0.12] rounded-2xl shadow-2xl w-full max-w-sm p-6" onClick={e => e.stopPropagation()}>
+            <div className="text-center mb-5">
+              <div className="text-3xl mb-3">📤</div>
+              <h3 className="text-lg font-bold text-white mb-2">Effacer l'historique des sorties ?</h3>
+              <p className="text-sm text-white/50">
+                Toutes les sorties de stock seront supprimées définitivement. Cette action est irréversible.
+              </p>
+            </div>
+            <div className="flex gap-3">
+              <button onClick={() => setShowClearSortiesConfirm(false)}
+                className="flex-1 py-2.5 rounded-xl bg-white/[0.06] hover:bg-white/10 text-white/60 text-sm font-medium transition-colors">
+                Annuler
+              </button>
+              <button onClick={() => {
+                setSortiesHistory([])
+                setShowClearSortiesConfirm(false)
               }}
                 className="flex-1 py-2.5 rounded-xl bg-red-500 hover:bg-red-400 text-white font-bold text-sm transition-colors">
                 Effacer tout
