@@ -2290,6 +2290,43 @@ export default function ATMApp() {
                   </div>
                 </div>
 
+                {/* Tickets en attente — bandeau visible */}
+                {pendingOrders.length > 0 && (
+                  <div className="px-6 pt-4 pb-2">
+                    <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4">
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="text-lg">⏸</span>
+                        <h3 className="text-sm font-bold text-amber-400">Tickets en attente</h3>
+                        <span className="min-w-[20px] h-5 flex items-center justify-center rounded-full bg-amber-500 text-[10px] font-bold text-black px-1.5">
+                          {pendingOrders.length}
+                        </span>
+                      </div>
+                      <div className="space-y-2">
+                        {pendingOrders.map(p => (
+                          <button
+                            key={p.id}
+                            onClick={() => { resumePendingOrder(p); setView("vendre") }}
+                            className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl bg-white/[0.06] hover:bg-amber-500/20 border border-white/[0.06] hover:border-amber-500/40 transition-all text-left group"
+                          >
+                            <div className="min-w-0 flex-1">
+                              <p className="text-sm font-semibold text-white truncate">
+                                {p.tableInput || "Sans client"}
+                              </p>
+                              <p className="text-xs text-white/40 mt-0.5">
+                                {Object.values(p.items).reduce((a, b) => a + b, 0)} article(s) · mis en attente à {p.savedAt.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}
+                              </p>
+                            </div>
+                            <div className="text-right flex-shrink-0">
+                              <p className="text-sm font-bold text-amber-400">{formatPrice(p.subtotal)}</p>
+                              <p className="text-[11px] text-amber-400/50 group-hover:text-amber-400 transition-colors">Reprendre →</p>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {filteredOrders.length === 0 ? (
                   <div className="flex flex-col items-center justify-center h-48 text-center">
                     <span className="text-5xl mb-4">📋</span>
