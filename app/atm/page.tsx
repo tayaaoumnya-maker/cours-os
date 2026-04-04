@@ -2303,24 +2303,32 @@ export default function ATMApp() {
                       </div>
                       <div className="space-y-2">
                         {pendingOrders.map(p => (
-                          <button
-                            key={p.id}
-                            onClick={() => { resumePendingOrder(p); setView("vendre") }}
-                            className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl bg-white/[0.06] hover:bg-amber-500/20 border border-white/[0.06] hover:border-amber-500/40 transition-all text-left group"
-                          >
-                            <div className="min-w-0 flex-1">
-                              <p className="text-sm font-semibold text-white truncate">
-                                {p.tableInput || "Sans client"}
-                              </p>
-                              <p className="text-xs text-white/40 mt-0.5">
-                                {Object.values(p.items).reduce((a, b) => a + b, 0)} article(s) · mis en attente à {p.savedAt.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}
-                              </p>
-                            </div>
-                            <div className="text-right flex-shrink-0">
-                              <p className="text-sm font-bold text-amber-400">{formatPrice(p.subtotal)}</p>
-                              <p className="text-[11px] text-amber-400/50 group-hover:text-amber-400 transition-colors">Reprendre →</p>
-                            </div>
-                          </button>
+                          <div key={p.id} className="flex items-center gap-2">
+                            <button
+                              onClick={() => { resumePendingOrder(p); setView("vendre") }}
+                              className="flex-1 flex items-center justify-between gap-3 px-4 py-3 rounded-xl bg-white/[0.06] hover:bg-amber-500/20 border border-white/[0.06] hover:border-amber-500/40 transition-all text-left group"
+                            >
+                              <div className="min-w-0 flex-1">
+                                <p className="text-sm font-semibold text-white truncate">
+                                  {p.tableInput || "Sans client"}
+                                </p>
+                                <p className="text-xs text-white/40 mt-0.5">
+                                  {Object.values(p.items).reduce((a, b) => a + b, 0)} article(s) · mis en attente à {p.savedAt.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}
+                                </p>
+                              </div>
+                              <div className="text-right flex-shrink-0">
+                                <p className="text-sm font-bold text-amber-400">{formatPrice(p.subtotal)}</p>
+                                <p className="text-[11px] text-amber-400/50 group-hover:text-amber-400 transition-colors">Reprendre →</p>
+                              </div>
+                            </button>
+                            <button
+                              onClick={() => setPendingOrders(prev => prev.filter(x => x.id !== p.id))}
+                              className="flex-shrink-0 w-9 h-9 rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 hover:border-red-500/40 flex items-center justify-center text-red-400 transition-all"
+                              title="Annuler ce ticket"
+                            >
+                              ✕
+                            </button>
+                          </div>
                         ))}
                       </div>
                     </div>
