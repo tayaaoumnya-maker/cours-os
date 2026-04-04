@@ -22,7 +22,7 @@ interface Product {
   image?: string
   description: string
   variablePrice?: boolean
-  taxId?: string       // référence à Tax.id — prix considéré TTC
+  taxId?: string       // référence à Tax.id — prix considéré HT, TVA ajoutée
   promoPercent?: number // % de remise (ex: 10 = -10%), prix barré + badge PROMO
   purchasePrice?: number // prix d'achat HT (coût fournisseur)
   supplierId?: string  // référence à Supplier.id
@@ -1483,18 +1483,19 @@ export default function ATMApp() {
       }
     })
 
-    // Calculer les montants HT/TVA/TTC par taux
+    // Calculer les montants HT/TVA/TTC par taux — prix produits = HT, TVA ajoutée
     let totalHT = 0
     order.items.forEach(item => {
       const prod = products.find(p => p.id === item.productId)
-      const ttc = item.quantity * item.unitPrice
+      const ht = item.quantity * item.unitPrice
       const entry = prod?.taxId ? taxEntries[prod.taxId] : null
       if (entry) {
-        const ht = ttc / (1 + entry.rate / 100)
-        entry.ttcAmt += ttc; entry.htAmt += ht; entry.tvaAmt += (ttc - ht)
+        const tva = ht * entry.rate / 100
+        const ttc = ht + tva
+        entry.htAmt += ht; entry.tvaAmt += tva; entry.ttcAmt += ttc
         totalHT += ht
       } else {
-        totalHT += ttc
+        totalHT += ht
       }
     })
 
@@ -4480,8 +4481,8 @@ export default function ATMApp() {
                   if (!prod?.taxId) return
                   const tax = taxes.find(t => t.id === prod.taxId)
                   if (!tax) return
-                  const ttc = item.unitPrice * item.quantity
-                  const tvaAmt = ttc * tax.rate / (100 + tax.rate)
+                  const ht = item.unitPrice * item.quantity
+                  const tvaAmt = ht * tax.rate / 100
                   const existing = tvaLines.find(l => l.name === tax.name)
                   if (existing) existing.amount += tvaAmt
                   else tvaLines.push({ name: tax.name, rate: tax.rate, amount: tvaAmt })
