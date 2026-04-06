@@ -2481,38 +2481,57 @@ export default function ATMApp() {
                                   <p className="text-xs text-white/30 italic px-4 pb-2">💬 "{order.comment}"</p>
                                 )}
                                 {/* Actions */}
-                                {(order.status !== "annulé" && order.status !== "remboursé" && !order.isRefund) || !order.isRefund ? (
-                                  <div className="px-4 pb-3 flex gap-2 flex-wrap border-t border-white/[0.04] pt-2 mt-1">
-                                    {STATUS_NEXT[order.status] && !order.isRefund && (
-                                      <button onClick={() => advanceOrder(order.id)} className="px-3 py-1 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 text-xs font-medium transition-all">
-                                        → {STATUS_NEXT[order.status]}
-                                      </button>
-                                    )}
-                                    {(order.status === "livré" || order.status === "en cours" || order.status === "prêt") && !order.isRefund && (
+                                {!order.isRefund ? (
+                                  <div className="px-4 pb-3 flex gap-2 flex-wrap items-center border-t border-white/[0.04] pt-2 mt-1">
+                                    {/* Ticket direct */}
+                                    <button onClick={() => { setReceiptOrder(order); setReceiptIsDuplicate(false) }}
+                                      className="px-3 py-1 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 text-xs font-medium transition-all">
+                                      🧾 Ticket
+                                    </button>
+                                    {/* Modifier la commande */}
+                                    {(order.status === "livré" || order.status === "en cours" || order.status === "prêt") && (
                                       <button onClick={() => openEditOrder(order.id)} className="px-3 py-1 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 text-xs font-medium transition-all">
                                         ✏️ Modifier
                                       </button>
                                     )}
-                                    {order.status === "livré" && !order.isRefund && (
+                                    {/* Rembourser */}
+                                    {order.status === "livré" && (
                                       <button onClick={() => { setRefundModal({ orderId: order.id, total: order.total }); setRefundReason("Vente annulée") }}
                                         className="px-3 py-1 rounded-lg bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 text-xs font-medium transition-all">
                                         ↩ Rembourser
                                       </button>
                                     )}
-                                    {order.status !== "livré" && order.status !== "annulé" && order.status !== "remboursé" && !order.isRefund && (
+                                    {/* Annuler */}
+                                    {order.status !== "livré" && order.status !== "annulé" && order.status !== "remboursé" && (
                                       <button onClick={() => cancelOrder(order.id)} className="px-3 py-1 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs transition-all">Annuler</button>
                                     )}
-                                    {!order.isRefund && (
-                                      <button onClick={() => { setReceiptOrder(order); setReceiptIsDuplicate(true) }}
-                                        className="px-3 py-1 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-white/30 hover:text-white/60 text-xs transition-all">
-                                        🖨 Duplicata
-                                      </button>
-                                    )}
-                                    {order.isRefund && order.refundReason && (
-                                      <p className="text-xs text-purple-400/60">↩ {order.refundReason}</p>
+                                    {/* Sélecteur de statut optionnel */}
+                                    {order.status !== "annulé" && order.status !== "remboursé" && (
+                                      <select
+                                        value={order.status}
+                                        onChange={e => {
+                                          const newStatus = e.target.value as OrderStatus
+                                          setOrders(prev => prev.map(o => o.id === order.id ? { ...o, status: newStatus } : o))
+                                        }}
+                                        className="ml-auto px-2 py-1 rounded-lg bg-white/[0.05] border border-white/[0.08] text-white/50 text-[11px] focus:outline-none focus:border-amber-500/50 cursor-pointer appearance-none"
+                                      >
+                                        <option value="en cours" className="bg-[#12121f]">En cours</option>
+                                        <option value="prêt" className="bg-[#12121f]">Prêt</option>
+                                        <option value="livré" className="bg-[#12121f]">Livré</option>
+                                      </select>
                                     )}
                                   </div>
-                                ) : null}
+                                ) : (
+                                  <div className="px-4 pb-3 flex gap-2 flex-wrap border-t border-white/[0.04] pt-2 mt-1">
+                                    {order.refundReason && (
+                                      <p className="text-xs text-purple-400/60">↩ {order.refundReason}</p>
+                                    )}
+                                    <button onClick={() => { setReceiptOrder(order); setReceiptIsDuplicate(false) }}
+                                      className="px-3 py-1 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-white/30 hover:text-white/60 text-xs transition-all">
+                                      🧾 Ticket
+                                    </button>
+                                  </div>
+                                )}
                               </div>
                             )
                           })}
@@ -4548,6 +4567,9 @@ export default function ATMApp() {
                 <div>{receiptOrder.createdAt.toLocaleDateString("fr-FR")} — {formatTime(receiptOrder.createdAt)}</div>
                 {receiptOrder.table && (
                   <div>Client : <span className="font-semibold text-gray-700">{receiptOrder.table}</span></div>
+                )}
+                {receiptOrder.deliveryName && (
+                  <div>Livraison : <span className="font-semibold text-gray-700">{receiptOrder.deliveryName}</span></div>
                 )}
                 {receiptOrder.comment && (
                   <div className="mt-1 italic text-gray-600">"{receiptOrder.comment}"</div>
