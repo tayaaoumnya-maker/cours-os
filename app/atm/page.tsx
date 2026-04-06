@@ -4170,7 +4170,6 @@ export default function ATMApp() {
 
                 {/* ─── Historique des sorties ─── */}
                 {(() => {
-                  // Filtrer les sorties par date
                   const now = new Date()
                   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate())
                   const weekStart = new Date(todayStart.getTime() - 6 * 86400000)
@@ -4184,64 +4183,24 @@ export default function ATMApp() {
                     return true
                   })
 
-                  // Totaux par produit
-                  const totalsByProduct: Record<string, { name: string; qty: number; count: number }> = {}
-                  filteredSorties.forEach(s => {
-                    if (!totalsByProduct[s.productId]) totalsByProduct[s.productId] = { name: s.name, qty: 0, count: 0 }
-                    totalsByProduct[s.productId].qty += s.qty
-                    totalsByProduct[s.productId].count += 1
-                  })
-                  const totalQty = filteredSorties.reduce((s, x) => s + x.qty, 0)
-                  const totalVentes = new Set(filteredSorties.map(s => s.orderId)).size
-
-                  // Grouper par jour
-                  const byDay: Record<string, typeof filteredSorties> = {}
-                  filteredSorties.forEach(s => {
-                    const day = new Date(s.at).toLocaleDateString("fr-FR", { weekday: "short", day: "numeric", month: "short", year: "numeric" })
-                    if (!byDay[day]) byDay[day] = []
-                    byDay[day].push(s)
-                  })
-
                   return (
                     <div className="bg-[#12121f] border border-white/[0.08] rounded-xl p-5">
+                      {/* Titre + Effacer */}
                       <div className="flex items-center justify-between mb-3">
-                        <h2 className="text-sm font-bold text-white/80">📤 Historique des sorties</h2>
-                        <div className="flex items-center gap-2">
-                          {sortiesSelectMode ? (
-                            <>
-                              <span className="text-xs text-white/40">{sortiesSelected.size} sélectionné(s)</span>
-                              {sortiesSelected.size > 0 && (
-                                <button onClick={() => setShowClearSortiesConfirm(true)}
-                                  className="text-xs px-2.5 py-1 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-colors">
-                                  🗑 Supprimer ({sortiesSelected.size})
-                                </button>
-                              )}
-                              <button onClick={() => {
-                                const all = new Set(sortiesHistory.map((_, i) => i))
-                                setSortiesSelected(prev => prev.size === sortiesHistory.length ? new Set() : all)
-                              }}
-                                className="text-xs text-amber-400 hover:text-amber-300 transition-colors">
-                                {sortiesSelected.size === sortiesHistory.length ? "Désélectionner" : "Tout sélectionner"}
-                              </button>
-                              <button onClick={() => { setSortiesSelectMode(false); setSortiesSelected(new Set()) }}
-                                className="text-xs text-white/40 hover:text-white/70 transition-colors">
-                                Annuler
-                              </button>
-                            </>
-                          ) : (
-                            <button onClick={() => { setSortiesSelectMode(true); setSortiesSelected(new Set()) }}
-                              className="text-xs text-red-400 hover:text-red-300 transition-colors">
-                              🗑 Effacer
-                            </button>
-                          )}
-                        </div>
+                        <h2 className="text-sm font-bold text-white/80">📤 Historique des sorties <span className="text-white/30 font-normal">({filteredSorties.length})</span></h2>
+                        {sortiesHistory.length > 0 && (
+                          <button onClick={() => { setSortiesHistory([]); }}
+                            className="text-xs px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 font-medium transition-all">
+                            🗑 Effacer tout
+                          </button>
+                        )}
                       </div>
 
                       {/* Filtres date */}
                       <div className="flex gap-1 mb-4 flex-wrap">
                         {([
                           { id: "today" as const, label: "Aujourd'hui" },
-                          { id: "week" as const, label: "7 derniers jours" },
+                          { id: "week" as const, label: "7 jours" },
                           { id: "month" as const, label: "Ce mois" },
                           { id: "all" as const, label: "Tout" },
                         ]).map(f => (
@@ -4254,92 +4213,36 @@ export default function ATMApp() {
                         ))}
                       </div>
 
-                      {/* Résumé chiffres */}
-                      <div className="grid grid-cols-3 gap-3 mb-4">
-                        <div className="bg-white/[0.03] rounded-lg p-3 text-center">
-                          <p className="text-lg font-black text-red-400">{totalQty}</p>
-                          <p className="text-[10px] text-white/30">unités sorties</p>
-                        </div>
-                        <div className="bg-white/[0.03] rounded-lg p-3 text-center">
-                          <p className="text-lg font-black text-amber-400">{totalVentes}</p>
-                          <p className="text-[10px] text-white/30">vente(s)</p>
-                        </div>
-                        <div className="bg-white/[0.03] rounded-lg p-3 text-center">
-                          <p className="text-lg font-black text-cyan-400">{Object.keys(totalsByProduct).length}</p>
-                          <p className="text-[10px] text-white/30">produit(s)</p>
-                        </div>
-                      </div>
-
-                      {/* Totaux par produit */}
-                      {Object.keys(totalsByProduct).length > 0 && (
-                        <div className="mb-4 bg-white/[0.02] rounded-lg p-3">
-                          <p className="text-[10px] text-white/30 font-semibold mb-2">SORTIES PAR PRODUIT</p>
-                          <div className="space-y-1.5">
-                            {Object.entries(totalsByProduct)
-                              .sort((a, b) => b[1].qty - a[1].qty)
-                              .map(([pid, data]) => (
-                                <div key={pid} className="flex items-center justify-between text-xs">
-                                  <span className="text-white/60 truncate max-w-[180px]">{data.name}</span>
-                                  <div className="flex items-center gap-3">
-                                    <span className="text-white/30">{data.count} vente(s)</span>
-                                    <span className="text-red-400 font-bold w-12 text-right">−{data.qty}</span>
-                                  </div>
-                                </div>
-                              ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Détail par jour */}
+                      {/* Liste des sorties */}
                       {filteredSorties.length === 0 ? (
                         <div className="text-center py-6">
                           <span className="text-3xl mb-2 block">📤</span>
                           <p className="text-white/30 text-sm">Aucune sortie sur cette période</p>
                         </div>
                       ) : (
-                        <div className="space-y-4">
-                          {Object.entries(byDay).map(([day, daySorties]) => (
-                            <div key={day}>
-                              <p className="text-[10px] font-black tracking-widest text-white/40 mb-2">{day.toUpperCase()} — {daySorties.reduce((s, x) => s + x.qty, 0)} unité(s) · {new Set(daySorties.map(s => s.orderId)).size} vente(s)</p>
-                              <div className="overflow-x-auto">
-                                <table className="w-full text-sm">
-                                  <tbody>
-                                    {daySorties.map((s, i) => {
-                                      const globalIdx = sortiesHistory.indexOf(s)
-                                      return (
-                                        <tr key={i}
-                                          className={`border-b border-white/[0.04] last:border-0 transition-colors ${sortiesSelectMode ? "cursor-pointer hover:bg-white/[0.04]" : ""} ${sortiesSelected.has(globalIdx) ? "bg-red-500/10" : ""}`}
-                                          onClick={() => {
-                                            if (!sortiesSelectMode) return
-                                            setSortiesSelected(prev => {
-                                              const next = new Set(prev)
-                                              next.has(globalIdx) ? next.delete(globalIdx) : next.add(globalIdx)
-                                              return next
-                                            })
-                                          }}>
-                                          {sortiesSelectMode && (
-                                            <td className="py-2 w-8">
-                                              <div className={`w-4 h-4 rounded border-2 flex items-center justify-center transition-all ${
-                                                sortiesSelected.has(globalIdx) ? "bg-red-500 border-red-500" : "border-white/20"
-                                              }`}>
-                                                {sortiesSelected.has(globalIdx) && <span className="text-white text-[10px]">✓</span>}
-                                              </div>
-                                            </td>
-                                          )}
-                                          <td className="py-2 text-white/70 truncate max-w-[140px]">{s.name}</td>
-                                          <td className="py-2 text-right text-red-400 font-bold">−{s.qty}</td>
-                                          <td className="py-2 text-right text-white/30 text-xs hidden sm:table-cell">{s.orderId}</td>
-                                          <td className="py-2 text-right text-white/30 text-xs whitespace-nowrap">
-                                            {formatTime(new Date(s.at))}
-                                          </td>
-                                        </tr>
-                                      )
-                                    })}
-                                  </tbody>
-                                </table>
-                              </div>
-                            </div>
-                          ))}
+                        <div className="overflow-x-auto">
+                          <table className="w-full text-sm">
+                            <thead>
+                              <tr className="text-white/30 text-xs border-b border-white/[0.06]">
+                                <th className="pb-2 text-left">Produit</th>
+                                <th className="pb-2 text-right">Qté</th>
+                                <th className="pb-2 text-right hidden sm:table-cell">Commande</th>
+                                <th className="pb-2 text-right">Date</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {filteredSorties.map((s, i) => (
+                                <tr key={i} className="border-b border-white/[0.04] last:border-0">
+                                  <td className="py-2 text-white/70 truncate max-w-[140px]">{s.name}</td>
+                                  <td className="py-2 text-right text-red-400 font-bold">−{s.qty}</td>
+                                  <td className="py-2 text-right text-white/30 text-xs hidden sm:table-cell">{s.orderId}</td>
+                                  <td className="py-2 text-right text-white/30 text-xs whitespace-nowrap">
+                                    {new Date(s.at).toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit" })} {formatTime(new Date(s.at))}
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
                         </div>
                       )}
                     </div>
