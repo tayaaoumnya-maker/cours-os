@@ -1227,6 +1227,7 @@ export default function ATMApp() {
       total: subtotal, paymentMethod: method, status: "livré", createdAt: new Date(),
       table: vitrineClient.trim() || undefined,
       orderedBy: userRole === "Administrateur" ? adminName : partenaireName,
+      deliveryName: cartDeliveryName.trim() || undefined,
     }
     // Déduction stock — utilise items (quantités exactes)
     setProducts(prev => prev.map(p => {
@@ -1242,6 +1243,7 @@ export default function ATMApp() {
     setVitrineCart({})
     setVitrineStep("select")
     setVitrineClient("")
+    setCartDeliveryName("")
     setReceiptOrder(order)
     setReceiptIsDuplicate(false)
   }
@@ -3271,6 +3273,23 @@ export default function ATMApp() {
                     <h2 className="font-bold text-base">Panier</h2>
                     <button onClick={() => setShowMobileCart(false)} className="w-8 h-8 rounded-full bg-white/[0.08] flex items-center justify-center text-white/50 text-sm">✕</button>
                   </div>
+                  {/* Nom client + livraison */}
+                  <div className="px-5 pt-3 pb-1 space-y-2 border-b border-white/[0.06]">
+                    <div>
+                      <p className="text-[10px] text-white/30 font-semibold mb-1">👤 Nom et prénom du client</p>
+                      <input type="text"
+                        value={cartClientSearch || (cartClientId ? (clients.find(c => c.id === cartClientId)?.name ?? "") : "")}
+                        onChange={e => { setCartClientSearch(e.target.value); setCartClientId(""); setTableInput(e.target.value) }}
+                        placeholder="Ex : Ahmed Benali"
+                        className="w-full bg-white/[0.05] border border-white/[0.08] rounded-lg px-3 py-2 text-sm placeholder-white/20 text-white focus:outline-none focus:border-amber-500/50 transition-colors" />
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-white/30 font-semibold mb-1">📦 Prénom de la personne livrée</p>
+                      <input type="text" value={cartDeliveryName} onChange={e => setCartDeliveryName(e.target.value)}
+                        placeholder="Ex : Mohamed (optionnel)"
+                        className="w-full bg-white/[0.05] border border-white/[0.08] rounded-lg px-3 py-2 text-sm placeholder-white/20 text-white focus:outline-none focus:border-amber-500/50 transition-colors" />
+                    </div>
+                  </div>
                   {/* Articles */}
                   <div className="flex-1 overflow-y-auto px-5 py-3 space-y-2">
                     {cartItems.map(({ product, qty }) => (
@@ -4435,12 +4454,20 @@ export default function ATMApp() {
                         })}
                       </div>
                     </div>
-                    {/* Client */}
-                    <div>
-                      <label className="block text-[11px] text-white/40 mb-1">Client / Chantier (optionnel)</label>
-                      <input type="text" value={vitrineClient} onChange={e => setVitrineClient(e.target.value)}
-                        placeholder="Nom du client ou chantier"
-                        className="w-full bg-white/[0.05] border border-white/[0.08] rounded-lg px-3 py-2 text-sm text-white placeholder-white/20 focus:outline-none focus:border-amber-500/50 transition-colors" />
+                    {/* Client + livraison */}
+                    <div className="space-y-2">
+                      <div>
+                        <label className="block text-[10px] text-white/30 font-semibold mb-1">👤 Nom et prénom du client</label>
+                        <input type="text" value={vitrineClient} onChange={e => setVitrineClient(e.target.value)}
+                          placeholder="Ex : Ahmed Benali"
+                          className="w-full bg-white/[0.05] border border-white/[0.08] rounded-lg px-3 py-2 text-sm text-white placeholder-white/20 focus:outline-none focus:border-amber-500/50 transition-colors" />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] text-white/30 font-semibold mb-1">📦 Prénom de la personne livrée</label>
+                        <input type="text" value={cartDeliveryName} onChange={e => setCartDeliveryName(e.target.value)}
+                          placeholder="Ex : Mohamed (optionnel)"
+                          className="w-full bg-white/[0.05] border border-white/[0.08] rounded-lg px-3 py-2 text-sm text-white placeholder-white/20 focus:outline-none focus:border-amber-500/50 transition-colors" />
+                      </div>
                     </div>
                   </div>
 
