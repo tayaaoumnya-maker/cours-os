@@ -2637,43 +2637,6 @@ export default function ATMApp() {
 
                 {/* Liste des tickets */}
                 <div className="px-4 pb-8 max-w-4xl mx-auto">
-                  {(() => {
-                    const ticketOrders = orders
-                      .filter(o => !o.isRefund)
-                      .filter(o => {
-                        if (!ticketSearch) return true
-                        const q = ticketSearch.toLowerCase()
-                        return o.id.toLowerCase().includes(q)
-                          || (o.table ?? "").toLowerCase().includes(q)
-                          || (o.deliveryName ?? "").toLowerCase().includes(q)
-                          || o.items.some(i => i.name.toLowerCase().includes(q))
-                      })
-                    const totalCA = ticketOrders.reduce((s, o) => s + o.total, 0)
-                    const totalArticles = ticketOrders.reduce((s, o) => s + o.items.reduce((a, i) => a + i.quantity, 0), 0)
-                    return ticketOrders.length > 0 ? (
-                      <div className="mt-3 mb-4 bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20 rounded-xl p-4">
-                        <div className="flex items-center justify-between flex-wrap gap-3">
-                          <div className="flex items-center gap-3">
-                            <span className="text-2xl">💰</span>
-                            <div>
-                              <p className="text-xs text-white/40">Total des ventes</p>
-                              <p className="text-xl font-black text-amber-400">{formatPrice(totalCA)}</p>
-                            </div>
-                          </div>
-                          <div className="flex gap-4">
-                            <div className="text-center">
-                              <p className="text-lg font-bold text-white/80">{ticketOrders.length}</p>
-                              <p className="text-[10px] text-white/30">ticket(s)</p>
-                            </div>
-                            <div className="text-center">
-                              <p className="text-lg font-bold text-white/80">{totalArticles}</p>
-                              <p className="text-[10px] text-white/30">article(s)</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ) : null
-                  })()}
                   {orders
                     .filter(o => !o.isRefund)
                     .filter(o => {
@@ -4250,6 +4213,33 @@ export default function ATMApp() {
                         </div>
                       ) : (
                         <div className="space-y-3">
+                          {/* Récap total */}
+                          {(() => {
+                            const totalQtySorties = filteredSorties.reduce((s, e) => s + e.qty, 0)
+                            const nbProduits = new Set(filteredSorties.map(s => s.productId)).size
+                            const nbCommandes = new Set(filteredSorties.map(s => s.orderId)).size
+                            return (
+                              <div className="bg-gradient-to-r from-red-500/10 to-orange-500/10 border border-red-500/20 rounded-xl p-4 flex items-center justify-between flex-wrap gap-3">
+                                <div className="flex items-center gap-3">
+                                  <span className="text-2xl">📤</span>
+                                  <div>
+                                    <p className="text-xs text-white/40">Total sorties</p>
+                                    <p className="text-xl font-black text-red-400">−{totalQtySorties} unités</p>
+                                  </div>
+                                </div>
+                                <div className="flex gap-4">
+                                  <div className="text-center">
+                                    <p className="text-lg font-bold text-white/80">{nbProduits}</p>
+                                    <p className="text-[10px] text-white/30">produit(s)</p>
+                                  </div>
+                                  <div className="text-center">
+                                    <p className="text-lg font-bold text-white/80">{nbCommandes}</p>
+                                    <p className="text-[10px] text-white/30">commande(s)</p>
+                                  </div>
+                                </div>
+                              </div>
+                            )
+                          })()}
                           {(() => {
                             const grouped: Record<string, { name: string; totalQty: number; entries: typeof filteredSorties }> = {}
                             filteredSorties.forEach(s => {
