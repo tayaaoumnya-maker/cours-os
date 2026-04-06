@@ -4205,36 +4205,45 @@ export default function ATMApp() {
                         ))}
                       </div>
 
-                      {/* Liste des sorties */}
+                      {/* Liste des sorties classées par produit */}
                       {filteredSorties.length === 0 ? (
                         <div className="text-center py-6">
                           <span className="text-3xl mb-2 block">📤</span>
                           <p className="text-white/30 text-sm">Aucune sortie sur cette période</p>
                         </div>
                       ) : (
-                        <div className="overflow-x-auto">
-                          <table className="w-full text-sm">
-                            <thead>
-                              <tr className="text-white/30 text-xs border-b border-white/[0.06]">
-                                <th className="pb-2 text-left">Produit</th>
-                                <th className="pb-2 text-right">Qté</th>
-                                <th className="pb-2 text-right hidden sm:table-cell">Commande</th>
-                                <th className="pb-2 text-right">Date</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {filteredSorties.map((s, i) => (
-                                <tr key={i} className="border-b border-white/[0.04] last:border-0">
-                                  <td className="py-2 text-white/70 truncate max-w-[140px]">{s.name}</td>
-                                  <td className="py-2 text-right text-red-400 font-bold">−{s.qty}</td>
-                                  <td className="py-2 text-right text-white/30 text-xs hidden sm:table-cell">{s.orderId}</td>
-                                  <td className="py-2 text-right text-white/30 text-xs whitespace-nowrap">
-                                    {new Date(s.at).toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit" })} {formatTime(new Date(s.at))}
-                                  </td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
+                        <div className="space-y-3">
+                          {(() => {
+                            const grouped: Record<string, { name: string; totalQty: number; entries: typeof filteredSorties }> = {}
+                            filteredSorties.forEach(s => {
+                              if (!grouped[s.productId]) grouped[s.productId] = { name: s.name, totalQty: 0, entries: [] }
+                              grouped[s.productId].totalQty += s.qty
+                              grouped[s.productId].entries.push(s)
+                            })
+                            return Object.entries(grouped)
+                              .sort((a, b) => b[1].totalQty - a[1].totalQty)
+                              .map(([pid, g]) => (
+                                <div key={pid} className="bg-white/[0.03] rounded-lg border border-white/[0.06] overflow-hidden">
+                                  <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/[0.06]">
+                                    <span className="text-sm font-semibold text-white/80 truncate">{g.name}</span>
+                                    <span className="text-sm font-bold text-red-400 ml-2 whitespace-nowrap">−{g.totalQty} vendus</span>
+                                  </div>
+                                  <table className="w-full text-sm">
+                                    <tbody>
+                                      {g.entries.map((s, i) => (
+                                        <tr key={i} className="border-b border-white/[0.03] last:border-0">
+                                          <td className="py-1.5 pl-4 text-red-400/70 text-xs font-medium">−{s.qty}</td>
+                                          <td className="py-1.5 text-white/30 text-xs hidden sm:table-cell">{s.orderId}</td>
+                                          <td className="py-1.5 pr-4 text-right text-white/30 text-xs whitespace-nowrap">
+                                            {new Date(s.at).toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit" })} {formatTime(new Date(s.at))}
+                                          </td>
+                                        </tr>
+                                      ))}
+                                    </tbody>
+                                  </table>
+                                </div>
+                              ))
+                          })()}
                         </div>
                       )}
                     </div>
