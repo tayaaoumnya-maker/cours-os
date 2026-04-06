@@ -73,6 +73,7 @@ interface Order {
   cashGiven?: number   // montant remis en espèces (pour rendu monnaie)
   clientId?: string    // lien vers Client.id
   orderedBy?: string   // nom de l'utilisateur qui a validé la commande
+  deliveryName?: string // prénom de la personne pour la livraison
 }
 
 interface PendingOrder {
@@ -692,6 +693,10 @@ export default function ATMApp() {
   const [vitrineSearch, setVitrineSearch]     = useState("")
   const [refundModal, setRefundModal]         = useState<{ orderId: string; total: number } | null>(null)
   const [refundReason, setRefundReason]       = useState("Vente annulée")
+  // Édition commande validée
+  const [editOrderId, setEditOrderId]           = useState<string | null>(null)
+  const [editOrderItems, setEditOrderItems]     = useState<OrderItem[]>([])
+  const [editOrderSearch, setEditOrderSearch]   = useState("")
   // Prix variable
   const [cartPrices, setCartPrices]           = useState<Record<string, number>>({})
   const [variablePriceModal, setVariablePriceModal] = useState<{ productId: string; name: string } | null>(null)
@@ -757,6 +762,7 @@ export default function ATMApp() {
   const [cartClientId, setCartClientId]       = useState("")
   const [cartClientSearch, setCartClientSearch] = useState("")
   const [showCartClientDrop, setShowCartClientDrop] = useState(false)
+  const [cartDeliveryName, setCartDeliveryName]     = useState("")
   // Fournisseurs
   const [suppliers, setSuppliers]             = useState<Supplier[]>(() => LS.get("atm_suppliers", []))
   const [showSupplierForm, setShowSupplierForm] = useState(false)
@@ -1080,6 +1086,7 @@ export default function ATMApp() {
     setDiscountValue(0)
     setCartClientId("")
     setCartClientSearch("")
+    setCartDeliveryName("")
   }
 
   function holdCart() {
@@ -1126,7 +1133,7 @@ export default function ATMApp() {
       discountValue,
       total:         cartTTC,
       paymentMethod: method,
-      status:        "en cours",
+      status:        "livré",
       createdAt:     new Date(),
       table:         tableInput.trim() || undefined,
       comment:       cartComment.trim() || undefined,
@@ -1134,10 +1141,12 @@ export default function ATMApp() {
       cashGiven:     cashGiven || undefined,
       clientId:      cartClientId || undefined,
       orderedBy:     userRole === "Administrateur" ? adminName : partenaireName,
+      deliveryName:  cartDeliveryName.trim() || undefined,
     }
+    // Déduction stock — utilise items (quantités exactes) au lieu de cart
     setProducts(prev => prev.map(p => {
-      const qty = cart[p.id] ?? 0
-      return qty > 0 ? { ...p, stock: Math.max(0, p.stock - qty) } : p
+      const orderItem = items.find(i => i.productId === p.id)
+      return orderItem ? { ...p, stock: Math.max(0, p.stock - orderItem.quantity) } : p
     }))
     const now = new Date()
     setSortiesHistory(prev => [
@@ -1164,13 +1173,14 @@ export default function ATMApp() {
     const subtotal = items.reduce((s, i) => s + i.unitPrice * i.quantity, 0)
     const order: Order = {
       id: genId(), items, subtotal, discountType: "percent", discountValue: 0,
-      total: subtotal, paymentMethod: method, status: "en cours", createdAt: new Date(),
+      total: subtotal, paymentMethod: method, status: "livré", createdAt: new Date(),
       table: vitrineClient.trim() || undefined,
       orderedBy: userRole === "Administrateur" ? adminName : partenaireName,
     }
+    // Déduction stock — utilise items (quantités exactes)
     setProducts(prev => prev.map(p => {
-      const qty = vitrineCart[p.id] ?? 0
-      return qty > 0 ? { ...p, stock: Math.max(0, p.stock - qty) } : p
+      const orderItem = items.find(i => i.productId === p.id)
+      return orderItem ? { ...p, stock: Math.max(0, p.stock - orderItem.quantity) } : p
     }))
     const now2 = new Date()
     setSortiesHistory(prev => [
@@ -1229,6 +1239,96 @@ export default function ATMApp() {
     }))
     setOrders(prev => [refund, ...prev.map(o => o.id === orderId ? { ...o, status: "remboursé" as OrderStatus } : o)])
     setRefundModal(null)
+  }
+
+  // ── Édition de commande validée ──────────────────────────────────────────
+  function openEditOrder(orderId: string) {
+    const order = orders.find(o => o.id === orderId)
+    if (!order) return
+    setEditOrderId(orderId)
+    setEditOrderItems(order.items.map(i => ({ ...i })))
+    setEditOrderSearch("")
+  }
+
+  function editOrderAddProduct(productId: string) {
+    const product = products.find(p => p.id === productId)
+    if (!product) return
+    const original = orders.find(o => o.id === editOrderId)
+    const originalQty = original?.items.find(i => i.productId === productId)?.quantity ?? 0
+    const existing = editOrderItems.find(i => i.productId === productId)
+    const currentEditQty = existing?.quantity ?? 0
+    // Stock dispo = stock actuel + ce qui était dans la commande originale
+    const availableStock = product.stock + originalQty
+    if (currentEditQty >= availableStock) return
+    if (existing) {
+      setEditOrderItems(prev => prev.map(i =>
+        i.productId === productId ? { ...i, quantity: i.quantity + 1 } : i
+      ))
+    } else {
+      setEditOrderItems(prev => [...prev, {
+        productId: product.id,
+        name: product.name,
+        quantity: 1,
+        unitPrice: product.price,
+      }])
+    }
+  }
+
+  function editOrderRemoveProduct(productId: string) {
+    setEditOrderItems(prev => {
+      const item = prev.find(i => i.productId === productId)
+      if (!item) return prev
+      if (item.quantity <= 1) return prev.filter(i => i.productId !== productId)
+      return prev.map(i => i.productId === productId ? { ...i, quantity: i.quantity - 1 } : i)
+    })
+  }
+
+  function editOrderDeleteProduct(productId: string) {
+    setEditOrderItems(prev => prev.filter(i => i.productId !== productId))
+  }
+
+  function saveEditOrder() {
+    if (!editOrderId) return
+    const original = orders.find(o => o.id === editOrderId)
+    if (!original) return
+
+    // Restaurer le stock des anciens items
+    const stockDelta: Record<string, number> = {}
+    original.items.forEach(i => { stockDelta[i.productId] = (stockDelta[i.productId] ?? 0) + i.quantity })
+    // Soustraire le stock des nouveaux items
+    editOrderItems.forEach(i => { stockDelta[i.productId] = (stockDelta[i.productId] ?? 0) - i.quantity })
+
+    // Appliquer delta au stock
+    setProducts(prev => prev.map(p => {
+      const delta = stockDelta[p.id]
+      return delta ? { ...p, stock: Math.max(0, p.stock + delta) } : p
+    }))
+
+    // Recalculer totaux
+    const newSubtotal = editOrderItems.reduce((s, i) => s + i.unitPrice * i.quantity, 0)
+    const newDiscountAmount = original.discountType === "percent"
+      ? newSubtotal * original.discountValue / 100
+      : Math.min(original.discountValue, newSubtotal)
+    const newHT = newSubtotal - newDiscountAmount
+    const newTTC = newHT * 1.2
+
+    // Mettre à jour la commande
+    setOrders(prev => prev.map(o => o.id === editOrderId ? {
+      ...o,
+      items: editOrderItems,
+      subtotal: newSubtotal,
+      total: newTTC,
+    } : o))
+
+    // Mettre à jour les sorties
+    const now = new Date()
+    setSortiesHistory(prev => [
+      ...editOrderItems.map(i => ({ productId: i.productId, name: i.name, qty: i.quantity, orderId: editOrderId!, at: now })),
+      ...prev.filter(s => s.orderId !== editOrderId),
+    ].slice(0, 200))
+
+    setEditOrderId(null)
+    setEditOrderItems([])
   }
 
   // ── Export CSV ────────────────────────────────────────────────────────────
@@ -2364,6 +2464,7 @@ export default function ATMApp() {
                                       {formatTime(order.createdAt)} · {order.id}
                                       {order.table ? ` · ${order.table}` : ""}
                                       {order.orderedBy ? ` · 👤 ${order.orderedBy}` : ""}
+                                      {order.deliveryName ? ` · 📦 ${order.deliveryName}` : ""}
                                     </p>
                                   </div>
                                   <div className="flex items-center gap-2 flex-shrink-0">
@@ -2385,6 +2486,11 @@ export default function ATMApp() {
                                     {STATUS_NEXT[order.status] && !order.isRefund && (
                                       <button onClick={() => advanceOrder(order.id)} className="px-3 py-1 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 text-xs font-medium transition-all">
                                         → {STATUS_NEXT[order.status]}
+                                      </button>
+                                    )}
+                                    {(order.status === "livré" || order.status === "en cours" || order.status === "prêt") && !order.isRefund && (
+                                      <button onClick={() => openEditOrder(order.id)} className="px-3 py-1 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 text-xs font-medium transition-all">
+                                        ✏️ Modifier
                                       </button>
                                     )}
                                     {order.status === "livré" && !order.isRefund && (
@@ -2756,6 +2862,19 @@ export default function ATMApp() {
                       </div>
                     )
                   })()}
+                </div>
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={cartDeliveryName}
+                    onChange={e => setCartDeliveryName(e.target.value)}
+                    placeholder="Prénom livraison (optionnel)"
+                    className="w-full bg-white/[0.05] border border-white/[0.08] rounded-lg px-3 py-2 text-sm placeholder-white/20 text-white focus:outline-none focus:border-amber-500/50 transition-colors pr-7"
+                  />
+                  {cartDeliveryName && (
+                    <button onClick={() => setCartDeliveryName("")}
+                      className="absolute right-2 top-2 text-white/30 hover:text-white/60 text-xs">✕</button>
+                  )}
                 </div>
                 <textarea
                   value={cartComment}
@@ -4700,6 +4819,105 @@ export default function ATMApp() {
                 <button onClick={() => processRefund(refundModal.orderId, refundReason)}
                   className="flex-1 py-2.5 rounded-xl bg-purple-500 hover:bg-purple-400 text-white font-bold text-sm transition-colors">
                   ↩ Confirmer le remboursement
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── MODAL ÉDITION COMMANDE ────────────────────────────────────────── */}
+      {editOrderId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={() => setEditOrderId(null)}>
+          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
+          <div className="relative z-10 w-full max-w-md bg-[#12121f] border border-white/[0.08] rounded-2xl overflow-hidden shadow-2xl max-h-[85vh] flex flex-col" onClick={e => e.stopPropagation()}>
+            <div className="px-5 py-4 border-b border-white/[0.06] flex items-center justify-between flex-shrink-0">
+              <div>
+                <h2 className="text-base font-bold">Modifier la commande</h2>
+                <p className="text-xs text-white/40 mt-0.5">#{editOrderId}</p>
+              </div>
+              <button onClick={() => setEditOrderId(null)} className="text-white/30 hover:text-white text-lg">✕</button>
+            </div>
+
+            {/* Articles actuels */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-2">
+              <p className="text-xs text-white/40 font-semibold mb-2">Articles de la commande</p>
+              {editOrderItems.length === 0 ? (
+                <p className="text-sm text-white/20 text-center py-4">Aucun article</p>
+              ) : editOrderItems.map(item => {
+                const product = products.find(p => p.id === item.productId)
+                return (
+                  <div key={item.productId} className="flex items-center gap-2 bg-white/[0.04] rounded-lg p-2.5">
+                    <div className="w-8 h-8 rounded-md overflow-hidden flex-shrink-0 bg-white/[0.05]">
+                      {product?.image
+                        ? <img src={product.image} alt={item.name} className="w-full h-full object-cover" />
+                        : <div className="w-full h-full flex items-center justify-center text-sm">{product?.emoji ?? "📦"}</div>
+                      }
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-medium truncate">{item.name}</p>
+                      <p className="text-xs text-white/30">{formatPrice(item.unitPrice)} / u.</p>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <button onClick={() => editOrderRemoveProduct(item.productId)}
+                        className="w-6 h-6 rounded-md bg-white/[0.08] hover:bg-white/15 text-xs flex items-center justify-center transition-colors">−</button>
+                      <span className="text-sm font-bold w-5 text-center">{item.quantity}</span>
+                      <button onClick={() => editOrderAddProduct(item.productId)}
+                        className="w-6 h-6 rounded-md bg-white/[0.08] hover:bg-white/15 text-xs flex items-center justify-center transition-colors">+</button>
+                      <button onClick={() => editOrderDeleteProduct(item.productId)}
+                        className="w-6 h-6 rounded-md bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs flex items-center justify-center transition-colors ml-1">✕</button>
+                    </div>
+                  </div>
+                )
+              })}
+
+              {/* Ajouter un produit */}
+              <div className="pt-3 border-t border-white/[0.06]">
+                <p className="text-xs text-white/40 font-semibold mb-2">Ajouter un produit</p>
+                <input
+                  type="text"
+                  value={editOrderSearch}
+                  onChange={e => setEditOrderSearch(e.target.value)}
+                  placeholder="Rechercher un produit..."
+                  className="w-full bg-white/[0.05] border border-white/[0.08] rounded-lg px-3 py-2 text-sm placeholder-white/20 text-white focus:outline-none focus:border-amber-500/50 transition-colors mb-2"
+                />
+                {editOrderSearch.length > 0 && (
+                  <div className="space-y-1 max-h-40 overflow-y-auto">
+                    {products
+                      .filter(p => p.name.toLowerCase().includes(editOrderSearch.toLowerCase()) && p.stock > 0)
+                      .slice(0, 8)
+                      .map(p => (
+                        <button key={p.id} onClick={() => { editOrderAddProduct(p.id); setEditOrderSearch("") }}
+                          className="w-full flex items-center gap-2 px-3 py-2 rounded-lg bg-white/[0.03] hover:bg-white/[0.08] text-left transition-colors">
+                          <span className="text-sm">{p.emoji}</span>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs font-medium truncate">{p.name}</p>
+                            <p className="text-[10px] text-white/30">{formatPrice(p.price)} · Stock: {p.stock}</p>
+                          </div>
+                          <span className="text-amber-400 text-xs">+ Ajouter</span>
+                        </button>
+                      ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Total + actions */}
+            <div className="px-5 py-4 border-t border-white/[0.06] flex-shrink-0">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-sm text-white/50">Nouveau total TTC</span>
+                <span className="text-lg font-bold text-amber-400">
+                  {formatPrice(editOrderItems.reduce((s, i) => s + i.unitPrice * i.quantity, 0) * 1.2)}
+                </span>
+              </div>
+              <div className="flex gap-2">
+                <button onClick={() => setEditOrderId(null)}
+                  className="flex-1 py-2.5 rounded-xl bg-white/[0.05] hover:bg-white/10 text-white/50 text-sm transition-colors">
+                  Annuler
+                </button>
+                <button onClick={saveEditOrder}
+                  className="flex-1 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-sm transition-colors">
+                  ✓ Enregistrer
                 </button>
               </div>
             </div>
