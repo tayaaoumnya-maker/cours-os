@@ -927,23 +927,16 @@ export default function ATMApp() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // ─── Synchronisation stock + sorties ↔ ventes ──────────────────────────────
-  // Au chargement : reconstruit l'historique des sorties ET recalcule le stock
-  // à partir des commandes réelles (source de vérité unique)
-  const syncStockRef = useRef(false)
+  // ─── Synchronisation sorties ↔ ventes ───────────────────────────────────────
+  // Reconstruit l'historique des sorties à chaque changement de commandes
+  // Source de vérité unique = les commandes
   useEffect(() => {
-    if (!initialized.current || syncStockRef.current) return
-    syncStockRef.current = true
+    if (!initialized.current) return
 
-    // 1. Reconstruire l'historique des sorties depuis les commandes actives
     const newSorties: { productId: string; name: string; qty: number; orderId: string; at: Date }[] = []
     const netSold: Record<string, number> = {}
 
-    // Trier les commandes par date (plus anciennes en premier)
-    const sortedOrders = [...orders].sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
-
-    sortedOrders.forEach(order => {
-      // Ne compter que les commandes actives (pas annulées, pas remboursées, pas les lignes refund)
+    orders.forEach(order => {
       if (order.isRefund) return
       if (order.status === "annulé") return
       if (order.status === "remboursé") return
@@ -960,35 +953,25 @@ export default function ATMApp() {
       })
     })
 
-    // 2. Mettre à jour l'historique des sorties (les plus récentes en premier — TOUTES les sorties)
-    const sortedSorties = newSorties.sort((a, b) => b.at.getTime() - a.at.getTime())
-    setSortiesHistory(sortedSorties)
+    // Sorties triées du plus récent au plus ancien
+    newSorties.sort((a, b) => b.at.getTime() - a.at.getTime())
+    setSortiesHistory(newSorties)
 
-    // 3. Recalculer le stock de chaque produit
+    // Recalculer le stock de chaque produit
     setProducts(prev => {
       let changed = false
       const updated = prev.map(p => {
         const sold = netSold[p.id] ?? 0
         const initial = INITIAL_PRODUCTS.find(ip => ip.id === p.id)
-        let correctStock: number
-        if (initial) {
-          // Produit initial : stock de départ connu
-          correctStock = Math.max(0, initial.stock - sold)
-          // Si stock actuel > calcul, l'utilisateur a fait une réception manuelle → on garde le surplus
-          if (p.stock > correctStock) return p
-        } else {
-          // Produit ajouté manuellement : on ne connaît pas le stock de départ
-          // On ne peut que vérifier la cohérence future — on ne touche pas
-          return p
-        }
-        if (p.stock !== correctStock) {
-          changed = true
-          return { ...p, stock: correctStock }
-        }
+        if (!initial) return p
+        const correctStock = Math.max(0, initial.stock - sold)
+        if (p.stock > correctStock) return p // réception manuelle
+        if (p.stock !== correctStock) { changed = true; return { ...p, stock: correctStock } }
         return p
       })
       return changed ? updated : prev
     })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orders])
 
   // formatPrice lié à la devise
