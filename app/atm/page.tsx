@@ -4247,29 +4247,27 @@ export default function ATMApp() {
                               grouped[s.productId].totalQty += s.qty
                               grouped[s.productId].entries.push(s)
                             })
-                            return Object.entries(grouped)
-                              .sort((a, b) => b[1].totalQty - a[1].totalQty)
-                              .map(([pid, g]) => (
-                                <div key={pid} className="bg-white/[0.03] rounded-lg border border-white/[0.06] overflow-hidden">
-                                  <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/[0.06]">
-                                    <span className="text-sm font-semibold text-white/80 truncate">{g.name}</span>
-                                    <span className="text-sm font-bold text-red-400 ml-2 whitespace-nowrap">−{g.totalQty} vendus</span>
-                                  </div>
-                                  <table className="w-full text-sm">
-                                    <tbody>
-                                      {g.entries.map((s, i) => (
-                                        <tr key={i} className="border-b border-white/[0.03] last:border-0">
-                                          <td className="py-1.5 pl-4 text-red-400/70 text-xs font-medium">−{s.qty}</td>
-                                          <td className="py-1.5 text-white/30 text-xs hidden sm:table-cell">{s.orderId}</td>
-                                          <td className="py-1.5 pr-4 text-right text-white/30 text-xs whitespace-nowrap">
-                                            {new Date(s.at).toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit" })} {formatTime(new Date(s.at))}
-                                          </td>
-                                        </tr>
-                                      ))}
-                                    </tbody>
-                                  </table>
-                                </div>
-                              ))
+                            const sortedGroups = Object.entries(grouped).sort((a, b) => b[1].totalQty - a[1].totalQty)
+                            return (
+                              <div className="bg-white/[0.03] rounded-xl border border-white/[0.06] overflow-hidden">
+                                <table className="w-full text-sm">
+                                  <thead>
+                                    <tr className="border-b border-white/[0.08]">
+                                      <th className="text-left text-[10px] text-white/30 font-medium uppercase tracking-wider px-3 py-2">Outillage</th>
+                                      <th className="text-right text-[10px] text-white/30 font-medium uppercase tracking-wider px-3 py-2">Qté vendue</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {sortedGroups.map(([pid, g], gi) => (
+                                      <tr key={pid} className={`hover:bg-white/[0.02] transition-colors ${gi > 0 ? "border-t border-white/[0.06]" : ""}`}>
+                                        <td className="px-3 py-2.5 text-xs font-medium text-white/80">{g.name}</td>
+                                        <td className="px-3 py-2.5 text-right text-xs font-bold text-red-400">−{g.totalQty}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            )
                           })()}
                         </div>
                       )}
