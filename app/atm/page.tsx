@@ -935,6 +935,7 @@ export default function ATMApp() {
 
     const newSorties: { productId: string; name: string; qty: number; orderId: string; at: Date }[] = []
     const netSold: Record<string, number> = {}
+    const seen = new Set<string>()
 
     orders.forEach(order => {
       if (order.isRefund) return
@@ -942,6 +943,9 @@ export default function ATMApp() {
       if (order.status === "remboursé") return
 
       order.items.forEach(item => {
+        const key = `${order.id}_${item.productId}`
+        if (seen.has(key)) return
+        seen.add(key)
         netSold[item.productId] = (netSold[item.productId] ?? 0) + item.quantity
         newSorties.push({
           productId: item.productId,
@@ -1393,7 +1397,7 @@ export default function ATMApp() {
   const [showClearSortiesConfirm, setShowClearSortiesConfirm] = useState(false)
   const [sortiesSelectMode, setSortiesSelectMode] = useState(false)
   const [sortiesSelected, setSortiesSelected] = useState<Set<number>>(new Set())
-  const [sortiesDateFilter, setSortiesDateFilter] = useState<"today" | "week" | "month" | "all">("all")
+  const [sortiesDateFilter, setSortiesDateFilter] = useState<"today" | "thisWeek" | "week" | "month" | "all">("all")
 
   function exportVentes() {
     const rows = orders.map(o => [
@@ -4155,13 +4159,17 @@ export default function ATMApp() {
                 {(() => {
                   const now = new Date()
                   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate())
-                  const weekStart = new Date(todayStart.getTime() - 6 * 86400000)
+                  const dayOfWeek = todayStart.getDay()
+                  const diffToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1
+                  const thisWeekStart = new Date(todayStart.getTime() - diffToMonday * 86400000)
+                  const last7Start = new Date(todayStart.getTime() - 6 * 86400000)
                   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
 
                   const filteredSorties = sortiesHistory.filter(s => {
                     const d = new Date(s.at)
                     if (sortiesDateFilter === "today") return d >= todayStart
-                    if (sortiesDateFilter === "week") return d >= weekStart
+                    if (sortiesDateFilter === "thisWeek") return d >= thisWeekStart
+                    if (sortiesDateFilter === "week") return d >= last7Start
                     if (sortiesDateFilter === "month") return d >= monthStart
                     return true
                   })
@@ -4183,6 +4191,7 @@ export default function ATMApp() {
                       <div className="flex gap-1 mb-4 flex-wrap">
                         {([
                           { id: "today" as const, label: "Aujourd'hui" },
+                          { id: "thisWeek" as const, label: "Semaine" },
                           { id: "week" as const, label: "7 jours" },
                           { id: "month" as const, label: "Ce mois" },
                           { id: "all" as const, label: "Tout" },
