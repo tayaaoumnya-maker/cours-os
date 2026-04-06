@@ -927,6 +927,54 @@ export default function ATMApp() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  // ─── Synchronisation stock ↔ ventes ────────────────────────────────────────
+  // Recalcule le stock de chaque produit à partir du stock initial + historique commandes
+  const syncStockRef = useRef(false)
+  useEffect(() => {
+    if (!initialized.current || syncStockRef.current) return
+    if (orders.length === 0) return // pas encore de commandes → rien à sync
+    syncStockRef.current = true
+
+    // Calcul des quantités nettes vendues par produit
+    const netSold: Record<string, number> = {}
+    orders.forEach(order => {
+      if (order.isRefund) return // les lignes de remboursement sont des doublons négatifs
+      if (order.status === "annulé") return // annulé = stock déjà restauré en principe, mais on recalcule
+      if (order.status === "remboursé") return // remboursé = stock a été rendu
+      // Commandes actives (en cours, prêt, livré)
+      order.items.forEach(item => {
+        netSold[item.productId] = (netSold[item.productId] ?? 0) + item.quantity
+      })
+    })
+
+    setProducts(prev => {
+      let changed = false
+      const updated = prev.map(p => {
+        const initial = INITIAL_PRODUCTS.find(ip => ip.id === p.id)
+        if (!initial) {
+          // Produit ajouté manuellement — on ne peut pas connaître le stock de départ
+          // On infère : baseStock = currentStock + ce qu'on a vendu
+          const sold = netSold[p.id] ?? 0
+          if (sold === 0) return p
+          const inferredBase = p.stock + sold
+          const correct = Math.max(0, inferredBase - sold)
+          if (p.stock !== correct) { changed = true; return { ...p, stock: correct } }
+          return p
+        }
+        const sold = netSold[p.id] ?? 0
+        const correctStock = Math.max(0, initial.stock - sold)
+        // Si le stock actuel est PLUS élevé que le calcul, l'utilisateur a fait une réception manuelle → on garde
+        if (p.stock > correctStock) return p
+        if (p.stock !== correctStock) {
+          changed = true
+          return { ...p, stock: correctStock }
+        }
+        return p
+      })
+      return changed ? updated : prev
+    })
+  }, [orders])
+
   // formatPrice lié à la devise
   const formatPrice = (n: number) => _fp(n, currency)
 
@@ -2365,6 +2413,20 @@ export default function ATMApp() {
                   </div>
                 )
               })()}
+
+              {/* Ticket Z — Clôture de caisse */}
+              <div className="bg-[#12121f] border border-white/[0.06] rounded-xl p-5 mt-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-sm font-bold text-white/70">🏁 Ticket Z — Clôture de caisse</h2>
+                    <p className="text-xs text-white/30 mt-1">Rapport de fin de journée : totaux par mode de paiement, CA réalisé.</p>
+                  </div>
+                  <button onClick={() => setShowTicketZ(true)}
+                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 border border-amber-500/30 font-semibold text-sm transition-colors">
+                    🏁 Ticket Z du jour
+                  </button>
+                </div>
+              </div>
             </div>}
 
             {/* Onglet Commandes */}
@@ -2954,7 +3016,8 @@ export default function ATMApp() {
 
               {/* Client selector + commentaire */}
               <div className="px-4 py-3 border-b border-white/[0.06] space-y-2">
-                {/* Autocomplete client */}
+                {/* Nom et prénom du client */}
+                <p className="text-[10px] text-white/30 font-semibold">👤 Nom et prénom du client</p>
                 <div className="relative">
                   <input
                     type="text"
@@ -2967,7 +3030,7 @@ export default function ATMApp() {
                     }}
                     onFocus={() => setShowCartClientDrop(true)}
                     onBlur={() => setTimeout(() => setShowCartClientDrop(false), 150)}
-                    placeholder="Client / Chantier (optionnel)"
+                    placeholder="Ex : Ahmed Benali"
                     className="w-full bg-white/[0.05] border border-white/[0.08] rounded-lg px-3 py-2 text-sm placeholder-white/20 text-white focus:outline-none focus:border-amber-500/50 transition-colors pr-7"
                   />
                   {cartClientId && (
@@ -2999,12 +3062,13 @@ export default function ATMApp() {
                     )
                   })()}
                 </div>
+                <p className="text-[10px] text-white/30 font-semibold">📦 Prénom de la personne livrée</p>
                 <div className="relative">
                   <input
                     type="text"
                     value={cartDeliveryName}
                     onChange={e => setCartDeliveryName(e.target.value)}
-                    placeholder="Prénom livraison (optionnel)"
+                    placeholder="Ex : Mohamed (optionnel)"
                     className="w-full bg-white/[0.05] border border-white/[0.08] rounded-lg px-3 py-2 text-sm placeholder-white/20 text-white focus:outline-none focus:border-amber-500/50 transition-colors pr-7"
                   />
                   {cartDeliveryName && (
@@ -3848,18 +3912,6 @@ export default function ATMApp() {
                     Mode test actif — toutes les nouvelles commandes seront marquées comme tests
                   </div>
                 )}
-              </div>
-
-              {/* Ticket Z */}
-              <div className="bg-[#12121f] border border-white/[0.06] rounded-xl p-5 space-y-3">
-                <div>
-                  <h2 className="text-sm font-bold text-white/70">🏁 Ticket Z — Clôture de caisse</h2>
-                  <p className="text-xs text-white/30 mt-1">Rapport de fin de journée : totaux par mode de paiement, CA réalisé.</p>
-                </div>
-                <button onClick={() => setShowTicketZ(true)}
-                  className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 border border-amber-500/30 font-semibold text-sm transition-colors">
-                  🏁 Générer le Ticket Z du jour
-                </button>
               </div>
 
               {/* Codes PIN */}
