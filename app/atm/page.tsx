@@ -667,7 +667,7 @@ export default function ATMApp() {
       .map(s => ({ ...s, at: new Date(s.at) }))
   )
   // Activité tabs
-  const [activiteTab, setActiviteTab]         = useState<"stats" | "commandes">("stats")
+  const [activiteTab, setActiviteTab]         = useState<"stats" | "commandes" | "tickets">("stats")
   const [activitePeriod, setActivitePeriod]   = useState<"7j" | "tout">("7j")
   const [activiteStatus, setActiviteStatus]   = useState<"tout" | "livré" | "en cours" | "prêt" | "annulé">("tout")
   const [dateFilter, setDateFilter]           = useState<"today" | "week" | "month" | "all">("today")
@@ -697,6 +697,9 @@ export default function ATMApp() {
   const [editOrderId, setEditOrderId]           = useState<string | null>(null)
   const [editOrderItems, setEditOrderItems]     = useState<OrderItem[]>([])
   const [editOrderSearch, setEditOrderSearch]   = useState("")
+  const [editOrderClient, setEditOrderClient]   = useState("")
+  const [editOrderDelivery, setEditOrderDelivery] = useState("")
+  const [ticketSearch, setTicketSearch]         = useState("")
   // Prix variable
   const [cartPrices, setCartPrices]           = useState<Record<string, number>>({})
   const [variablePriceModal, setVariablePriceModal] = useState<{ productId: string; name: string } | null>(null)
@@ -1248,6 +1251,8 @@ export default function ATMApp() {
     setEditOrderId(orderId)
     setEditOrderItems(order.items.map(i => ({ ...i })))
     setEditOrderSearch("")
+    setEditOrderClient(order.table ?? "")
+    setEditOrderDelivery(order.deliveryName ?? "")
   }
 
   function editOrderAddProduct(productId: string) {
@@ -1318,6 +1323,8 @@ export default function ATMApp() {
       items: editOrderItems,
       subtotal: newSubtotal,
       total: newTTC,
+      table: editOrderClient.trim() || undefined,
+      deliveryName: editOrderDelivery.trim() || undefined,
     } : o))
 
     // Mettre à jour les sorties
@@ -2102,12 +2109,12 @@ export default function ATMApp() {
                 <p className="text-white/30 text-sm">{today ? new Date(today).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" }) : ""}</p>
               </div>
               <div className="flex gap-1">
-                {(["stats", "commandes"] as const).map(tab => (
+                {(["stats", "commandes", "tickets"] as const).map(tab => (
                   <button key={tab} onClick={() => setActiviteTab(tab)}
                     className={`px-4 py-2 text-sm font-medium rounded-t-lg transition-all ${
                       activiteTab === tab ? "bg-white/[0.08] text-white" : "text-white/40 hover:text-white/70"
                     }`}>
-                    {tab === "stats" ? "📊 Statistiques" : `📋 Commandes${orders.filter(o => o.status === "en cours" || o.status === "prêt").length > 0 ? ` (${orders.filter(o => o.status === "en cours" || o.status === "prêt").length})` : ""}`}
+                    {tab === "stats" ? "📊 Stats" : tab === "commandes" ? `📋 Commandes${orders.filter(o => o.status === "en cours" || o.status === "prêt").length > 0 ? ` (${orders.filter(o => o.status === "en cours" || o.status === "prêt").length})` : ""}` : `🧾 Tickets (${orders.filter(o => !o.isRefund).length})`}
                   </button>
                 ))}
               </div>
@@ -2540,6 +2547,116 @@ export default function ATMApp() {
                     ))}
                   </div>
                 )}
+              </div>
+            )}
+
+            {/* ── ONGLET TICKETS ─────────────────────────────────────────────── */}
+            {activiteTab === "tickets" && (
+              <div className="flex-1 overflow-y-auto">
+                {/* Recherche */}
+                <div className="px-6 pt-6 pb-4 border-b border-white/[0.06]">
+                  <div className="flex items-center gap-3 mb-3">
+                    <h2 className="text-lg font-bold">Historique des tickets</h2>
+                    <span className="text-xs text-white/30">{orders.filter(o => !o.isRefund).length} ticket(s)</span>
+                  </div>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30 text-sm">🔍</span>
+                    <input type="text" value={ticketSearch} onChange={e => setTicketSearch(e.target.value)}
+                      placeholder="Rechercher par n°, client ou produit..."
+                      className="w-full bg-white/[0.04] border border-white/[0.06] rounded-lg pl-9 pr-3 py-2 text-sm placeholder-white/20 focus:outline-none focus:border-amber-500/40 transition-colors" />
+                  </div>
+                </div>
+
+                {/* Liste des tickets */}
+                <div className="px-4 pb-8 max-w-4xl mx-auto">
+                  {orders
+                    .filter(o => !o.isRefund)
+                    .filter(o => {
+                      if (!ticketSearch) return true
+                      const q = ticketSearch.toLowerCase()
+                      return o.id.toLowerCase().includes(q)
+                        || (o.table ?? "").toLowerCase().includes(q)
+                        || (o.deliveryName ?? "").toLowerCase().includes(q)
+                        || o.items.some(i => i.name.toLowerCase().includes(q))
+                    })
+                    .map(order => {
+                      const payIcon = order.paymentMethod === "espèces" ? "💵" : order.paymentMethod === "carte" ? "💳" : order.paymentMethod === "chèque" ? "📝" : "🏦"
+                      const payLabel = { espèces: "Espèces", carte: "Carte", chèque: "Chèque", virement: "Virement" }[order.paymentMethod]
+                      const totalItems = order.items.reduce((s, i) => s + i.quantity, 0)
+                      return (
+                        <div key={order.id} className="mt-3 bg-[#12121f] border border-white/[0.06] rounded-2xl overflow-hidden hover:border-white/10 transition-colors">
+                          {/* En-tête ticket */}
+                          <div className="px-4 py-3 flex items-start gap-3">
+                            <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-xl flex-shrink-0">🧾</div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2">
+                                <p className="text-sm font-bold">Ticket #{order.id}</p>
+                                <Badge className={STATUS_COLOR[order.status]}>{order.status}</Badge>
+                              </div>
+                              <p className="text-xs text-white/40 mt-0.5">
+                                {order.createdAt.toLocaleDateString("fr-FR", { weekday: "short", day: "numeric", month: "short" })} à {formatTime(order.createdAt)}
+                              </p>
+                              {order.table && <p className="text-xs text-white/50 mt-0.5">👤 {order.table}</p>}
+                              {order.deliveryName && <p className="text-xs text-white/50">📦 Livraison : {order.deliveryName}</p>}
+                            </div>
+                            <div className="text-right flex-shrink-0">
+                              <p className="text-base font-black text-amber-400">{formatPrice(order.total)}</p>
+                              <p className="text-[10px] text-white/30">{payIcon} {payLabel}</p>
+                            </div>
+                          </div>
+
+                          {/* Détail articles */}
+                          <div className="px-4 pb-2">
+                            <div className="bg-white/[0.02] rounded-lg p-2.5 space-y-1">
+                              {order.items.map(item => (
+                                <div key={item.productId} className="flex justify-between text-xs">
+                                  <span className="text-white/60">{item.quantity}× {item.name}</span>
+                                  <span className="text-white/40 font-medium">{formatPrice(item.quantity * item.unitPrice)}</span>
+                                </div>
+                              ))}
+                              <div className="border-t border-white/[0.06] pt-1 mt-1 flex justify-between text-xs">
+                                <span className="text-white/30">{totalItems} article(s)</span>
+                                <span className="text-amber-400 font-bold">{formatPrice(order.total)}</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          {order.comment && (
+                            <p className="text-xs text-white/30 italic px-4 pb-2">💬 "{order.comment}"</p>
+                          )}
+
+                          {/* Actions ticket */}
+                          <div className="px-4 pb-3 flex gap-2 flex-wrap border-t border-white/[0.04] pt-2 mt-1">
+                            <button onClick={() => { setReceiptOrder(order); setReceiptIsDuplicate(false) }}
+                              className="px-3 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 text-xs font-medium transition-all">
+                              🧾 Voir le ticket
+                            </button>
+                            {(order.status === "livré" || order.status === "en cours" || order.status === "prêt") && (
+                              <button onClick={() => openEditOrder(order.id)}
+                                className="px-3 py-1.5 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 text-xs font-medium transition-all">
+                                ✏️ Modifier
+                              </button>
+                            )}
+                            <button onClick={() => shareReceipt(order)}
+                              className="px-3 py-1.5 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 text-xs font-medium transition-all">
+                              🔗 Partager
+                            </button>
+                            <button onClick={() => downloadReceipt(order)}
+                              className="px-3 py-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-white/40 hover:text-white/60 text-xs transition-all">
+                              ⬇️ Télécharger
+                            </button>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  {orders.filter(o => !o.isRefund).length === 0 && (
+                    <div className="flex flex-col items-center justify-center h-48 text-center">
+                      <span className="text-5xl mb-4">🧾</span>
+                      <p className="text-white/40">Aucun ticket pour le moment</p>
+                      <p className="text-white/20 text-xs mt-1">Les tickets apparaîtront ici après chaque vente</p>
+                    </div>
+                  )}
+                </div>
               </div>
             )}
           </div>
@@ -4861,8 +4978,23 @@ export default function ATMApp() {
               <button onClick={() => setEditOrderId(null)} className="text-white/30 hover:text-white text-lg">✕</button>
             </div>
 
-            {/* Articles actuels */}
+            {/* Client + Livraison + Articles */}
             <div className="flex-1 overflow-y-auto p-4 space-y-2">
+              {/* Champs client & livraison */}
+              <div className="space-y-2 pb-2 mb-2 border-b border-white/[0.06]">
+                <div>
+                  <p className="text-[10px] text-white/30 mb-1">Client / Chantier</p>
+                  <input type="text" value={editOrderClient} onChange={e => setEditOrderClient(e.target.value)}
+                    placeholder="Nom du client (optionnel)"
+                    className="w-full bg-white/[0.05] border border-white/[0.08] rounded-lg px-3 py-2 text-sm placeholder-white/20 text-white focus:outline-none focus:border-amber-500/50 transition-colors" />
+                </div>
+                <div>
+                  <p className="text-[10px] text-white/30 mb-1">Prénom livraison</p>
+                  <input type="text" value={editOrderDelivery} onChange={e => setEditOrderDelivery(e.target.value)}
+                    placeholder="Prénom de la personne (optionnel)"
+                    className="w-full bg-white/[0.05] border border-white/[0.08] rounded-lg px-3 py-2 text-sm placeholder-white/20 text-white focus:outline-none focus:border-amber-500/50 transition-colors" />
+                </div>
+              </div>
               <p className="text-xs text-white/40 font-semibold mb-2">Articles de la commande</p>
               {editOrderItems.length === 0 ? (
                 <p className="text-sm text-white/20 text-center py-4">Aucun article</p>
