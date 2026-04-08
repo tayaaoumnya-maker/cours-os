@@ -670,7 +670,12 @@ export default function ATMApp() {
   const [activiteTab, setActiviteTab]         = useState<"stats" | "commandes" | "tickets">("stats")
   const [activitePeriod, setActivitePeriod]   = useState<"7j" | "tout">("7j")
   const [activiteStatus, setActiviteStatus]   = useState<"tout" | "livré" | "en cours" | "prêt" | "annulé">("tout")
-  const [dateFilter, setDateFilter]           = useState<"today" | "week" | "month" | "all">("today")
+  const [dateFilter, setDateFilter]           = useState<"today" | "week" | "month" | "all" | "custom">("today")
+  const [ventesCustomDate, setVentesCustomDate] = useState<string>("") // YYYY-MM-DD
+  const [hiddenSortiesKeys, setHiddenSortiesKeys] = useState<Set<string>>(
+    () => new Set(LS.get<string[]>("atm_hidden_sorties", []))
+  )
+  useEffect(() => { LS.set("atm_hidden_sorties", [...hiddenSortiesKeys]) }, [hiddenSortiesKeys])
   // Tickets en attente
   const [pendingOrders, setPendingOrders]     = useState<PendingOrder[]>(() =>
     LS.get<PendingOrder[]>("atm_pending", []).map(o => ({ ...o, savedAt: new Date(o.savedAt) }))
@@ -947,6 +952,7 @@ export default function ATMApp() {
         if (seen.has(key)) return
         seen.add(key)
         netSold[item.productId] = (netSold[item.productId] ?? 0) + item.quantity
+        if (hiddenSortiesKeys.has(key)) return // masqué dans l'historique
         newSorties.push({
           productId: item.productId,
           name: item.name,
@@ -976,7 +982,7 @@ export default function ATMApp() {
       return changed ? updated : prev
     })
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [orders])
+  }, [orders, hiddenSortiesKeys])
 
   // formatPrice lié à la devise
   const formatPrice = (n: number) => _fp(n, currency)
@@ -1035,10 +1041,15 @@ export default function ATMApp() {
         case "today": return o.createdAt.toDateString() === now.toDateString()
         case "week": { const w = new Date(now); w.setDate(w.getDate() - 7); return o.createdAt >= w }
         case "month": return o.createdAt.getMonth() === now.getMonth() && o.createdAt.getFullYear() === now.getFullYear()
+        case "custom": {
+          if (!ventesCustomDate) return false
+          const [y, m, d] = ventesCustomDate.split("-").map(Number)
+          return o.createdAt.getFullYear() === y && o.createdAt.getMonth() === m - 1 && o.createdAt.getDate() === d
+        }
         default: return true
       }
     })
-  }, [orders, dateFilter])
+  }, [orders, dateFilter, ventesCustomDate])
 
   const deliveredFiltered = filteredByDate.filter(o => o.status === "livré")
   const filteredRevenue   = deliveredFiltered.reduce((sum, o) => sum + o.total, 0)
@@ -1394,10 +1405,11 @@ export default function ATMApp() {
   // ── Export CSV ────────────────────────────────────────────────────────────
   const [showExportMenu, setShowExportMenu] = useState(false)
   const [showClearConfirm, setShowClearConfirm] = useState(false)
-  const [showClearSortiesConfirm, setShowClearSortiesConfirm] = useState(false)
   const [sortiesSelectMode, setSortiesSelectMode] = useState(false)
-  const [sortiesSelected, setSortiesSelected] = useState<Set<number>>(new Set())
-  const [sortiesDateFilter, setSortiesDateFilter] = useState<"today" | "thisWeek" | "week" | "month" | "all">("all")
+  const [sortiesSelected, setSortiesSelected] = useState<Set<string>>(new Set()) // productIds sélectionnés
+  const [sortiesDateFilter, setSortiesDateFilter] = useState<"today" | "thisWeek" | "week" | "month" | "all" | "custom">("all")
+  const [sortiesDateFrom, setSortiesDateFrom] = useState<string>("") // YYYY-MM-DD
+  const [sortiesDateTo, setSortiesDateTo]     = useState<string>("") // YYYY-MM-DD
 
   function exportVentes() {
     const rows = orders.map(o => [
@@ -2177,23 +2189,37 @@ export default function ATMApp() {
             {activiteTab === "stats" && <div className="max-w-5xl mx-auto">
 
               {/* Filtre dates + Export */}
-              <div className="flex items-center justify-between mb-6 gap-3">
+              <div className="flex items-center justify-between mb-6 gap-3 flex-wrap">
                 {/* Filtres scrollable sur mobile */}
                 <div className="flex-1 min-w-0 overflow-x-auto">
-                  <div className="flex gap-1 bg-white/[0.03] rounded-xl p-1 w-max">
+                  <div className="flex gap-1 bg-white/[0.03] rounded-xl p-1 w-max items-center">
                     {([
                       { id: "today", label: "Aujourd'hui" },
                       { id: "week",  label: "Semaine" },
                       { id: "month", label: "Mois" },
                       { id: "all",   label: "Tout" },
                     ] as const).map(f => (
-                      <button key={f.id} onClick={() => setDateFilter(f.id)}
+                      <button key={f.id} onClick={() => { setDateFilter(f.id); setVentesCustomDate("") }}
                         className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all whitespace-nowrap ${
                           dateFilter === f.id ? "bg-amber-500 text-black" : "text-white/40 hover:text-white"
                         }`}>
                         {f.label}
                       </button>
                     ))}
+                    <div className={`flex items-center gap-1 ml-1 px-2 py-1 rounded-lg transition-all ${dateFilter === "custom" ? "bg-amber-500 text-black" : "text-white/40"}`}>
+                      <span className="text-xs font-medium">📅</span>
+                      <input
+                        type="date"
+                        value={ventesCustomDate}
+                        onChange={e => { setVentesCustomDate(e.target.value); setDateFilter(e.target.value ? "custom" : "today") }}
+                        className={`bg-transparent text-xs font-medium focus:outline-none ${dateFilter === "custom" ? "text-black" : "text-white/60"}`}
+                        style={{ colorScheme: "dark" }}
+                      />
+                      {dateFilter === "custom" && (
+                        <button onClick={() => { setVentesCustomDate(""); setDateFilter("today") }}
+                          className="text-black/60 hover:text-black text-xs font-bold px-1">✕</button>
+                      )}
+                    </div>
                   </div>
                 </div>
 
@@ -4165,30 +4191,92 @@ export default function ATMApp() {
                   const last7Start = new Date(todayStart.getTime() - 6 * 86400000)
                   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
 
+                  const customFrom = sortiesDateFrom ? new Date(sortiesDateFrom + "T00:00:00") : null
+                  const customTo   = sortiesDateTo   ? new Date(sortiesDateTo   + "T23:59:59") : null
+
                   const filteredSorties = sortiesHistory.filter(s => {
                     const d = new Date(s.at)
                     if (sortiesDateFilter === "today") return d >= todayStart
                     if (sortiesDateFilter === "thisWeek") return d >= thisWeekStart
                     if (sortiesDateFilter === "week") return d >= last7Start
                     if (sortiesDateFilter === "month") return d >= monthStart
+                    if (sortiesDateFilter === "custom") {
+                      if (customFrom && d < customFrom) return false
+                      if (customTo   && d > customTo)   return false
+                      return !!(customFrom || customTo)
+                    }
                     return true
                   })
 
+                  // Clés visibles dans le filtre courant (pour suppression par période)
+                  const visibleKeys = filteredSorties.map(s => `${s.orderId}_${s.productId}`)
+
                   return (
                     <div className="bg-[#12121f] border border-white/[0.08] rounded-xl p-5">
-                      {/* Titre + Effacer */}
-                      <div className="flex items-center justify-between mb-3">
+                      {/* Titre + actions */}
+                      <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
                         <h2 className="text-sm font-bold text-white/80">📤 Historique des sorties <span className="text-white/30 font-normal">({filteredSorties.length})</span></h2>
-                        {sortiesHistory.length > 0 && (
-                          <button onClick={() => { setSortiesHistory([]); }}
-                            className="text-xs px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 font-medium transition-all">
-                            🗑 Effacer tout
-                          </button>
-                        )}
+                        <div className="flex items-center gap-2">
+                          {sortiesHistory.length > 0 && !sortiesSelectMode && (
+                            <button onClick={() => { setSortiesSelectMode(true); setSortiesSelected(new Set()) }}
+                              className="text-xs px-3 py-1.5 rounded-lg bg-white/[0.06] hover:bg-white/[0.10] text-white/70 border border-white/[0.08] font-medium transition-all">
+                              ☑ Sélectionner
+                            </button>
+                          )}
+                          {sortiesHistory.length > 0 && !sortiesSelectMode && filteredSorties.length > 0 && (
+                            <button onClick={() => {
+                              if (!confirm(`Effacer ${filteredSorties.length} sortie(s) de la période filtrée ?`)) return
+                              setHiddenSortiesKeys(prev => {
+                                const next = new Set(prev)
+                                visibleKeys.forEach(k => next.add(k))
+                                return next
+                              })
+                            }}
+                              className="text-xs px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 font-medium transition-all">
+                              🗑 Effacer la période
+                            </button>
+                          )}
+                          {hiddenSortiesKeys.size > 0 && !sortiesSelectMode && (
+                            <button onClick={() => { if (confirm("Restaurer tout l'historique effacé ?")) setHiddenSortiesKeys(new Set()) }}
+                              className="text-xs px-3 py-1.5 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/20 font-medium transition-all">
+                              ↺ Restaurer ({hiddenSortiesKeys.size})
+                            </button>
+                          )}
+                          {sortiesSelectMode && (
+                            <>
+                              <button onClick={() => { setSortiesSelectMode(false); setSortiesSelected(new Set()) }}
+                                className="text-xs px-3 py-1.5 rounded-lg bg-white/[0.06] hover:bg-white/[0.10] text-white/70 border border-white/[0.08] font-medium transition-all">
+                                Annuler
+                              </button>
+                              <button
+                                disabled={sortiesSelected.size === 0}
+                                onClick={() => {
+                                  if (sortiesSelected.size === 0) return
+                                  if (!confirm(`Supprimer ${sortiesSelected.size} produit(s) de l'historique ?`)) return
+                                  setHiddenSortiesKeys(prev => {
+                                    const next = new Set(prev)
+                                    filteredSorties.forEach(s => {
+                                      if (sortiesSelected.has(s.productId)) next.add(`${s.orderId}_${s.productId}`)
+                                    })
+                                    return next
+                                  })
+                                  setSortiesSelectMode(false)
+                                  setSortiesSelected(new Set())
+                                }}
+                                className={`text-xs px-3 py-1.5 rounded-lg font-medium border transition-all ${
+                                  sortiesSelected.size === 0
+                                    ? "bg-white/[0.04] text-white/30 border-white/[0.06] cursor-not-allowed"
+                                    : "bg-red-500/15 hover:bg-red-500/25 text-red-400 border-red-500/30"
+                                }`}>
+                                🗑 Supprimer ({sortiesSelected.size})
+                              </button>
+                            </>
+                          )}
+                        </div>
                       </div>
 
                       {/* Filtres date */}
-                      <div className="flex gap-1 mb-4 flex-wrap">
+                      <div className="flex gap-1 mb-3 flex-wrap items-center">
                         {([
                           { id: "today" as const, label: "Aujourd'hui" },
                           { id: "thisWeek" as const, label: "Semaine" },
@@ -4196,14 +4284,46 @@ export default function ATMApp() {
                           { id: "month" as const, label: "Ce mois" },
                           { id: "all" as const, label: "Tout" },
                         ]).map(f => (
-                          <button key={f.id} onClick={() => setSortiesDateFilter(f.id)}
+                          <button key={f.id} onClick={() => { setSortiesDateFilter(f.id); }}
                             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                               sortiesDateFilter === f.id ? "bg-amber-500 text-black" : "bg-white/[0.06] text-white/40 hover:text-white"
                             }`}>
                             {f.label}
                           </button>
                         ))}
+                        <button onClick={() => setSortiesDateFilter("custom")}
+                          className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                            sortiesDateFilter === "custom" ? "bg-amber-500 text-black" : "bg-white/[0.06] text-white/40 hover:text-white"
+                          }`}>
+                          📅 Période
+                        </button>
                       </div>
+
+                      {/* Sélecteur de période personnalisée */}
+                      {sortiesDateFilter === "custom" && (
+                        <div className="flex gap-2 mb-4 flex-wrap items-center bg-white/[0.03] border border-white/[0.06] rounded-lg p-2">
+                          <label className="text-[10px] text-white/40 font-medium uppercase tracking-wider">Du</label>
+                          <input
+                            type="date"
+                            value={sortiesDateFrom}
+                            onChange={e => setSortiesDateFrom(e.target.value)}
+                            className="bg-white/[0.06] border border-white/[0.08] rounded-lg px-2 py-1 text-xs text-white focus:outline-none focus:border-amber-500/40"
+                            style={{ colorScheme: "dark" }}
+                          />
+                          <label className="text-[10px] text-white/40 font-medium uppercase tracking-wider">Au</label>
+                          <input
+                            type="date"
+                            value={sortiesDateTo}
+                            onChange={e => setSortiesDateTo(e.target.value)}
+                            className="bg-white/[0.06] border border-white/[0.08] rounded-lg px-2 py-1 text-xs text-white focus:outline-none focus:border-amber-500/40"
+                            style={{ colorScheme: "dark" }}
+                          />
+                          {(sortiesDateFrom || sortiesDateTo) && (
+                            <button onClick={() => { setSortiesDateFrom(""); setSortiesDateTo("") }}
+                              className="text-[10px] text-white/40 hover:text-white px-2 py-1">✕ Effacer</button>
+                          )}
+                        </div>
+                      )}
 
                       {/* Liste des sorties classées par produit */}
                       {filteredSorties.length === 0 ? (
@@ -4253,17 +4373,47 @@ export default function ATMApp() {
                                 <table className="w-full text-sm">
                                   <thead>
                                     <tr className="border-b border-white/[0.08]">
+                                      {sortiesSelectMode && (
+                                        <th className="w-10 px-3 py-2">
+                                          <input
+                                            type="checkbox"
+                                            checked={sortedGroups.length > 0 && sortiesSelected.size === sortedGroups.length}
+                                            onChange={e => {
+                                              if (e.target.checked) setSortiesSelected(new Set(sortedGroups.map(([pid]) => pid)))
+                                              else setSortiesSelected(new Set())
+                                            }}
+                                            className="accent-amber-500"
+                                          />
+                                        </th>
+                                      )}
                                       <th className="text-left text-[10px] text-white/30 font-medium uppercase tracking-wider px-3 py-2">Outillage</th>
                                       <th className="text-right text-[10px] text-white/30 font-medium uppercase tracking-wider px-3 py-2">Qté vendue</th>
                                     </tr>
                                   </thead>
                                   <tbody>
-                                    {sortedGroups.map(([pid, g], gi) => (
-                                      <tr key={pid} className={`hover:bg-white/[0.02] transition-colors ${gi > 0 ? "border-t border-white/[0.06]" : ""}`}>
-                                        <td className="px-3 py-2.5 text-xs font-medium text-white/80">{g.name}</td>
-                                        <td className="px-3 py-2.5 text-right text-xs font-bold text-red-400">−{g.totalQty}</td>
-                                      </tr>
-                                    ))}
+                                    {sortedGroups.map(([pid, g], gi) => {
+                                      const checked = sortiesSelected.has(pid)
+                                      const toggle = () => setSortiesSelected(prev => {
+                                        const next = new Set(prev)
+                                        if (next.has(pid)) next.delete(pid); else next.add(pid)
+                                        return next
+                                      })
+                                      return (
+                                        <tr key={pid}
+                                          onClick={() => { if (sortiesSelectMode) toggle() }}
+                                          className={`transition-colors ${gi > 0 ? "border-t border-white/[0.06]" : ""} ${
+                                            sortiesSelectMode ? `cursor-pointer ${checked ? "bg-amber-500/10" : "hover:bg-white/[0.04]"}` : "hover:bg-white/[0.02]"
+                                          }`}>
+                                          {sortiesSelectMode && (
+                                            <td className="w-10 px-3 py-2.5">
+                                              <input type="checkbox" checked={checked} onChange={toggle} onClick={e => e.stopPropagation()} className="accent-amber-500" />
+                                            </td>
+                                          )}
+                                          <td className="px-3 py-2.5 text-xs font-medium text-white/80">{g.name}</td>
+                                          <td className="px-3 py-2.5 text-right text-xs font-bold text-red-400">−{g.totalQty}</td>
+                                        </tr>
+                                      )
+                                    })}
                                   </tbody>
                                 </table>
                               </div>
@@ -5424,40 +5574,6 @@ export default function ATMApp() {
               }}
                 className="flex-1 py-2.5 rounded-xl bg-red-500 hover:bg-red-400 text-white font-bold text-sm transition-colors">
                 Effacer tout
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Modal confirmation effacer historique sorties */}
-      {showClearSortiesConfirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={() => setShowClearSortiesConfirm(false)}>
-          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
-          <div className="relative bg-[#1a1a35] border border-white/[0.12] rounded-2xl shadow-2xl w-full max-w-sm p-6" onClick={e => e.stopPropagation()}>
-            <div className="text-center mb-5">
-              <div className="text-3xl mb-3">📤</div>
-              <h3 className="text-lg font-bold text-white mb-2">Supprimer {sortiesSelected.size} sortie(s) ?</h3>
-              <p className="text-sm text-white/50">
-                {sortiesSelected.size === sortiesHistory.length
-                  ? "Toutes les sorties seront supprimées définitivement."
-                  : `${sortiesSelected.size} entrée(s) sélectionnée(s) seront supprimées définitivement.`
-                } Cette action est irréversible.
-              </p>
-            </div>
-            <div className="flex gap-3">
-              <button onClick={() => setShowClearSortiesConfirm(false)}
-                className="flex-1 py-2.5 rounded-xl bg-white/[0.06] hover:bg-white/10 text-white/60 text-sm font-medium transition-colors">
-                Annuler
-              </button>
-              <button onClick={() => {
-                setSortiesHistory(prev => prev.filter((_, i) => !sortiesSelected.has(i)))
-                setSortiesSelected(new Set())
-                setSortiesSelectMode(false)
-                setShowClearSortiesConfirm(false)
-              }}
-                className="flex-1 py-2.5 rounded-xl bg-red-500 hover:bg-red-400 text-white font-bold text-sm transition-colors">
-                Supprimer
               </button>
             </div>
           </div>
