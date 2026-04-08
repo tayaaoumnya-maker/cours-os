@@ -676,6 +676,14 @@ export default function ATMApp() {
     () => new Set(LS.get<string[]>("atm_hidden_sorties", []))
   )
   useEffect(() => { LS.set("atm_hidden_sorties", [...hiddenSortiesKeys]) }, [hiddenSortiesKeys])
+  const [hiddenOrderIds, setHiddenOrderIds] = useState<Set<string>>(
+    () => new Set(LS.get<string[]>("atm_hidden_orders", []))
+  )
+  useEffect(() => { LS.set("atm_hidden_orders", [...hiddenOrderIds]) }, [hiddenOrderIds])
+  const [ordersSelectMode, setOrdersSelectMode]   = useState(false)
+  const [ordersSelected, setOrdersSelected]       = useState<Set<string>>(new Set())
+  const [ticketsSelectMode, setTicketsSelectMode] = useState(false)
+  const [ticketsSelected, setTicketsSelected]     = useState<Set<string>>(new Set())
   // Tickets en attente
   const [pendingOrders, setPendingOrders]     = useState<PendingOrder[]>(() =>
     LS.get<PendingOrder[]>("atm_pending", []).map(o => ({ ...o, savedAt: new Date(o.savedAt) }))
@@ -966,21 +974,9 @@ export default function ATMApp() {
     // Sorties triées du plus récent au plus ancien
     newSorties.sort((a, b) => b.at.getTime() - a.at.getTime())
     setSortiesHistory(newSorties)
-
-    // Recalculer le stock de chaque produit
-    setProducts(prev => {
-      let changed = false
-      const updated = prev.map(p => {
-        const sold = netSold[p.id] ?? 0
-        const initial = INITIAL_PRODUCTS.find(ip => ip.id === p.id)
-        if (!initial) return p
-        const correctStock = Math.max(0, initial.stock - sold)
-        if (p.stock > correctStock) return p // réception manuelle
-        if (p.stock !== correctStock) { changed = true; return { ...p, stock: correctStock } }
-        return p
-      })
-      return changed ? updated : prev
-    })
+    // NOTE : le stock est géré directement par validateOrder / validateVitrineOrder
+    // (déduction) + cancelOrder / processRefund (restauration). Aucune reconciliation
+    // automatique ici — elle écrasait les ajustements manuels vers le bas.
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orders, hiddenSortiesKeys])
 
@@ -1064,13 +1060,14 @@ export default function ATMApp() {
   const filteredOrders = useMemo(() => {
     const sevenDaysAgo = new Date(); sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7); sevenDaysAgo.setHours(0, 0, 0, 0)
     return orders.filter(o => {
+      if (hiddenOrderIds.has(o.id)) return false
       if (activitePeriod === "7j" && o.createdAt < sevenDaysAgo) return false
       if (activiteStatus === "tout" && o.status === "annulé") return false
       if (activiteStatus !== "tout" && o.status !== activiteStatus) return false
       if (orderSearch !== "" && !o.id.toLowerCase().includes(orderSearch.toLowerCase()) && !(o.table && o.table.toLowerCase().includes(orderSearch.toLowerCase()))) return false
       return true
     })
-  }, [orders, activitePeriod, activiteStatus, orderSearch])
+  }, [orders, activitePeriod, activiteStatus, orderSearch, hiddenOrderIds])
 
   // Groupement par jour pour la vue commandes
   const ordersByDay = useMemo(() => {
@@ -2482,6 +2479,45 @@ export default function ATMApp() {
                         {s === "tout" ? "Tous statuts" : s}
                       </button>
                     ))}
+                    {/* Actions sélection */}
+                    <div className="ml-auto flex items-center gap-2">
+                      {!ordersSelectMode && filteredOrders.length > 0 && (
+                        <button onClick={() => { setOrdersSelectMode(true); setOrdersSelected(new Set()) }}
+                          className="px-3 py-1.5 rounded-full text-xs font-medium border border-white/[0.08] text-white/60 hover:text-white hover:border-white/20 transition-all">
+                          ☑ Sélectionner
+                        </button>
+                      )}
+                      {!ordersSelectMode && hiddenOrderIds.size > 0 && (
+                        <button onClick={() => { if (confirm("Restaurer toutes les commandes effacées ?")) setHiddenOrderIds(new Set()) }}
+                          className="px-3 py-1.5 rounded-full text-xs font-medium border border-cyan-500/30 bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 transition-all">
+                          ↺ Restaurer ({hiddenOrderIds.size})
+                        </button>
+                      )}
+                      {ordersSelectMode && (
+                        <>
+                          <button onClick={() => { setOrdersSelectMode(false); setOrdersSelected(new Set()) }}
+                            className="px-3 py-1.5 rounded-full text-xs font-medium border border-white/[0.08] text-white/60 hover:text-white transition-all">
+                            Annuler
+                          </button>
+                          <button
+                            disabled={ordersSelected.size === 0}
+                            onClick={() => {
+                              if (ordersSelected.size === 0) return
+                              if (!confirm(`Effacer ${ordersSelected.size} commande(s) ?`)) return
+                              setHiddenOrderIds(prev => { const next = new Set(prev); ordersSelected.forEach(id => next.add(id)); return next })
+                              setOrdersSelectMode(false)
+                              setOrdersSelected(new Set())
+                            }}
+                            className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
+                              ordersSelected.size === 0
+                                ? "border-white/[0.06] text-white/30 cursor-not-allowed"
+                                : "border-red-500/30 bg-red-500/15 text-red-400 hover:bg-red-500/25"
+                            }`}>
+                            🗑 Effacer ({ordersSelected.size})
+                          </button>
+                        </>
+                      )}
+                    </div>
                   </div>
                   {/* Barre de recherche */}
                   <div className="relative mt-3">
@@ -2552,10 +2588,25 @@ export default function ATMApp() {
                           {dayOrders.map(order => {
                             const payIcon = order.paymentMethod === "espèces" ? "💵" : order.paymentMethod === "carte" ? "💳" : "🏦"
                             const isExpanded = false
+                            const isChecked = ordersSelected.has(order.id)
+                            const toggleOrder = () => setOrdersSelected(prev => {
+                              const next = new Set(prev)
+                              if (next.has(order.id)) next.delete(order.id); else next.add(order.id)
+                              return next
+                            })
                             return (
-                              <div key={order.id} className="bg-[#12121f] border border-white/[0.06] rounded-2xl overflow-hidden hover:border-white/10 transition-colors">
+                              <div key={order.id}
+                                onClick={() => { if (ordersSelectMode) toggleOrder() }}
+                                className={`bg-[#12121f] border rounded-2xl overflow-hidden transition-colors ${
+                                  ordersSelectMode
+                                    ? `cursor-pointer ${isChecked ? "border-amber-500/60 bg-amber-500/[0.04]" : "border-white/[0.06] hover:border-white/20"}`
+                                    : "border-white/[0.06] hover:border-white/10"
+                                }`}>
                                 {/* Ligne principale */}
                                 <div className="flex items-center gap-3 px-4 py-3.5">
+                                  {ordersSelectMode && (
+                                    <input type="checkbox" checked={isChecked} onChange={toggleOrder} onClick={e => e.stopPropagation()} className="w-4 h-4 accent-amber-500 flex-shrink-0" />
+                                  )}
                                   <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0 ${order.paymentMethod === "espèces" ? "bg-emerald-500/10" : "bg-cyan-500/10"}`}>
                                     {payIcon}
                                   </div>
@@ -2645,13 +2696,53 @@ export default function ATMApp() {
             )}
 
             {/* ── ONGLET TICKETS ─────────────────────────────────────────────── */}
-            {activiteTab === "tickets" && (
+            {activiteTab === "tickets" && (() => {
+              const visibleTickets = orders.filter(o => !o.isRefund && !hiddenOrderIds.has(o.id))
+              return (
               <div className="flex-1 overflow-y-auto">
                 {/* Recherche */}
                 <div className="px-6 pt-6 pb-4 border-b border-white/[0.06]">
-                  <div className="flex items-center gap-3 mb-3">
+                  <div className="flex items-center gap-3 mb-3 flex-wrap">
                     <h2 className="text-lg font-bold">Historique des tickets</h2>
-                    <span className="text-xs text-white/30">{orders.filter(o => !o.isRefund).length} ticket(s)</span>
+                    <span className="text-xs text-white/30">{visibleTickets.length} ticket(s)</span>
+                    <div className="ml-auto flex items-center gap-2">
+                      {!ticketsSelectMode && visibleTickets.length > 0 && (
+                        <button onClick={() => { setTicketsSelectMode(true); setTicketsSelected(new Set()) }}
+                          className="px-3 py-1.5 rounded-full text-xs font-medium border border-white/[0.08] text-white/60 hover:text-white hover:border-white/20 transition-all">
+                          ☑ Sélectionner
+                        </button>
+                      )}
+                      {!ticketsSelectMode && hiddenOrderIds.size > 0 && (
+                        <button onClick={() => { if (confirm("Restaurer tous les tickets effacés ?")) setHiddenOrderIds(new Set()) }}
+                          className="px-3 py-1.5 rounded-full text-xs font-medium border border-cyan-500/30 bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 transition-all">
+                          ↺ Restaurer ({hiddenOrderIds.size})
+                        </button>
+                      )}
+                      {ticketsSelectMode && (
+                        <>
+                          <button onClick={() => { setTicketsSelectMode(false); setTicketsSelected(new Set()) }}
+                            className="px-3 py-1.5 rounded-full text-xs font-medium border border-white/[0.08] text-white/60 hover:text-white transition-all">
+                            Annuler
+                          </button>
+                          <button
+                            disabled={ticketsSelected.size === 0}
+                            onClick={() => {
+                              if (ticketsSelected.size === 0) return
+                              if (!confirm(`Effacer ${ticketsSelected.size} ticket(s) ?`)) return
+                              setHiddenOrderIds(prev => { const next = new Set(prev); ticketsSelected.forEach(id => next.add(id)); return next })
+                              setTicketsSelectMode(false)
+                              setTicketsSelected(new Set())
+                            }}
+                            className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
+                              ticketsSelected.size === 0
+                                ? "border-white/[0.06] text-white/30 cursor-not-allowed"
+                                : "border-red-500/30 bg-red-500/15 text-red-400 hover:bg-red-500/25"
+                            }`}>
+                            🗑 Effacer ({ticketsSelected.size})
+                          </button>
+                        </>
+                      )}
+                    </div>
                   </div>
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30 text-sm">🔍</span>
@@ -2663,8 +2754,7 @@ export default function ATMApp() {
 
                 {/* Liste des tickets */}
                 <div className="px-4 pb-8 max-w-4xl mx-auto">
-                  {orders
-                    .filter(o => !o.isRefund)
+                  {visibleTickets
                     .filter(o => {
                       if (!ticketSearch) return true
                       const q = ticketSearch.toLowerCase()
@@ -2677,10 +2767,25 @@ export default function ATMApp() {
                       const payIcon = order.paymentMethod === "espèces" ? "💵" : order.paymentMethod === "carte" ? "💳" : order.paymentMethod === "chèque" ? "📝" : "🏦"
                       const payLabel = { espèces: "Espèces", carte: "Carte", chèque: "Chèque", virement: "Virement" }[order.paymentMethod]
                       const totalItems = order.items.reduce((s, i) => s + i.quantity, 0)
+                      const isChecked = ticketsSelected.has(order.id)
+                      const toggleTicket = () => setTicketsSelected(prev => {
+                        const next = new Set(prev)
+                        if (next.has(order.id)) next.delete(order.id); else next.add(order.id)
+                        return next
+                      })
                       return (
-                        <div key={order.id} className="mt-3 bg-[#12121f] border border-white/[0.06] rounded-2xl overflow-hidden hover:border-white/10 transition-colors">
+                        <div key={order.id}
+                          onClick={() => { if (ticketsSelectMode) toggleTicket() }}
+                          className={`mt-3 bg-[#12121f] border rounded-2xl overflow-hidden transition-colors ${
+                            ticketsSelectMode
+                              ? `cursor-pointer ${isChecked ? "border-amber-500/60 bg-amber-500/[0.04]" : "border-white/[0.06] hover:border-white/20"}`
+                              : "border-white/[0.06] hover:border-white/10"
+                          }`}>
                           {/* En-tête ticket */}
                           <div className="px-4 py-3 flex items-start gap-3">
+                            {ticketsSelectMode && (
+                              <input type="checkbox" checked={isChecked} onChange={toggleTicket} onClick={e => e.stopPropagation()} className="w-4 h-4 mt-3 accent-amber-500 flex-shrink-0" />
+                            )}
                             <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-xl flex-shrink-0">🧾</div>
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-2">
@@ -2743,7 +2848,7 @@ export default function ATMApp() {
                         </div>
                       )
                     })}
-                  {orders.filter(o => !o.isRefund).length === 0 && (
+                  {visibleTickets.length === 0 && (
                     <div className="flex flex-col items-center justify-center h-48 text-center">
                       <span className="text-5xl mb-4">🧾</span>
                       <p className="text-white/40">Aucun ticket pour le moment</p>
@@ -2752,7 +2857,8 @@ export default function ATMApp() {
                   )}
                 </div>
               </div>
-            )}
+              )
+            })()}
           </div>
           </div>
         )}
