@@ -729,6 +729,9 @@ export default function ATMApp() {
   const [formulaModal, setFormulaModal]       = useState<Formula | "new" | null>(null)
   const [formulaTab, setFormulaTab]           = useState<"produits" | "formules">("produits")
   const [vendreAddProduct, setVendreAddProduct] = useState(false)
+  const [vendreSaleDate, setVendreSaleDate]     = useState("")  // date personnalisée pour la vente (YYYY-MM-DD)
+  const [vendreDeleteMode, setVendreDeleteMode] = useState(false)
+  const [vendreDeleteSelected, setVendreDeleteSelected] = useState<Set<string>>(new Set())
   // Paramètres boutique
   const [shopName, setShopName]               = useState(() => LS.get("atm_shopName", "ATM Outillage"))
   const [shopSubtitle, setShopSubtitle]       = useState(() => LS.get("atm_shopSubtitle", "Vente de matériel & outillage"))
@@ -1196,7 +1199,7 @@ export default function ATMApp() {
       total:         cartTTC,
       paymentMethod: method,
       status:        "livré",
-      createdAt:     new Date(),
+      createdAt:     vendreSaleDate ? new Date(vendreSaleDate + "T12:00:00") : new Date(),
       table:         tableInput.trim() || undefined,
       comment:       cartComment.trim() || undefined,
       isTestMode:    testMode || undefined,
@@ -1210,7 +1213,7 @@ export default function ATMApp() {
       const orderItem = items.find(i => i.productId === p.id)
       return orderItem ? { ...p, stock: Math.max(0, p.stock - orderItem.quantity) } : p
     }))
-    const now = new Date()
+    const now = vendreSaleDate ? new Date(vendreSaleDate + "T12:00:00") : new Date()
     setSortiesHistory(prev => [
       ...items.map(i => ({ productId: i.productId, name: i.name, qty: i.quantity, orderId: order.id, at: now })),
       ...prev,
@@ -1909,7 +1912,7 @@ export default function ATMApp() {
     <div className="flex h-[100dvh] bg-black items-center justify-center">
       <div className="text-center animate-pulse">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/atm-logo.jpg" alt="ATM Outillage" className="h-56 w-auto mx-auto rounded-3xl shadow-2xl shadow-amber-500/20" />
+        <img src={ticketLogo || "/atm-logo.jpg"} alt="ATM Outillage" className="h-56 w-auto mx-auto rounded-3xl shadow-2xl shadow-amber-500/20" />
         {isLoading && <div className="text-zinc-500 text-xs mt-6 tracking-widest uppercase">Chargement…</div>}
       </div>
     </div>
@@ -2906,6 +2909,54 @@ export default function ATMApp() {
                     <button onClick={() => setSearchQuery("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 text-xs">✕</button>
                   )}
                 </div>
+                {/* Calendrier date de vente + Supprimer */}
+                <div className="flex items-center gap-2 mb-3">
+                  <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border transition-all ${vendreSaleDate ? "bg-amber-500/15 border-amber-500/30" : "bg-white/[0.04] border-white/[0.08]"}`}>
+                    <span className="text-xs">📅</span>
+                    <input
+                      type="date"
+                      value={vendreSaleDate}
+                      onChange={e => setVendreSaleDate(e.target.value)}
+                      className={`bg-transparent text-xs font-medium focus:outline-none ${vendreSaleDate ? "text-amber-400" : "text-white/50"}`}
+                      style={{ colorScheme: "dark" }}
+                    />
+                    {vendreSaleDate && (
+                      <button onClick={() => setVendreSaleDate("")} className="text-amber-400/60 hover:text-amber-400 text-xs font-bold px-0.5">✕</button>
+                    )}
+                  </div>
+                  {!vendreSaleDate && <span className="text-[10px] text-white/25">= aujourd&apos;hui</span>}
+                  <div className="flex-1" />
+                  {!vendreDeleteMode ? (
+                    <button onClick={() => { setVendreDeleteMode(true); setVendreDeleteSelected(new Set()) }}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-medium border border-red-500/20 transition-all">
+                      🗑 Supprimer
+                    </button>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <button onClick={() => { setVendreDeleteMode(false); setVendreDeleteSelected(new Set()) }}
+                        className="px-3 py-1.5 rounded-lg bg-white/[0.06] hover:bg-white/[0.10] text-white/60 text-xs font-medium border border-white/[0.08] transition-all">
+                        Annuler
+                      </button>
+                      <button
+                        disabled={vendreDeleteSelected.size === 0}
+                        onClick={() => {
+                          if (vendreDeleteSelected.size === 0) return
+                          if (!confirm(`Supprimer ${vendreDeleteSelected.size} produit(s) définitivement ?`)) return
+                          setProducts(prev => prev.filter(p => !vendreDeleteSelected.has(p.id)))
+                          setVendreDeleteMode(false)
+                          setVendreDeleteSelected(new Set())
+                        }}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
+                          vendreDeleteSelected.size === 0
+                            ? "bg-white/[0.04] text-white/30 border-white/[0.06] cursor-not-allowed"
+                            : "bg-red-500/20 hover:bg-red-500/30 text-red-400 border-red-500/30"
+                        }`}>
+                        🗑 Supprimer ({vendreDeleteSelected.size})
+                      </button>
+                    </div>
+                  )}
+                </div>
+
                 <div className="flex gap-2 overflow-x-auto pb-1">
                   {["Tout", ...categories].map(cat => (
                     <button
@@ -3034,23 +3085,45 @@ export default function ATMApp() {
                       const isOutOfStock = product.stock === 0
                       const isLow = product.stock > 0 && product.stock <= product.alertThreshold
                       const selected = inCart > 0
+                      const isDeleteSelected = vendreDeleteSelected.has(product.id)
                       return (
                         <div key={product.id}
                           className={`relative rounded-xl overflow-hidden cursor-pointer transition-all border-2 ${
-                            selected ? "border-amber-500 shadow-lg shadow-amber-500/20" : "border-transparent hover:border-white/20"
-                          } ${isOutOfStock ? "opacity-40 pointer-events-none" : ""}`}
+                            vendreDeleteMode
+                              ? isDeleteSelected ? "border-red-500 shadow-lg shadow-red-500/20" : "border-transparent hover:border-red-500/30"
+                              : selected ? "border-amber-500 shadow-lg shadow-amber-500/20" : "border-transparent hover:border-white/20"
+                          } ${isOutOfStock && !vendreDeleteMode ? "opacity-40 pointer-events-none" : ""}`}
                           onClick={() => {
+                            if (vendreDeleteMode) {
+                              setVendreDeleteSelected(prev => {
+                                const next = new Set(prev)
+                                if (next.has(product.id)) next.delete(product.id)
+                                else next.add(product.id)
+                                return next
+                              })
+                              return
+                            }
                             if (isOutOfStock) return
                             if (!selected) addToCart(product.id)
                             else setCart(prev => { const { [product.id]: _, ...rest } = prev; return rest })
                           }}
                         >
+                          {/* Checkbox suppression */}
+                          {vendreDeleteMode && (
+                            <div className="absolute top-1.5 left-1.5 z-10">
+                              <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all ${
+                                isDeleteSelected ? "bg-red-500 border-red-500" : "border-white/30 bg-black/40"
+                              }`}>
+                                {isDeleteSelected && <span className="text-[10px] font-black text-white">✓</span>}
+                              </div>
+                            </div>
+                          )}
                           {/* Image */}
                           <div className="aspect-[4/3] bg-[#12121f]">
                             {product.image
                               ? <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
                               : <div className="w-full h-full flex items-center justify-center text-3xl opacity-20">{product.emoji}</div>}
-                            {isLow && !isOutOfStock && (
+                            {isLow && !isOutOfStock && !vendreDeleteMode && (
                               <span className="absolute top-1.5 left-1.5 text-[9px] px-1.5 py-0.5 rounded-full bg-amber-500/90 text-black font-bold">Stock bas</span>
                             )}
                           </div>
