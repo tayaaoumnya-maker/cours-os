@@ -668,7 +668,9 @@ export default function ATMApp() {
   )
   // Activité tabs
   const [activiteTab, setActiviteTab]         = useState<"stats" | "commandes" | "tickets">("stats")
-  const [activitePeriod, setActivitePeriod]   = useState<"7j" | "tout">("7j")
+  const [activitePeriod, setActivitePeriod]   = useState<"today" | "7j" | "thisWeek" | "month" | "tout" | "custom">("7j")
+  const [activiteDateFrom, setActiviteDateFrom] = useState("")
+  const [activiteDateTo, setActiviteDateTo]     = useState("")
   const [activiteStatus, setActiviteStatus]   = useState<"tout" | "livré" | "en cours" | "prêt" | "annulé">("tout")
   const [dateFilter, setDateFilter]           = useState<"today" | "week" | "month" | "all" | "custom">("today")
   const [ventesCustomDate, setVentesCustomDate] = useState<string>("") // YYYY-MM-DD
@@ -828,7 +830,7 @@ export default function ATMApp() {
   useEffect(() => { LS.set("atm_shopAddress", shopAddress); if (initialized.current && supabaseOk.current) dbSet("atm_shopAddress", shopAddress) }, [shopAddress])
   useEffect(() => { LS.set("atm_shopPhone", shopPhone);     if (initialized.current && supabaseOk.current) dbSet("atm_shopPhone", shopPhone) }, [shopPhone])
   useEffect(() => { LS.set("atm_currency", currency);       if (initialized.current && supabaseOk.current) dbSet("atm_currency", currency) }, [currency])
-  useEffect(() => { LS.set("atm_ticketLogo", ticketLogo);   if (initialized.current && supabaseOk.current) dbSet("atm_ticketLogo", ticketLogo) }, [ticketLogo])
+  useEffect(() => { LS.set("atm_ticketLogo", ticketLogo) }, [ticketLogo]) // logo base64 trop gros pour Supabase — localStorage uniquement
   useEffect(() => { LS.set("atm_ticketFooter", ticketFooter); if (initialized.current && supabaseOk.current) dbSet("atm_ticketFooter", ticketFooter) }, [ticketFooter])
   useEffect(() => { LS.set("atm_adminPin", adminPin);           if (initialized.current && supabaseOk.current) dbSet("atm_adminPin", adminPin) }, [adminPin])
   useEffect(() => { LS.set("atm_partenairePin", partenairePin); if (initialized.current && supabaseOk.current) dbSet("atm_partenairePin", partenairePin) }, [partenairePin])
@@ -888,7 +890,7 @@ export default function ATMApp() {
         if (all.atm_shopAddress !== undefined) setShopAddress(all.atm_shopAddress as string)
         if (all.atm_shopPhone !== undefined) setShopPhone(all.atm_shopPhone as string)
         if (all.atm_currency !== undefined) setCurrency(all.atm_currency as string)
-        if (all.atm_ticketLogo !== undefined) setTicketLogo(all.atm_ticketLogo as string)
+        // ticketLogo: localStorage uniquement (base64 trop volumineux pour Supabase)
         if (all.atm_ticketFooter !== undefined) setTicketFooter(all.atm_ticketFooter as string)
         if (all.atm_adminName !== undefined) setAdminName(all.atm_adminName as string)
         if (all.atm_partenaireName !== undefined) setPartenaireName(all.atm_partenaireName as string)
@@ -918,7 +920,7 @@ export default function ATMApp() {
         const keys = [
           "atm_products", "atm_orders", "atm_pending", "atm_formulas",
           "atm_shopName", "atm_shopSubtitle", "atm_shopAddress", "atm_shopPhone",
-          "atm_currency", "atm_ticketLogo", "atm_ticketFooter",
+          "atm_currency", "atm_ticketFooter",
           "atm_adminName", "atm_partenaireName", "atm_adminPin", "atm_partenairePin", "atm_taxes",
           "atm_shopSiret", "atm_shopTva", "atm_shopNaf",
           "atm_fondDeCaisse", "atm_fondDate",
@@ -1061,16 +1063,27 @@ export default function ATMApp() {
   }, [filteredByDate])
 
   const filteredOrders = useMemo(() => {
-    const sevenDaysAgo = new Date(); sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7); sevenDaysAgo.setHours(0, 0, 0, 0)
+    const now = new Date()
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+    const sevenDaysAgo = new Date(todayStart); sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
+    const weekStart = new Date(todayStart); weekStart.setDate(weekStart.getDate() - weekStart.getDay() + (weekStart.getDay() === 0 ? -6 : 1))
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
     return orders.filter(o => {
       if (hiddenOrderIds.has(o.id)) return false
+      if (activitePeriod === "today" && o.createdAt < todayStart) return false
       if (activitePeriod === "7j" && o.createdAt < sevenDaysAgo) return false
+      if (activitePeriod === "thisWeek" && o.createdAt < weekStart) return false
+      if (activitePeriod === "month" && o.createdAt < monthStart) return false
+      if (activitePeriod === "custom") {
+        if (activiteDateFrom && o.createdAt < new Date(activiteDateFrom + "T00:00:00")) return false
+        if (activiteDateTo && o.createdAt > new Date(activiteDateTo + "T23:59:59")) return false
+      }
       if (activiteStatus === "tout" && o.status === "annulé") return false
       if (activiteStatus !== "tout" && o.status !== activiteStatus) return false
       if (orderSearch !== "" && !o.id.toLowerCase().includes(orderSearch.toLowerCase()) && !(o.table && o.table.toLowerCase().includes(orderSearch.toLowerCase()))) return false
       return true
     })
-  }, [orders, activitePeriod, activiteStatus, orderSearch, hiddenOrderIds])
+  }, [orders, activitePeriod, activiteDateFrom, activiteDateTo, activiteStatus, orderSearch, hiddenOrderIds])
 
   // Groupement par jour pour la vue commandes
   const ordersByDay = useMemo(() => {
@@ -2206,17 +2219,19 @@ export default function ATMApp() {
                         {f.label}
                       </button>
                     ))}
-                    <div className={`flex items-center gap-1 ml-1 px-2 py-1 rounded-lg transition-all ${dateFilter === "custom" ? "bg-amber-500 text-black" : "text-white/40"}`}>
+                    <div className={`relative flex items-center gap-1 ml-1 px-2 py-1 rounded-lg transition-all cursor-pointer ${dateFilter === "custom" ? "bg-amber-500 text-black" : "text-white/40 hover:text-white"}`}
+                      onClick={() => { const inp = document.getElementById("stats-date-picker") as HTMLInputElement; inp?.showPicker?.(); inp?.focus() }}>
                       <span className="text-xs font-medium">📅</span>
                       <input
+                        id="stats-date-picker"
                         type="date"
                         value={ventesCustomDate}
                         onChange={e => { setVentesCustomDate(e.target.value); setDateFilter(e.target.value ? "custom" : "today") }}
-                        className={`bg-transparent text-xs font-medium focus:outline-none ${dateFilter === "custom" ? "text-black" : "text-white/60"}`}
+                        className={`bg-transparent text-xs font-medium focus:outline-none cursor-pointer min-w-[7rem] ${dateFilter === "custom" ? "text-black" : "text-white/60"}`}
                         style={{ colorScheme: "dark" }}
                       />
                       {dateFilter === "custom" && (
-                        <button onClick={() => { setVentesCustomDate(""); setDateFilter("today") }}
+                        <button onClick={e => { e.stopPropagation(); setVentesCustomDate(""); setDateFilter("today") }}
                           className="text-black/60 hover:text-black text-xs font-bold px-1">✕</button>
                       )}
                     </div>
@@ -2469,12 +2484,24 @@ export default function ATMApp() {
                   <p className="text-4xl font-black tracking-tight mb-5">{formatPrice(totalCAFiltre)}</p>
                   <div className="flex gap-2 flex-wrap">
                     {/* Filtre période */}
-                    {([["7j", "📅 Les 7 derniers jours"], ["tout", "📅 Tout"]] as [typeof activitePeriod, string][]).map(([val, label]) => (
-                      <button key={val} onClick={() => setActivitePeriod(val)}
-                        className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${activitePeriod === val ? "bg-white/10 border-white/20 text-white" : "border-white/[0.08] text-white/40 hover:text-white/70"}`}>
-                        {label}
+                    <div className="flex gap-1 flex-wrap">
+                      {([
+                        { id: "today" as const, label: "Aujourd'hui" },
+                        { id: "thisWeek" as const, label: "Semaine" },
+                        { id: "7j" as const, label: "7 jours" },
+                        { id: "month" as const, label: "Ce mois" },
+                        { id: "tout" as const, label: "Tout" },
+                      ]).map(f => (
+                        <button key={f.id} onClick={() => setActivitePeriod(f.id)}
+                          className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${activitePeriod === f.id ? "bg-white/10 border-white/20 text-white" : "border-white/[0.08] text-white/40 hover:text-white/70"}`}>
+                          {f.label}
+                        </button>
+                      ))}
+                      <button onClick={() => setActivitePeriod("custom")}
+                        className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${activitePeriod === "custom" ? "bg-white/10 border-white/20 text-white" : "border-white/[0.08] text-white/40 hover:text-white/70"}`}>
+                        📅 Période
                       </button>
-                    ))}
+                    </div>
                     {/* Filtre statut */}
                     {(["tout", "livré", "en cours", "prêt", "annulé"] as typeof activiteStatus[]).map(s => (
                       <button key={s} onClick={() => setActiviteStatus(s)}
@@ -2522,6 +2549,23 @@ export default function ATMApp() {
                       )}
                     </div>
                   </div>
+                  {/* Sélecteur de période personnalisée */}
+                  {activitePeriod === "custom" && (
+                    <div className="flex gap-2 mt-3 flex-wrap items-center bg-white/[0.03] border border-white/[0.06] rounded-lg p-2">
+                      <label className="text-[10px] text-white/40 font-medium uppercase tracking-wider">Du</label>
+                      <input type="date" value={activiteDateFrom} onChange={e => setActiviteDateFrom(e.target.value)}
+                        className="bg-white/[0.06] border border-white/[0.08] rounded-lg px-2 py-1 text-xs text-white focus:outline-none focus:border-amber-500/40"
+                        style={{ colorScheme: "dark" }} />
+                      <label className="text-[10px] text-white/40 font-medium uppercase tracking-wider">Au</label>
+                      <input type="date" value={activiteDateTo} onChange={e => setActiviteDateTo(e.target.value)}
+                        className="bg-white/[0.06] border border-white/[0.08] rounded-lg px-2 py-1 text-xs text-white focus:outline-none focus:border-amber-500/40"
+                        style={{ colorScheme: "dark" }} />
+                      {(activiteDateFrom || activiteDateTo) && (
+                        <button onClick={() => { setActiviteDateFrom(""); setActiviteDateTo("") }}
+                          className="text-[10px] text-white/40 hover:text-white px-2 py-1">✕ Effacer</button>
+                      )}
+                    </div>
+                  )}
                   {/* Barre de recherche */}
                   <div className="relative mt-3">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30 text-sm">🔍</span>
@@ -2700,7 +2744,23 @@ export default function ATMApp() {
 
             {/* ── ONGLET TICKETS ─────────────────────────────────────────────── */}
             {activiteTab === "tickets" && (() => {
-              const visibleTickets = orders.filter(o => !o.isRefund && !hiddenOrderIds.has(o.id))
+              const now = new Date()
+              const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+              const sevenDaysAgo = new Date(todayStart); sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
+              const weekStart = new Date(todayStart); weekStart.setDate(weekStart.getDate() - weekStart.getDay() + (weekStart.getDay() === 0 ? -6 : 1))
+              const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
+              const visibleTickets = orders.filter(o => {
+                if (o.isRefund || hiddenOrderIds.has(o.id)) return false
+                if (activitePeriod === "today" && o.createdAt < todayStart) return false
+                if (activitePeriod === "7j" && o.createdAt < sevenDaysAgo) return false
+                if (activitePeriod === "thisWeek" && o.createdAt < weekStart) return false
+                if (activitePeriod === "month" && o.createdAt < monthStart) return false
+                if (activitePeriod === "custom") {
+                  if (activiteDateFrom && o.createdAt < new Date(activiteDateFrom + "T00:00:00")) return false
+                  if (activiteDateTo && o.createdAt > new Date(activiteDateTo + "T23:59:59")) return false
+                }
+                return true
+              })
               return (
               <div className="flex-1 overflow-y-auto">
                 {/* Recherche */}
@@ -2747,6 +2807,41 @@ export default function ATMApp() {
                       )}
                     </div>
                   </div>
+                  {/* Filtre période */}
+                  <div className="flex gap-1 mb-3 flex-wrap">
+                    {([
+                      { id: "today" as const, label: "Aujourd'hui" },
+                      { id: "thisWeek" as const, label: "Semaine" },
+                      { id: "7j" as const, label: "7 jours" },
+                      { id: "month" as const, label: "Ce mois" },
+                      { id: "tout" as const, label: "Tout" },
+                    ]).map(f => (
+                      <button key={f.id} onClick={() => setActivitePeriod(f.id)}
+                        className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${activitePeriod === f.id ? "bg-white/10 border-white/20 text-white" : "border-white/[0.08] text-white/40 hover:text-white/70"}`}>
+                        {f.label}
+                      </button>
+                    ))}
+                    <button onClick={() => setActivitePeriod("custom")}
+                      className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${activitePeriod === "custom" ? "bg-white/10 border-white/20 text-white" : "border-white/[0.08] text-white/40 hover:text-white/70"}`}>
+                      📅 Période
+                    </button>
+                  </div>
+                  {activitePeriod === "custom" && (
+                    <div className="flex gap-2 mb-3 flex-wrap items-center bg-white/[0.03] border border-white/[0.06] rounded-lg p-2">
+                      <label className="text-[10px] text-white/40 font-medium uppercase tracking-wider">Du</label>
+                      <input type="date" value={activiteDateFrom} onChange={e => setActiviteDateFrom(e.target.value)}
+                        className="bg-white/[0.06] border border-white/[0.08] rounded-lg px-2 py-1 text-xs text-white focus:outline-none focus:border-amber-500/40"
+                        style={{ colorScheme: "dark" }} />
+                      <label className="text-[10px] text-white/40 font-medium uppercase tracking-wider">Au</label>
+                      <input type="date" value={activiteDateTo} onChange={e => setActiviteDateTo(e.target.value)}
+                        className="bg-white/[0.06] border border-white/[0.08] rounded-lg px-2 py-1 text-xs text-white focus:outline-none focus:border-amber-500/40"
+                        style={{ colorScheme: "dark" }} />
+                      {(activiteDateFrom || activiteDateTo) && (
+                        <button onClick={() => { setActiviteDateFrom(""); setActiviteDateTo("") }}
+                          className="text-[10px] text-white/40 hover:text-white px-2 py-1">✕ Effacer</button>
+                      )}
+                    </div>
+                  )}
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30 text-sm">🔍</span>
                     <input type="text" value={ticketSearch} onChange={e => setTicketSearch(e.target.value)}
