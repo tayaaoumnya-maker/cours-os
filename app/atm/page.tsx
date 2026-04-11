@@ -830,7 +830,7 @@ export default function ATMApp() {
   useEffect(() => { LS.set("atm_shopAddress", shopAddress); if (initialized.current && supabaseOk.current) dbSet("atm_shopAddress", shopAddress) }, [shopAddress])
   useEffect(() => { LS.set("atm_shopPhone", shopPhone);     if (initialized.current && supabaseOk.current) dbSet("atm_shopPhone", shopPhone) }, [shopPhone])
   useEffect(() => { LS.set("atm_currency", currency);       if (initialized.current && supabaseOk.current) dbSet("atm_currency", currency) }, [currency])
-  useEffect(() => { LS.set("atm_ticketLogo", ticketLogo) }, [ticketLogo]) // logo base64 trop gros pour Supabase — localStorage uniquement
+  useEffect(() => { LS.set("atm_ticketLogo", ticketLogo); if (initialized.current && supabaseOk.current) dbSet("atm_ticketLogo", ticketLogo) }, [ticketLogo])
   useEffect(() => { LS.set("atm_ticketFooter", ticketFooter); if (initialized.current && supabaseOk.current) dbSet("atm_ticketFooter", ticketFooter) }, [ticketFooter])
   useEffect(() => { LS.set("atm_adminPin", adminPin);           if (initialized.current && supabaseOk.current) dbSet("atm_adminPin", adminPin) }, [adminPin])
   useEffect(() => { LS.set("atm_partenairePin", partenairePin); if (initialized.current && supabaseOk.current) dbSet("atm_partenairePin", partenairePin) }, [partenairePin])
@@ -890,7 +890,7 @@ export default function ATMApp() {
         if (all.atm_shopAddress !== undefined) setShopAddress(all.atm_shopAddress as string)
         if (all.atm_shopPhone !== undefined) setShopPhone(all.atm_shopPhone as string)
         if (all.atm_currency !== undefined) setCurrency(all.atm_currency as string)
-        // ticketLogo: localStorage uniquement (base64 trop volumineux pour Supabase)
+        if (all.atm_ticketLogo !== undefined) setTicketLogo(all.atm_ticketLogo as string)
         if (all.atm_ticketFooter !== undefined) setTicketFooter(all.atm_ticketFooter as string)
         if (all.atm_adminName !== undefined) setAdminName(all.atm_adminName as string)
         if (all.atm_partenaireName !== undefined) setPartenaireName(all.atm_partenaireName as string)
@@ -920,7 +920,7 @@ export default function ATMApp() {
         const keys = [
           "atm_products", "atm_orders", "atm_pending", "atm_formulas",
           "atm_shopName", "atm_shopSubtitle", "atm_shopAddress", "atm_shopPhone",
-          "atm_currency", "atm_ticketFooter",
+          "atm_currency", "atm_ticketLogo", "atm_ticketFooter",
           "atm_adminName", "atm_partenaireName", "atm_adminPin", "atm_partenairePin", "atm_taxes",
           "atm_shopSiret", "atm_shopTva", "atm_shopNaf",
           "atm_fondDeCaisse", "atm_fondDate",
@@ -4294,7 +4294,21 @@ export default function ATMApp() {
                         const file = e.target.files?.[0]
                         if (!file) return
                         const reader = new FileReader()
-                        reader.onload = ev => { const result = ev.target?.result as string; if (result?.startsWith("data:image/")) setTicketLogo(result) }
+                        reader.onload = ev => {
+                          const src = ev.target?.result as string
+                          if (!src?.startsWith("data:image/")) return
+                          // Compresser le logo (max 200px, JPEG 0.7) pour pouvoir le stocker dans Supabase
+                          const img = new Image()
+                          img.onload = () => {
+                            const MAX = 200
+                            let w = img.width, h = img.height
+                            if (w > MAX || h > MAX) { const r = Math.min(MAX / w, MAX / h); w = Math.round(w * r); h = Math.round(h * r) }
+                            const c = document.createElement("canvas"); c.width = w; c.height = h
+                            c.getContext("2d")!.drawImage(img, 0, 0, w, h)
+                            setTicketLogo(c.toDataURL("image/jpeg", 0.7))
+                          }
+                          img.src = src
+                        }
                         reader.readAsDataURL(file)
                         e.target.value = ""
                       }} />
