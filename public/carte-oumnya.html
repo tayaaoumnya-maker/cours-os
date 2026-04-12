@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oumnya Tayaa — Webdesigner Freelance</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Inter', sans-serif; min-height:100vh; display:flex; align-items:center; justify-content:center; background:linear-gradient(145deg, #fdf8f2 0%, #f5e6d0 50%, #fdf8f2 100%); padding:20px; }
+
+  .card { width:100%; max-width:420px; background:rgba(255,255,255,0.85); backdrop-filter:blur(20px) saturate(180%); border-radius:24px; overflow:hidden; position:relative; box-shadow:0 20px 60px rgba(200,160,120,0.2), 0 0 0 1px rgba(200,160,120,0.1); }
+
+  /* Glow border */
+  @property --angle { syntax:'<angle>'; initial-value:0deg; inherits:false; }
+  @keyframes rotateGlow { to { --angle:360deg; } }
+  .card::before { content:''; position:absolute; inset:-2px; border-radius:26px; padding:2px; background:conic-gradient(from var(--angle, 0deg), rgba(200,160,120,0.6), rgba(220,185,140,0.4), rgba(245,230,208,0.8), rgba(200,160,120,0.3), rgba(210,175,130,0.6), rgba(245,230,208,0.4)); -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite:xor; mask-composite:exclude; animation:rotateGlow 5s linear infinite; z-index:0; }
+  .card::after { content:''; position:absolute; inset:0; border-radius:24px; background:rgba(255,255,255,0.9); z-index:0; }
+  .card > * { position:relative; z-index:1; }
+
+  /* Header */
+  .card-header { background:linear-gradient(135deg, #2a1a1a 0%, #3d2b2b 100%); padding:48px 32px 56px; text-align:center; position:relative; overflow:hidden; }
+  .card-header::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 30% 20%, rgba(200,160,120,0.15), transparent 60%); }
+  .card-header::after { content:''; position:absolute; bottom:-1px; left:0; right:0; height:40px; background:rgba(255,255,255,0.9); border-radius:40px 40px 0 0; }
+
+  .avatar { width:100px; height:100px; border-radius:50%; background:linear-gradient(135deg, #f5e6d0, #c8a882); display:flex; align-items:center; justify-content:center; margin:0 auto 18px; font-family:'Playfair Display', serif; font-size:2.4rem; font-weight:500; color:#2a1a1a; border:4px solid rgba(255,255,255,0.2); box-shadow:0 8px 30px rgba(0,0,0,0.3); position:relative; z-index:2; }
+
+  .card-name { font-family:'Playfair Display', serif; font-size:1.8rem; font-weight:500; color:#fff; margin-bottom:6px; letter-spacing:0.5px; position:relative; }
+  .card-title { font-size:0.78rem; font-weight:400; color:rgba(245,230,208,0.9); letter-spacing:2px; text-transform:uppercase; position:relative; }
+
+  /* Body */
+  .card-body { padding:32px 28px 20px; }
+
+  .tagline { text-align:center; font-size:0.88rem; color:#6b5f5f; line-height:1.7; font-weight:300; margin-bottom:28px; font-style:italic; }
+
+  /* Contact items */
+  .contact-item { display:flex; align-items:center; gap:14px; padding:14px 16px; border-radius:12px; margin-bottom:10px; transition:all 0.3s ease; cursor:pointer; text-decoration:none; color:#3a3232; background:rgba(245,230,208,0.25); border:1px solid rgba(200,160,120,0.1); }
+  .contact-item:hover { background:rgba(245,230,208,0.5); transform:translateX(4px); box-shadow:0 4px 16px rgba(200,160,120,0.15); }
+  .contact-icon { width:42px; height:42px; border-radius:12px; background:linear-gradient(135deg, #fff, #f5e6d0); display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; box-shadow:0 2px 8px rgba(200,160,120,0.15); }
+  .contact-info { flex:1; }
+  .contact-label { font-size:0.65rem; font-weight:600; color:#a89e9e; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:2px; }
+  .contact-value { font-size:0.92rem; font-weight:500; color:#3a3232; }
+
+  /* Services */
+  .services { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:24px 0 8px; }
+  .service-tag { padding:6px 16px; border-radius:100px; font-size:0.7rem; font-weight:500; color:#8a6d4b; background:linear-gradient(135deg, rgba(245,230,208,0.4), rgba(245,230,208,0.7)); border:1px solid rgba(200,160,120,0.15); letter-spacing:0.5px; }
+
+  /* Save button */
+  .save-btn { display:block; width:100%; padding:16px; border:none; border-radius:14px; font-size:0.82rem; font-weight:600; cursor:pointer; letter-spacing:1.5px; text-transform:uppercase; font-family:'Inter', sans-serif; margin-top:24px; background:linear-gradient(135deg, #fff 0%, #f5e6d0 50%, #fff 100%); background-size:200% 200%; animation:shimmer 3s ease infinite; color:#2a1a1a; box-shadow:0 4px 20px rgba(200,160,120,0.3); transition:all 0.3s ease; }
+  .save-btn:hover { box-shadow:0 8px 30px rgba(200,160,120,0.45); transform:translateY(-2px); }
+  @keyframes shimmer { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+
+  /* Footer */
+  .card-footer { text-align:center; padding:16px 28px 24px; }
+  .card-footer p { font-size:0.68rem; color:#a89e9e; letter-spacing:0.5px; }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="card-header">
+    <div class="avatar">OT</div>
+    <h1 class="card-name">Oumnya Tayaa</h1>
+    <p class="card-title">Webdesigner Freelance</p>
+  </div>
+
+  <div class="card-body">
+    <p class="tagline">Je crée des sites web élégants et performants<br>qui attirent vos clients et boostent votre activité.</p>
+
+    <a href="tel:+33650986149" class="contact-item">
+      <div class="contact-icon">&#128222;</div>
+      <div class="contact-info">
+        <div class="contact-label">Téléphone</div>
+        <div class="contact-value">06 50 98 61 49</div>
+      </div>
+    </a>
+
+    <a href="mailto:tayaaoumnya@gmail.com" class="contact-item">
+      <div class="contact-icon">&#9993;</div>
+      <div class="contact-info">
+        <div class="contact-label">Email</div>
+        <div class="contact-value">tayaaoumnya@gmail.com</div>
+      </div>
+    </a>
+
+    <div class="services">
+      <span class="service-tag">Sites vitrines</span>
+      <span class="service-tag">Réservation en ligne</span>
+      <span class="service-tag">SEO local</span>
+      <span class="service-tag">Design premium</span>
+    </div>
+
+    <a href="data:text/vcard;charset=utf-8,BEGIN%3AVCARD%0AVERSION%3A3.0%0AFN%3AOumnya%20Tayaa%0AN%3ATayaa%3BOumnya%0ATEL%3BTYPE%3DCELL%3A%2B33650986149%0AEMAIL%3Atayaaoumnya%40gmail.com%0ATITLE%3AWebdesigner%20Freelance%0AEND%3AVCARD" download="oumnya-tayaa.vcf" style="text-decoration:none;">
+      <button class="save-btn">&#10022; Enregistrer le contact</button>
+    </a>
+  </div>
+
+  <div class="card-footer">
+    <p>Webdesigner Freelance &mdash; Disponible pour vos projets</p>
+  </div>
+</div>
+
+</body>
+</html>
