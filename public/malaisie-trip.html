@@ -386,43 +386,54 @@
   </div>
 
   <script>
-    const STORAGE_KEY = 'malaisie-trip-checks';
-
-    function loadState() {
-      try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-      } catch { return {}; }
-    }
-
-    function saveState(state) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    }
+    const SUPABASE_URL = 'https://sonpdfmkgzbxdbwxpvdw.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvbnBkZm1rZ3pieGRid3hwdmR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUxMjY0NzYsImV4cCI6MjA5MDcwMjQ3Nn0.SQZOpaECUy14689kanyLgkVU2e9J7tmEKu71Go0nbOk';
+    const headers = { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' };
 
     function updateCounter() {
       const checked = document.querySelectorAll('.card.checked').length;
       document.getElementById('count').textContent = checked;
     }
 
-    function toggle(card) {
-      card.classList.toggle('checked');
-      const cb = card.querySelector('input[type="checkbox"]');
-      cb.checked = !cb.checked;
-
-      const state = loadState();
-      state[card.dataset.id] = cb.checked;
-      saveState(state);
+    function applyState(data) {
+      data.forEach(row => {
+        const card = document.querySelector(`.card[data-id="${row.id}"]`);
+        if (!card) return;
+        if (row.checked) {
+          card.classList.add('checked');
+          card.querySelector('input[type="checkbox"]').checked = true;
+        } else {
+          card.classList.remove('checked');
+          card.querySelector('input[type="checkbox"]').checked = false;
+        }
+      });
       updateCounter();
     }
 
-    // Restore state on load
-    const saved = loadState();
-    document.querySelectorAll('.card').forEach(card => {
-      if (saved[card.dataset.id]) {
-        card.classList.add('checked');
-        card.querySelector('input[type="checkbox"]').checked = true;
-      }
-    });
-    updateCounter();
+    async function loadFromSupabase() {
+      const res = await fetch(SUPABASE_URL + '/rest/v1/trip_votes?select=*', { headers });
+      const data = await res.json();
+      applyState(data);
+    }
+
+    async function toggle(card) {
+      card.classList.toggle('checked');
+      const cb = card.querySelector('input[type="checkbox"]');
+      cb.checked = !cb.checked;
+      updateCounter();
+
+      await fetch(SUPABASE_URL + '/rest/v1/trip_votes?id=eq.' + card.dataset.id, {
+        method: 'PATCH',
+        headers,
+        body: JSON.stringify({ checked: cb.checked, updated_at: new Date().toISOString() })
+      });
+    }
+
+    // Load state from Supabase
+    loadFromSupabase();
+
+    // Auto-refresh every 5 seconds to see friend's changes
+    setInterval(loadFromSupabase, 5000);
   </script>
 </body>
 </html>
