@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Malaisie Oct 2026</title>
+  <meta name="robots" content="noindex, nofollow">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0f0f0f;
+      color: #e8e8e8;
+      min-height: 100vh;
+      padding: 24px 16px 60px;
+    }
+
+    .container { max-width: 640px; margin: 0 auto; }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding: 32px 0 24px;
+    }
+
+    header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #f59e0b, #ef4444, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+
+    header p {
+      color: #888;
+      font-size: 14px;
+    }
+
+    .section {
+      margin-bottom: 32px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+
+    .section-header h2 {
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .section-dates {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 16px;
+    }
+
+    .transport-info {
+      background: #1a1a2e;
+      border: 1px solid #2a2a4a;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      font-size: 13px;
+      color: #a0a0c0;
+      line-height: 1.6;
+    }
+
+    .transport-info strong {
+      color: #c0c0e0;
+    }
+
+    .card {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .card:hover {
+      border-color: #444;
+      background: #222;
+    }
+
+    .card.checked {
+      border-color: #22c55e40;
+      background: #22c55e08;
+    }
+
+    .card.checked .card-title {
+      text-decoration: line-through;
+      color: #666;
+    }
+
+    .card.checked .badge {
+      background: #22c55e20;
+      color: #22c55e;
+    }
+
+    .checkbox-wrapper {
+      flex-shrink: 0;
+    }
+
+    .checkbox-wrapper input[type="checkbox"] {
+      display: none;
+    }
+
+    .checkmark {
+      width: 24px;
+      height: 24px;
+      border: 2px solid #444;
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .card.checked .checkmark {
+      background: #22c55e;
+      border-color: #22c55e;
+    }
+
+    .checkmark svg {
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .card.checked .checkmark svg {
+      opacity: 1;
+    }
+
+    .card-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: #ffffff10;
+      color: #aaa;
+      margin-bottom: 6px;
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1.4;
+      margin-bottom: 4px;
+      transition: all 0.2s ease;
+    }
+
+    .card-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      color: #ef4444;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .card-link:hover { color: #f87171; }
+
+    .counter {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #1a1a1aee;
+      backdrop-filter: blur(12px);
+      border-top: 1px solid #2a2a2a;
+      padding: 14px;
+      text-align: center;
+      font-size: 13px;
+      color: #888;
+    }
+
+    .counter span { color: #22c55e; font-weight: 600; }
+
+    @media (max-width: 480px) {
+      header h1 { font-size: 24px; }
+      .card { padding: 14px 12px; }
+      .card-title { font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Malaisie - Octobre 2026</h1>
+      <p>2 personnes &middot; 16 nuits &middot; Coche tes favoris</p>
+    </header>
+
+    <!-- IPOH -->
+    <div class="section">
+      <div class="section-header">
+        <h2>Ipoh</h2>
+      </div>
+      <div class="section-dates">2 &rarr; 6 octobre &middot; 4 nuits</div>
+      <div class="transport-info">
+        <strong>Trajet :</strong> Kuala Lumpur &rarr; Ipoh en train
+      </div>
+
+      <div class="card" data-id="ipoh-1" onclick="toggle(this)">
+        <label class="checkbox-wrapper">
+          <input type="checkbox">
+          <div class="checkmark">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </label>
+        <div class="card-content">
+          <div class="badge">Choix 1</div>
+          <div class="card-title">Ville d'Ipoh, vue montagne au coucher du soleil, Netflix Disney+</div>
+          <a class="card-link" href="https://www.airbnb.fr/rooms/1184620313807128101?adults=2&check_in=2026-10-01&check_out=2026-10-04" target="_blank" onclick="event.stopPropagation()">Voir sur Airbnb &rarr;</a>
+        </div>
+      </div>
+
+      <div class="card" data-id="ipoh-2" onclick="toggle(this)">
+        <label class="checkbox-wrapper">
+          <input type="checkbox">
+          <div class="checkmark">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </label>
+        <div class="card-content">
+          <div class="badge">Choix 2</div>
+          <div class="card-title">Urban Resort @ Octagon (2-4 pers.) Rénovation récente | Netflix</div>
+          <a class="card-link" href="https://www.airbnb.fr/rooms/1557204126729972655?adults=2&check_in=2026-10-01&check_out=2026-10-04" target="_blank" onclick="event.stopPropagation()">Voir sur Airbnb &rarr;</a>
+        </div>
+      </div>
+
+      <div class="card" data-id="ipoh-3" onclick="toggle(this)">
+        <label class="checkbox-wrapper">
+          <input type="checkbox">
+          <div class="checkmark">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </label>
+        <div class="card-content">
+          <div class="badge">Choix 3</div>
+          <div class="card-title">Centre-ville d'Ipoh Majestic 2R2B @GHomestay 3</div>
+          <a class="card-link" href="https://www.airbnb.fr/rooms/1396883330709411035?adults=2&check_in=2026-10-01&check_out=2026-10-04" target="_blank" onclick="event.stopPropagation()">Voir sur Airbnb &rarr;</a>
+        </div>
+      </div>
+
+      <div class="card" data-id="ipoh-4" onclick="toggle(this)">
+        <label class="checkbox-wrapper">
+          <input type="checkbox">
+          <div class="checkmark">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </label>
+        <div class="card-content">
+          <div class="badge">Choix 4</div>
+          <div class="card-title">2BR moderne à Stallionz avec balcon | Sky Gym et yoga</div>
+          <a class="card-link" href="https://www.airbnb.fr/rooms/1612125838875337283?adults=2&check_in=2026-10-02&check_out=2026-10-06" target="_blank" onclick="event.stopPropagation()">Voir sur Airbnb &rarr;</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- GEORGE TOWN -->
+    <div class="section">
+      <div class="section-header">
+        <h2>George Town, Penang</h2>
+      </div>
+      <div class="section-dates">6 &rarr; 10 octobre &middot; 4 nuits</div>
+      <div class="transport-info">
+        <strong>Trajet :</strong> Ipoh &rarr; Butterworth en train (1h56)<br>
+        Puis ferry : Sultan Abdul Salim Ferry Terminal &rarr; Raja Tun Uda Ferry Terminal
+      </div>
+
+      <div class="card" data-id="gt-1" onclick="toggle(this)">
+        <label class="checkbox-wrapper">
+          <input type="checkbox">
+          <div class="checkmark">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </label>
+        <div class="card-content">
+          <div class="badge">Choix 1</div>
+          <div class="card-title">Muji@Beacon &middot; Wi-Fi gratuit &middot; Étage élevé</div>
+          <a class="card-link" href="https://www.airbnb.fr/rooms/975747632792135071?adults=2&check_in=2026-10-06&check_out=2026-10-10" target="_blank" onclick="event.stopPropagation()">Voir sur Airbnb &rarr;</a>
+        </div>
+      </div>
+
+      <div class="card" data-id="gt-2" onclick="toggle(this)">
+        <label class="checkbox-wrapper">
+          <input type="checkbox">
+          <div class="checkmark">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </label>
+        <div class="card-content">
+          <div class="badge">Choix 2</div>
+          <div class="card-title">Studio Vue Sur Mer @ Tropicana 218 &middot; Purificateur d'eau LG</div>
+          <a class="card-link" href="https://www.airbnb.fr/rooms/33542613?adults=2&check_in=2026-10-06&check_out=2026-10-10" target="_blank" onclick="event.stopPropagation()">Voir sur Airbnb &rarr;</a>
+        </div>
+      </div>
+
+      <div class="card" data-id="gt-3" onclick="toggle(this)">
+        <label class="checkbox-wrapper">
+          <input type="checkbox">
+          <div class="checkmark">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </label>
+        <div class="card-content">
+          <div class="badge">Choix 3</div>
+          <div class="card-title">Ryokan 2BR Apartment @ 22 Macalisterz par ALV</div>
+          <a class="card-link" href="https://www.airbnb.fr/rooms/1507716209018504654?adults=2&check_in=2026-10-06&check_out=2026-10-10" target="_blank" onclick="event.stopPropagation()">Voir sur Airbnb &rarr;</a>
+        </div>
+      </div>
+
+      <div class="card" data-id="gt-4" onclick="toggle(this)">
+        <label class="checkbox-wrapper">
+          <input type="checkbox">
+          <div class="checkmark">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </label>
+        <div class="card-content">
+          <div class="badge">Choix 4</div>
+          <div class="card-title">Lumi Studio Suite @ 22 Macalisterz par ALV</div>
+          <a class="card-link" href="https://www.airbnb.fr/rooms/1625104144573021731?adults=2&check_in=2026-10-06&check_out=2026-10-10" target="_blank" onclick="event.stopPropagation()">Voir sur Airbnb &rarr;</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- KUALA LUMPUR -->
+    <div class="section">
+      <div class="section-header">
+        <h2>Kuala Lumpur</h2>
+      </div>
+      <div class="section-dates">10 &rarr; 18 octobre &middot; 8 nuits</div>
+
+      <div class="card" data-id="kl-1" onclick="toggle(this)">
+        <label class="checkbox-wrapper">
+          <input type="checkbox">
+          <div class="checkmark">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </label>
+        <div class="card-content">
+          <div class="badge">Choix 1</div>
+          <div class="card-title">Skyline Slumber Home &middot; Vue sur la ville &middot; 5 min à pied du train</div>
+          <a class="card-link" href="https://www.airbnb.fr/rooms/1541734003082368270?adults=2&check_in=2026-10-10&check_out=2026-10-18" target="_blank" onclick="event.stopPropagation()">Voir sur Airbnb &rarr;</a>
+        </div>
+      </div>
+
+      <div class="card" data-id="kl-2" onclick="toggle(this)">
+        <label class="checkbox-wrapper">
+          <input type="checkbox">
+          <div class="checkmark">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7L5.5 10L11.5 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </label>
+        <div class="card-content">
+          <div class="badge">Choix 2</div>
+          <div class="card-title">Grey Antler &middot; À pied de la tour KL / KLCC / centre-ville</div>
+          <a class="card-link" href="https://www.airbnb.fr/rooms/1486848206934539257?adults=2&check_in=2026-10-10&check_out=2026-10-18" target="_blank" onclick="event.stopPropagation()">Voir sur Airbnb &rarr;</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="counter">
+    <span id="count">0</span> / <span id="total">10</span> sélectionnés
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'malaisie-trip-checks';
+
+    function loadState() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+      } catch { return {}; }
+    }
+
+    function saveState(state) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function updateCounter() {
+      const checked = document.querySelectorAll('.card.checked').length;
+      document.getElementById('count').textContent = checked;
+    }
+
+    function toggle(card) {
+      card.classList.toggle('checked');
+      const cb = card.querySelector('input[type="checkbox"]');
+      cb.checked = !cb.checked;
+
+      const state = loadState();
+      state[card.dataset.id] = cb.checked;
+      saveState(state);
+      updateCounter();
+    }
+
+    // Restore state on load
+    const saved = loadState();
+    document.querySelectorAll('.card').forEach(card => {
+      if (saved[card.dataset.id]) {
+        card.classList.add('checked');
+        card.querySelector('input[type="checkbox"]').checked = true;
+      }
+    });
+    updateCounter();
+  </script>
+</body>
+</html>
