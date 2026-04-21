@@ -54,7 +54,7 @@
             {% if block.type == 'hero_card' %}
               <div class="fh-hero-card fh-hc-{{ forloop.index }}" style="background:{{ block.settings.gradient }}" {{ block.shopify_attributes }}>
                 {% if block.settings.image != blank %}
-                  {{ block.settings.image | image_url: width: 600 | image_tag: loading: 'eager', class: 'fh-card-img' }}
+                  {{ block.settings.image | image_url: width: 900 | image_tag: loading: 'eager', class: 'fh-card-img' }}
                 {% else %}
                   <span class="fh-flag">{{ block.settings.flag_emoji }}</span>
                 {% endif %}
@@ -113,7 +113,7 @@
     #shopify-section-{{ section.id }} .fh-hero-card-stack{position:relative;width:440px;height:600px}
     #shopify-section-{{ section.id }} .fh-hero-card{position:absolute;width:380px;height:540px;border-radius:20px;overflow:hidden;display:flex;align-items:center;justify-content:center;box-shadow:0 30px 80px rgba(0,0,0,0.5);transition:all .6s cubic-bezier(.4,0,.2,1)}
     #shopify-section-{{ section.id }} .fh-hero-card .fh-flag{font-size:120px;filter:drop-shadow(0 10px 30px rgba(0,0,0,0.4))}
-    #shopify-section-{{ section.id }} .fh-hero-card .fh-card-img{width:100%;height:100%;object-fit:cover}
+    #shopify-section-{{ section.id }} .fh-hero-card .fh-card-img{width:100%;height:100%;object-fit:contain;object-position:center 40%;padding:20px 16px 60px}
     #shopify-section-{{ section.id }} .fh-hero-card::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(0,0,0,0.6) 100%)}
     #shopify-section-{{ section.id }} .fh-hero-card-label{position:absolute;bottom:20px;left:20px;z-index:2}
     #shopify-section-{{ section.id }} .fh-hc-name{font-family:'Bebas Neue',Impact,sans-serif;font-size:24px;color:#fff;letter-spacing:1px}
