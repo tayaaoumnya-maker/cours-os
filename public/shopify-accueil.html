@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Football Heritage — Coupe du Monde 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --gold:#d4a843;--gold-light:#f0d78c;--gold-dark:#a68636;
+    --black:#0d1b2a;--black2:#0f1f30;--black3:#132438;
+    --white:#fff;--gray-100:#f5f5f3;--gray-200:#e0e0dc;--gray-500:#777;--gray-700:#444;
+    --red:#0d1b2a;--green:#2d6a4f;--blue:#0d1b2a;
+    --font-display:'Bebas Neue',Impact,sans-serif;
+    --font-body:'Inter',-apple-system,sans-serif;
+  }
+  body{font-family:var(--font-body);color:var(--black);background:#fff;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  ::selection{background:var(--gold);color:var(--black)}
+
+  /* ===== TICKER ===== */
+  .ticker{background:var(--black);color:var(--gold-light);overflow:hidden;height:36px;display:flex;align-items:center;position:relative}
+  .ticker-track{display:flex;animation:scroll 25s linear infinite;white-space:nowrap}
+  .ticker-item{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:2px;padding:0 48px;flex-shrink:0}
+  @keyframes scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+  /* ===== HEADER ===== */
+  .header{display:flex;align-items:center;justify-content:space-between;padding:18px 48px;position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop-filter:blur(24px);border-bottom:1px solid rgba(0,0,0,0.06)}
+  .header-logo{font-family:var(--font-display);font-size:32px;letter-spacing:3px;color:var(--black)}
+  .header-logo span{color:var(--gold)}
+  .header-nav{display:flex;gap:28px}
+  .header-nav a{text-decoration:none;color:var(--gray-700);font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;transition:color .3s}
+  .header-nav a:hover{color:var(--gold)}
+  .header-icons{display:flex;gap:18px;align-items:center}
+  .header-icons svg{width:20px;height:20px;cursor:pointer;stroke:var(--gray-700);fill:none;stroke-width:1.5;transition:stroke .3s}
+  .header-icons svg:hover{stroke:var(--red)}
+  .cart-badge{position:relative}
+  .cart-badge::after{content:'0';position:absolute;top:-8px;right:-10px;background:var(--black);color:var(--white);font-size:9px;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800}
+
+  /* ===== HERO ===== */
+  .hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;background:var(--black)}
+  .hero-bg{position:absolute;inset:0;background:
+    radial-gradient(ellipse at 20% 80%,rgba(13,27,42,0.15) 0%,transparent 50%),
+    radial-gradient(ellipse at 80% 20%,rgba(212,168,67,0.1) 0%,transparent 50%),
+    radial-gradient(ellipse at 50% 50%,rgba(29,53,87,0.2) 0%,transparent 60%);
+  }
+  /* Stadium light beams */
+  .hero-lights{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+  .light-beam{position:absolute;width:2px;height:120vh;background:linear-gradient(180deg,transparent,rgba(255,255,255,0.03),transparent);transform:rotate(-15deg);animation:beam 8s ease-in-out infinite}
+  .light-beam:nth-child(1){left:10%;animation-delay:0s}
+  .light-beam:nth-child(2){left:30%;animation-delay:2s;width:3px}
+  .light-beam:nth-child(3){left:55%;animation-delay:4s}
+  .light-beam:nth-child(4){left:75%;animation-delay:1s;width:3px}
+  .light-beam:nth-child(5){left:90%;animation-delay:3s}
+  @keyframes beam{0%,100%{opacity:.3;transform:rotate(-15deg)}50%{opacity:.8;transform:rotate(-12deg)}}
+
+  /* Floating particles */
+  .particles{position:absolute;inset:0;pointer-events:none}
+  .particle{position:absolute;width:4px;height:4px;border-radius:50%;animation:float 6s ease-in-out infinite}
+  .particle:nth-child(1){background:var(--black);top:20%;left:15%;animation-delay:0s}
+  .particle:nth-child(2){background:var(--gold);top:60%;left:80%;animation-delay:1.5s;width:3px;height:3px}
+  .particle:nth-child(3){background:var(--white);top:40%;left:45%;animation-delay:3s;width:2px;height:2px;opacity:.5}
+  .particle:nth-child(4){background:var(--gold);top:75%;left:25%;animation-delay:4s;width:5px;height:5px}
+  .particle:nth-child(5){background:var(--black);top:30%;left:70%;animation-delay:2s;width:3px;height:3px}
+  .particle:nth-child(6){background:var(--white);top:85%;left:60%;animation-delay:5s;width:2px;height:2px;opacity:.4}
+  @keyframes float{0%,100%{transform:translateY(0) scale(1);opacity:.6}50%{transform:translateY(-30px) scale(1.5);opacity:1}}
+
+  .hero-inner{position:relative;z-index:2;width:100%;max-width:1400px;margin:0 auto;padding:100px 64px 80px;display:flex;align-items:center;gap:80px}
+  .hero-text{flex:1.2}
+
+  /* Countdown */
+  .countdown{display:flex;gap:16px;margin-bottom:32px}
+  .cd-block{text-align:center}
+  .cd-num{font-family:var(--font-display);font-size:48px;color:var(--white);line-height:1;display:block;text-shadow:0 0 30px rgba(212,168,67,0.3)}
+  .cd-label{font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--gold);font-weight:600;margin-top:4px}
+  .cd-sep{font-family:var(--font-display);font-size:36px;color:rgba(255,255,255,0.15);padding-top:6px}
+
+  .hero h1{font-family:var(--font-display);font-size:96px;line-height:0.95;letter-spacing:2px;margin-bottom:20px;text-transform:uppercase}
+  .hero h1 .line1{display:block;color:rgba(255,255,255,0.4);font-size:48px;letter-spacing:6px}
+  .hero h1 .line2{display:block;color:var(--white);text-shadow:0 0 60px rgba(13,27,42,0.3)}
+  .hero h1 .line3{display:block;color:var(--gold);text-shadow:0 0 60px rgba(212,168,67,0.4)}
+  .hero-sub{font-size:16px;color:rgba(255,255,255,0.4);line-height:1.7;margin-bottom:36px;max-width:440px;font-weight:300}
+  .hero-actions{display:flex;gap:16px;align-items:center;margin-bottom:28px}
+  .btn-fire{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,#0d1b2a,#162d4a);color:var(--white);padding:18px 36px;border-radius:6px;font-size:13px;font-weight:800;text-decoration:none;text-transform:uppercase;letter-spacing:2px;transition:all .3s;box-shadow:0 8px 32px rgba(13,27,42,0.3)}
+  .btn-fire:hover{transform:translateY(-2px);box-shadow:0 16px 48px rgba(13,27,42,0.45)}
+  .btn-ghost{color:rgba(255,255,255,0.4);font-size:13px;font-weight:500;text-decoration:none;letter-spacing:1px;text-transform:uppercase;transition:color .3s;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:2px}
+  .btn-ghost:hover{color:var(--gold);border-color:var(--gold)}
+  .hero-trust{display:flex;gap:24px;flex-wrap:wrap}
+  .hero-trust-item{display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:1px}
+  .hero-trust-item .ic{color:var(--gold);font-size:14px}
+
+  .hero-visual{flex:1;display:flex;justify-content:center;position:relative}
+  .hero-card-stack{position:relative;width:340px;height:480px}
+  .hero-card{position:absolute;width:300px;height:440px;border-radius:20px;overflow:hidden;display:flex;align-items:center;justify-content:center;box-shadow:0 30px 80px rgba(0,0,0,0.5);transition:all .6s cubic-bezier(.4,0,.2,1)}
+  .hero-card .flag{font-size:120px;filter:drop-shadow(0 10px 30px rgba(0,0,0,0.4))}
+  .hero-card::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(0,0,0,0.6) 100%)}
+  .hero-card-label{position:absolute;bottom:20px;left:20px;z-index:2}
+  .hero-card-label .hc-name{font-family:var(--font-display);font-size:24px;color:#fff;letter-spacing:1px}
+  .hero-card-label .hc-price{font-size:14px;color:var(--gold-light);font-weight:600}
+  .hc-maroc{background:linear-gradient(160deg,#c1272d,#7a1018)}
+  .hc-algerie{background:linear-gradient(160deg,#006233,#003d1f)}
+  .hc-civ{background:linear-gradient(160deg,#FF8200,#cc6500)}
+  .card-front{top:0;left:0;z-index:3;transform:rotate(-2deg) scale(1);opacity:1}
+  .card-mid{top:20px;left:40px;z-index:2;transform:rotate(3deg) scale(.95);opacity:.7}
+  .card-back{top:40px;left:80px;z-index:1;transform:rotate(7deg) scale(.9);opacity:.4}
+  .card-exit{top:-20px;left:-40px;z-index:0;transform:rotate(-10deg) scale(.85) translateY(-30px);opacity:0}
+  .hero-card-stack:hover .card-front{transform:rotate(0deg) translateX(-20px) scale(1)}
+  .hero-card-stack:hover .card-mid{transform:rotate(0deg) translateX(0) scale(.95);opacity:1}
+  .hero-card-stack:hover .card-back{transform:rotate(0deg) translateX(20px) scale(.9);opacity:.8}
+
+  /* ===== SOCIAL PROOF — TÉMOIGNAGES ===== */
+  .testimonials{padding:100px 48px;background:var(--gray-100);position:relative}
+  .testimonials::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--red),var(--gold),var(--red));opacity:.6}
+  .section-header{text-align:center;margin-bottom:56px}
+  .section-overline{font-size:11px;text-transform:uppercase;letter-spacing:4px;color:var(--gold);font-weight:700;margin-bottom:12px}
+  .section-title{font-family:var(--font-display);font-size:52px;letter-spacing:2px;text-transform:uppercase;color:var(--black)}
+  .section-subtitle{font-size:14px;color:var(--gray-500);margin-top:8px;font-weight:300}
+  .testi-grid{display:flex;justify-content:center;gap:24px;flex-wrap:wrap;max-width:1100px;margin:0 auto}
+  .testi-card{background:var(--white);border:1px solid var(--gray-200);border-radius:16px;padding:32px;flex:1;min-width:280px;max-width:340px;transition:all .4s;position:relative;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.04)}
+  .testi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--red),var(--gold));opacity:0;transition:opacity .4s}
+  .testi-card:hover{transform:translateY(-6px);box-shadow:0 16px 48px rgba(0,0,0,0.08)}
+  .testi-card:hover::before{opacity:1}
+  .testi-stars{color:var(--gold);font-size:14px;margin-bottom:16px;letter-spacing:2px}
+  .testi-text{font-size:15px;color:var(--gray-700);line-height:1.7;margin-bottom:20px;font-weight:300}
+  .testi-author{display:flex;align-items:center;gap:12px}
+  .testi-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--red),var(--gold));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:var(--white)}
+  .testi-name{font-size:14px;font-weight:700;color:var(--black)}
+  .testi-loc{font-size:12px;color:var(--gray-500)}
+  .testi-verified{font-size:11px;color:#2e7d32;font-weight:600;margin-top:12px}
+
+  /* ===== PRÉSENTATION MARQUE ===== */
+  .brand{padding:100px 48px;text-align:center;position:relative;background:var(--white);overflow:hidden}
+  .brand::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(13,27,42,0.03),transparent 60%)}
+  .brand-inner{max-width:750px;margin:0 auto;position:relative;z-index:1}
+  .brand h2{font-family:var(--font-display);font-size:56px;letter-spacing:2px;text-transform:uppercase;margin-bottom:28px;line-height:1.1;color:var(--black)}
+  .brand h2 .gold{color:var(--gold)}
+  .brand-divider{width:60px;height:3px;background:var(--black);margin:0 auto 28px;border-radius:2px}
+  .brand p{font-size:16px;color:var(--gray-700);line-height:1.8;margin-bottom:18px;font-weight:300}
+
+  /* ===== CTA PRODUIT ===== */
+  .cta-product{padding:100px 48px;background:var(--gray-100);position:relative;overflow:hidden}
+  .cta-product::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(13,27,42,0.04),transparent 50%)}
+  .cta-inner{max-width:1100px;margin:0 auto;display:flex;gap:64px;align-items:center;flex-wrap:wrap;position:relative;z-index:1}
+  .cta-image{flex:1;min-width:320px}
+  .cta-jersey{width:100%;aspect-ratio:3/4;border-radius:20px;background:linear-gradient(160deg,#c1272d,#7a1018);display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 30px 80px rgba(193,39,45,0.2);overflow:hidden}
+  .cta-jersey .flag{font-size:180px;filter:drop-shadow(0 20px 60px rgba(0,0,0,0.3))}
+  .cta-jersey::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,0.08) 0%,transparent 30%);pointer-events:none}
+  .cta-info{flex:1;min-width:320px}
+  .cta-info .section-overline{text-align:left}
+  .cta-info h3{font-family:var(--font-display);font-size:48px;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;color:var(--black)}
+  .cta-stars{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+  .cta-stars .stars{color:var(--gold);font-size:14px}
+  .cta-stars .count{color:var(--gray-500);font-size:13px}
+  .cta-price{font-size:40px;font-family:var(--font-display);color:var(--gold);letter-spacing:1px;margin-bottom:24px}
+  .cta-price .old{font-size:24px;color:var(--gray-500);text-decoration:line-through;margin-left:12px;font-family:var(--font-body);font-weight:300}
+  .cta-benefits{list-style:none;margin-bottom:32px}
+  .cta-benefits li{font-size:15px;color:var(--gray-700);padding:8px 0;display:flex;align-items:center;gap:12px;font-weight:400}
+  .cta-benefits li .ck{width:20px;height:20px;border-radius:50%;background:rgba(13,27,42,0.1);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:11px;font-weight:800;flex-shrink:0}
+  .btn-stadium{display:inline-flex;align-items:center;gap:12px;background:linear-gradient(135deg,#0d1b2a,#162d4a);color:var(--white);padding:18px 40px;border-radius:6px;font-size:14px;font-weight:800;text-decoration:none;text-transform:uppercase;letter-spacing:2px;transition:all .3s;box-shadow:0 8px 32px rgba(13,27,42,0.3)}
+  .btn-stadium:hover{transform:translateY(-2px);box-shadow:0 16px 48px rgba(13,27,42,0.45)}
+
+  /* ===== COLLECTIONS ===== */
+  .collections{padding:100px 48px;background:var(--white)}
+  .coll-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;max-width:1200px;margin:0 auto}
+  .coll-card{border-radius:16px;overflow:hidden;position:relative;cursor:pointer;aspect-ratio:3/4.5;display:flex;align-items:flex-end}
+  .coll-card-bg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:80px;transition:transform .6s}
+  .coll-card:hover .coll-card-bg{transform:scale(1.08)}
+  .coll-card::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(0,0,0,0.85) 100%)}
+  .coll-info{position:relative;z-index:2;padding:24px;width:100%}
+  .coll-flag{font-size:28px;margin-bottom:8px}
+  .coll-country{font-family:var(--font-display);font-size:28px;letter-spacing:2px;text-transform:uppercase;color:var(--white)}
+  .coll-from{font-size:13px;color:var(--gold-light);font-weight:500;margin-top:4px}
+  .coll-arrow{position:absolute;top:20px;right:20px;z-index:2;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.4);font-size:16px;transition:all .3s;backdrop-filter:blur(4px)}
+  .coll-card:hover .coll-arrow{background:var(--gold);color:var(--black);border-color:var(--gold)}
+  .bg-ma{background:linear-gradient(180deg,#c1272d,#5a0f14)}
+  .bg-dz{background:linear-gradient(180deg,#006233,#002614)}
+  .bg-ci{background:linear-gradient(180deg,#FF8200,#7a3e00)}
+  .bg-fr{background:linear-gradient(180deg,#0055A4,#002952)}
+  .bg-br{background:linear-gradient(180deg,#009C3B,#FFDF00)}
+
+  /* ===== NOTRE HISTOIRE ===== */
+  .story{padding:100px 48px;background:var(--gray-100);position:relative;overflow:hidden}
+  .story::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 50%,rgba(13,27,42,0.03),transparent 60%)}
+  .story-inner{max-width:1100px;margin:0 auto;display:flex;gap:64px;align-items:center;flex-wrap:wrap;position:relative;z-index:1}
+  .story-visual{flex:1;min-width:300px;aspect-ratio:4/3;border-radius:20px;overflow:hidden;background:var(--white);border:1px solid var(--gray-200);display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 4px 16px rgba(0,0,0,0.06)}
+  .story-emoji{font-size:100px}
+  .story-visual::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(13,27,42,0.05),transparent 60%)}
+  .story-content{flex:1;min-width:300px}
+  .story-content h2{font-family:var(--font-display);font-size:52px;text-transform:uppercase;letter-spacing:2px;margin-bottom:24px;line-height:1.05;color:var(--black)}
+  .story-content h2 .gold{color:var(--gold)}
+  .story-content p{font-size:16px;color:var(--gray-700);line-height:1.8;margin-bottom:18px;font-weight:300}
+  .story-link{display:inline-flex;align-items:center;gap:8px;color:var(--gold);text-decoration:none;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:2px;transition:gap .3s;border-bottom:1px solid rgba(13,27,42,0.3);padding-bottom:4px}
+  .story-link:hover{gap:14px;border-color:var(--gold)}
+
+  /* ===== FAQ ===== */
+  .faq{padding:100px 48px;background:var(--white)}
+  .faq-inner{max-width:680px;margin:0 auto}
+  .faq-item{border-bottom:1px solid var(--gray-200)}
+  .faq-q{width:100%;background:none;border:none;text-align:left;padding:24px 0;font-size:16px;font-weight:600;color:var(--black);cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-family:var(--font-body);transition:color .3s}
+  .faq-q:hover{color:var(--gold)}
+  .faq-icon{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--gray-200);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--gray-500);transition:all .3s;flex-shrink:0}
+  .faq-q.open .faq-icon{background:var(--black);border-color:var(--gold);color:var(--white)}
+  .faq-a{display:none;padding:0 0 24px;font-size:15px;color:var(--gray-500);line-height:1.7;font-weight:300}
+  .faq-a.open{display:block}
+
+  /* ===== FOOTER ===== */
+  .footer{background:var(--black2);color:rgba(255,255,255,0.3);padding:64px 48px 32px;border-top:1px solid rgba(255,255,255,0.04)}
+  .footer-grid{max-width:1100px;margin:0 auto;display:flex;gap:64px;flex-wrap:wrap;margin-bottom:48px}
+  .footer-col{flex:1;min-width:180px}
+  .footer-col h4{color:var(--white);font-size:11px;text-transform:uppercase;letter-spacing:2px;margin-bottom:20px;font-weight:700}
+  .footer-col a{display:block;color:rgba(255,255,255,0.25);text-decoration:none;font-size:13px;margin-bottom:10px;transition:color .3s;font-weight:300}
+  .footer-col a:hover{color:var(--gold)}
+  .footer-bottom{text-align:center;padding-top:32px;border-top:1px solid rgba(255,255,255,0.04);font-size:12px;font-weight:300}
+
+  /* ===== RESPONSIVE ===== */
+  @media(max-width:900px){
+    .hero-inner{flex-direction:column;padding:60px 24px;gap:48px;text-align:center}
+    .hero h1{font-size:56px}
+    .hero h1 .line1{font-size:32px}
+    .hero-sub{margin:0 auto 36px}
+    .hero-actions{justify-content:center}
+    .hero-trust{justify-content:center}
+    .hero-card-stack{width:260px;height:380px}
+    .hero-card{width:240px;height:360px}
+    .header{padding:14px 20px}
+    .header-nav{display:none}
+    .cta-inner,.story-inner{flex-direction:column}
+    .coll-grid{grid-template-columns:repeat(2,1fr)}
+    .testimonials,.brand,.cta-product,.collections,.story,.faq{padding:64px 20px}
+    .section-title{font-size:36px}
+    .countdown{justify-content:center}
+  }
+  @media(max-width:500px){
+    .hero h1{font-size:44px}
+    .coll-grid{grid-template-columns:1fr 1fr}
+    .cd-num{font-size:36px}
+  }
+</style>
+</head>
+<body>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-track">
+    <span class="ticker-item">&#9917; Coupe du Monde 2026 &mdash; USA / Canada / Mexique</span>
+    <span class="ticker-item">&#127942; Livraison gratuite d&egrave;s 49&euro;</span>
+    <span class="ticker-item">&#127474;&#127462; &#127465;&#127487; &#127464;&#127470; &#127467;&#127479; &#127463;&#127479; &mdash; 5 pays, 5 designs exclusifs</span>
+    <span class="ticker-item">&#128293; &Eacute;dition limit&eacute;e Coupe du Monde 2026</span>
+    <span class="ticker-item">&#128666; Fabriqu&eacute; en Europe &mdash; Livr&eacute; en 3-5 jours</span>
+    <span class="ticker-item">&#9917; Coupe du Monde 2026 &mdash; USA / Canada / Mexique</span>
+    <span class="ticker-item">&#127942; Livraison gratuite d&egrave;s 49&euro;</span>
+    <span class="ticker-item">&#127474;&#127462; &#127465;&#127487; &#127464;&#127470; &#127467;&#127479; &#127463;&#127479; &mdash; 5 pays, 5 designs exclusifs</span>
+    <span class="ticker-item">&#128293; &Eacute;dition limit&eacute;e Coupe du Monde 2026</span>
+    <span class="ticker-item">&#128666; Fabriqu&eacute; en Europe &mdash; Livr&eacute; en 3-5 jours</span>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-logo">FOOTBALL <span>HERITAGE</span></div>
+  <nav class="header-nav">
+    <a href="#">Collections</a>
+    <a href="#">Notre histoire</a>
+    <a href="#">FAQ</a>
+    <a href="#">Nos avis</a>
+  </nav>
+  <div class="header-icons">
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <div class="cart-badge"><svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></div>
+  </div>
+</header>
+
+<!-- ===== 1. HERO ===== -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-lights">
+    <div class="light-beam"></div><div class="light-beam"></div><div class="light-beam"></div><div class="light-beam"></div><div class="light-beam"></div>
+  </div>
+  <div class="particles">
+    <div class="particle"></div><div class="particle"></div><div class="particle"></div><div class="particle"></div><div class="particle"></div><div class="particle"></div>
+  </div>
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="countdown" id="countdown">
+        <div class="cd-block"><span class="cd-num" id="cd-days">--</span><span class="cd-label">Jours</span></div>
+        <div class="cd-sep">:</div>
+        <div class="cd-block"><span class="cd-num" id="cd-hours">--</span><span class="cd-label">Heures</span></div>
+        <div class="cd-sep">:</div>
+        <div class="cd-block"><span class="cd-num" id="cd-mins">--</span><span class="cd-label">Min</span></div>
+        <div class="cd-sep">:</div>
+        <div class="cd-block"><span class="cd-num" id="cd-secs">--</span><span class="cd-label">Sec</span></div>
+      </div>
+      <h1>
+        <span class="line1">Coupe du Monde 2026</span>
+        <span class="line2">Porte tes</span>
+        <span class="line3">Origines</span>
+      </h1>
+      <p class="hero-sub">T-shirts fan premium pour la diaspora. Design exclusif, coton premium 180g/m&sup2;, fabriqu&eacute; en Europe. Sois pr&ecirc;t pour le coup d'envoi.</p>
+      <div class="hero-actions">
+        <a href="#" class="btn-fire">Shopper la collection &#8594;</a>
+        <a href="#" class="btn-ghost">Notre histoire</a>
+      </div>
+      <div class="hero-trust">
+        <div class="hero-trust-item"><span class="ic">&#10003;</span> Rembours&eacute; 30j</div>
+        <div class="hero-trust-item"><span class="ic">&#10003;</span> Made in Europe</div>
+        <div class="hero-trust-item"><span class="ic">&#10003;</span> 3-5 jours</div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-card-stack">
+        <div class="hero-card hc-civ card-back"><span class="flag">&#127464;&#127470;</span><div class="hero-card-label"><div class="hc-name">C&ocirc;te d'Ivoire</div><div class="hc-price">34,99 &euro;</div></div></div>
+        <div class="hero-card hc-algerie card-mid"><span class="flag">&#127465;&#127487;</span><div class="hero-card-label"><div class="hc-name">Alg&eacute;rie</div><div class="hc-price">34,99 &euro;</div></div></div>
+        <div class="hero-card hc-maroc card-front"><span class="flag">&#127474;&#127462;</span><div class="hero-card-label"><div class="hc-name">Maroc</div><div class="hc-price">34,99 &euro;</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 2. TÉMOIGNAGES ===== -->
+<section class="testimonials">
+  <div class="section-header">
+    <div class="section-overline">&#9733; Avis clients</div>
+    <div class="section-title">Ils sont pr&ecirc;ts</div>
+    <div class="section-subtitle">4,8/5 sur plus de 300 avis v&eacute;rifi&eacute;s</div>
+  </div>
+  <div class="testi-grid">
+    <div class="testi-card">
+      <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      <p class="testi-text">&laquo; J'ai port&eacute; le t-shirt Maroc pendant le match et l'ambiance &eacute;tait folle. Tout le monde me demandait o&ugrave; je l'avais trouv&eacute;. Un truc de ouf. &raquo;</p>
+      <div class="testi-author"><div class="testi-avatar">YK</div><div><div class="testi-name">Youssef K.</div><div class="testi-loc">Paris</div></div></div>
+      <div class="testi-verified">&#10003; Achat v&eacute;rifi&eacute;</div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      <p class="testi-text">&laquo; Le pack famille Alg&eacute;rie est arriv&eacute; en 4 jours. On est tous &eacute;quip&eacute;s pour supporter les Fennecs &agrave; la Coupe du Monde. Qualit&eacute; dingue. &raquo;</p>
+      <div class="testi-author"><div class="testi-avatar">AB</div><div><div class="testi-name">Amina B.</div><div class="testi-loc">Lyon</div></div></div>
+      <div class="testi-verified">&#10003; Achat v&eacute;rifi&eacute;</div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      <p class="testi-text">&laquo; Ce t-shirt c'est pas un maillot g&eacute;n&eacute;rique, c'est une d&eacute;claration. Je repr&eacute;sente mes origines avec style. Vivement les matchs ! &raquo;</p>
+      <div class="testi-author"><div class="testi-avatar">ID</div><div><div class="testi-name">Ibrahim D.</div><div class="testi-loc">Bruxelles</div></div></div>
+      <div class="testi-verified">&#10003; Achat v&eacute;rifi&eacute;</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 3. PRÉSENTATION MARQUE ===== -->
+<section class="brand">
+  <div class="brand-inner">
+    <div class="section-overline">Notre mission</div>
+    <div class="brand-divider"></div>
+    <h2>Le foot, c'est<br>plus qu'un <span class="gold">sport</span></h2>
+    <p>C'est la fiert&eacute; de tout un peuple. C'est 90 minutes o&ugrave; tout un pays vibre ensemble. C'est les cris dans les salons, les klaxons dans les rues, les larmes de joie.</p>
+    <p>On a cr&eacute;&eacute; Football Heritage pour capturer cette &eacute;nergie. Chaque t-shirt est con&ccedil;u pour que tu ressentes cette fiert&eacute; &agrave; chaque fois que tu l'enfiles.</p>
+    <p>Coupe du Monde 2026, on y sera. <strong>Et toi ?</strong></p>
+  </div>
+</section>
+
+<!-- ===== 4. CTA PRODUIT ===== -->
+<section class="cta-product">
+  <div class="cta-inner">
+    <div class="cta-image">
+      <div class="cta-jersey"><span class="flag">&#127474;&#127462;</span></div>
+    </div>
+    <div class="cta-info">
+      <div class="section-overline">&#128293; Best-seller</div>
+      <h3>Jersey Maroc Heritage</h3>
+      <div class="cta-stars"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span><span class="count">127 avis</span></div>
+      <div class="cta-price">34,99&euro; <span class="old">49,99&euro;</span></div>
+      <ul class="cta-benefits">
+        <li><span class="ck">&#10003;</span> Design exclusif inspir&eacute; du Maroc</li>
+        <li><span class="ck">&#10003;</span> Coton premium 180g/m&sup2; ultra-respirant</li>
+        <li><span class="ck">&#10003;</span> Impression DTG haute d&eacute;finition &mdash; couleurs qui durent &agrave; vie</li>
+        <li><span class="ck">&#10003;</span> Fabriqu&eacute; en Europe, chez toi en 3-5j</li>
+        <li><span class="ck">&#10003;</span> Satisfait ou rembours&eacute; 30 jours</li>
+      </ul>
+      <a href="shopify-produit.html" class="btn-stadium">Voir le produit &#8594;</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 5. COLLECTIONS ===== -->
+<section class="collections">
+  <div class="section-header">
+    <div class="section-overline">&#127942; Collections</div>
+    <div class="section-title">Choisis ton camp</div>
+    <div class="section-subtitle">5 pays, 5 designs exclusifs &mdash; &Eacute;dition Coupe du Monde 2026</div>
+  </div>
+  <div class="coll-grid">
+    <div class="coll-card"><div class="coll-card-bg bg-ma">&#127474;&#127462;</div><div class="coll-arrow">&rarr;</div><div class="coll-info"><div class="coll-flag">&#127474;&#127462;</div><div class="coll-country">Maroc</div><div class="coll-from">D&egrave;s 34,99&euro;</div></div></div>
+    <div class="coll-card"><div class="coll-card-bg bg-dz">&#127465;&#127487;</div><div class="coll-arrow">&rarr;</div><div class="coll-info"><div class="coll-flag">&#127465;&#127487;</div><div class="coll-country">Alg&eacute;rie</div><div class="coll-from">D&egrave;s 34,99&euro;</div></div></div>
+    <div class="coll-card"><div class="coll-card-bg bg-ci">&#127464;&#127470;</div><div class="coll-arrow">&rarr;</div><div class="coll-info"><div class="coll-flag">&#127464;&#127470;</div><div class="coll-country">C&ocirc;te d'Ivoire</div><div class="coll-from">D&egrave;s 34,99&euro;</div></div></div>
+    <div class="coll-card"><div class="coll-card-bg bg-fr">&#127467;&#127479;</div><div class="coll-arrow">&rarr;</div><div class="coll-info"><div class="coll-flag">&#127467;&#127479;</div><div class="coll-country">France</div><div class="coll-from">D&egrave;s 34,99&euro;</div></div></div>
+    <div class="coll-card"><div class="coll-card-bg bg-br">&#127463;&#127479;</div><div class="coll-arrow">&rarr;</div><div class="coll-info"><div class="coll-flag">&#127463;&#127479;</div><div class="coll-country">Br&eacute;sil</div><div class="coll-from">D&egrave;s 34,99&euro;</div></div></div>
+  </div>
+</section>
+
+<!-- ===== 6. NOTRE HISTOIRE ===== -->
+<section class="story">
+  <div class="story-inner">
+    <div class="story-visual"><span class="story-emoji">&#9917;&#127757;</span></div>
+    <div class="story-content">
+      <div class="section-overline">Notre histoire</div>
+      <h2>N&eacute;s entre<br>deux <span class="gold">cultures</span></h2>
+      <p>On a grandi en vibrant pour deux &eacute;quipes. En criant devant la t&eacute;l&eacute; avec nos parents pour un match, puis en c&eacute;l&eacute;brant dans la rue avec nos potes pour l'autre.</p>
+      <p>Football Heritage est n&eacute; de cette double fiert&eacute;. Chaque t-shirt raconte l'histoire d'un pays, d'une diaspora, d'une passion partag&eacute;e.</p>
+      <a href="#" class="story-link">Lire toute notre histoire &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 7. FAQ ===== -->
+<section class="faq">
+  <div class="section-header">
+    <div class="section-overline">FAQ</div>
+    <div class="section-title">Questions fr&eacute;quentes</div>
+  </div>
+  <div class="faq-inner">
+    <div class="faq-item"><button class="faq-q" onclick="this.classList.toggle('open');this.querySelector('.faq-icon').classList.toggle('open');this.nextElementSibling.classList.toggle('open')">Quels sont les d&eacute;lais de livraison ? <span class="faq-icon">+</span></button><div class="faq-a">Production 1-2j + livraison 3-5j ouvr&eacute;s en Europe. Suivi par email en temps r&eacute;el.</div></div>
+    <div class="faq-item"><button class="faq-q" onclick="this.classList.toggle('open');this.querySelector('.faq-icon').classList.toggle('open');this.nextElementSibling.classList.toggle('open')">Quelle taille choisir ? <span class="faq-icon">+</span></button><div class="faq-a">Taille normalement. H&eacute;sitation ? Taille au-dessus pour d&eacute;contract&eacute;, en-dessous pour ajust&eacute;.</div></div>
+    <div class="faq-item"><button class="faq-q" onclick="this.classList.toggle('open');this.querySelector('.faq-icon').classList.toggle('open');this.nextElementSibling.classList.toggle('open')">C'est un maillot officiel ? <span class="faq-icon">+</span></button><div class="faq-a">Non. Designs originaux ind&eacute;pendants, non affili&eacute;s aux f&eacute;d&eacute;rations, FIFA ou &eacute;quipementiers.</div></div>
+    <div class="faq-item"><button class="faq-q" onclick="this.classList.toggle('open');this.querySelector('.faq-icon').classList.toggle('open');this.nextElementSibling.classList.toggle('open')">Politique de retour ? <span class="faq-icon">+</span></button><div class="faq-a">30 jours satisfait ou rembours&eacute;, sans conditions.</div></div>
+    <div class="faq-item"><button class="faq-q" onclick="this.classList.toggle('open');this.querySelector('.faq-icon').classList.toggle('open');this.nextElementSibling.classList.toggle('open')">Livraison hors France ? <span class="faq-icon">+</span></button><div class="faq-a">Oui ! Toute l'Europe : Belgique, Allemagne, Espagne, Italie, Pays-Bas, Portugal...</div></div>
+    <div class="faq-item"><button class="faq-q" onclick="this.classList.toggle('open');this.querySelector('.faq-icon').classList.toggle('open');this.nextElementSibling.classList.toggle('open')">Comment sont imprim&eacute;s les t-shirts ? <span class="faq-icon">+</span></button><div class="faq-a">Impression DTG haute d&eacute;finition : couleurs int&eacute;gr&eacute;es dans le tissu. Durable, r&eacute;sistant, couleurs &eacute;ternelles.</div></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-col"><h4>Football Heritage</h4><a href="#">Accueil</a><a href="#">Tous les produits</a><a href="#">Notre histoire</a><a href="#">Contact</a></div>
+    <div class="footer-col"><h4>Collections</h4><a href="#">Maroc</a><a href="#">Alg&eacute;rie</a><a href="#">C&ocirc;te d'Ivoire</a><a href="#">France</a><a href="#">Br&eacute;sil</a></div>
+    <div class="footer-col"><h4>Informations</h4><a href="#">Guide des tailles</a><a href="#">Livraison & retours</a><a href="#">CGV</a><a href="#">Confidentialit&eacute;</a></div>
+    <div class="footer-col"><h4>Suivez-nous</h4><a href="#">Instagram</a><a href="#">TikTok</a><a href="#">YouTube</a><a href="#">Pinterest</a></div>
+  </div>
+  <div class="footer-bottom">&copy; 2026 Football Heritage &middot; Propuls&eacute; par Shopify</div>
+</footer>
+
+<script>
+// Countdown to World Cup 2026 — June 11, 2026
+const wc = new Date('2026-06-11T00:00:00').getTime();
+function updateCD(){
+  const now = Date.now(), d = wc - now;
+  if(d < 0) return;
+  document.getElementById('cd-days').textContent = String(Math.floor(d/86400000)).padStart(2,'0');
+  document.getElementById('cd-hours').textContent = String(Math.floor((d%86400000)/3600000)).padStart(2,'0');
+  document.getElementById('cd-mins').textContent = String(Math.floor((d%3600000)/60000)).padStart(2,'0');
+  document.getElementById('cd-secs').textContent = String(Math.floor((d%60000)/1000)).padStart(2,'0');
+}
+updateCD();
+setInterval(updateCD, 1000);
+
+// Card stack auto-rotation
+(function(){
+  var stack = document.querySelector('.hero-card-stack');
+  if(!stack) return;
+  var cards = Array.from(stack.querySelectorAll('.hero-card'));
+  if(cards.length < 2) return;
+  var slots = ['card-front','card-mid','card-back'];
+  var order = [];
+  // Initial order: front card last in DOM (index 2), mid (1), back (0)
+  for(var i = cards.length - 1; i >= 0; i--) order.push(i);
+  function apply(){
+    for(var i = 0; i < cards.length; i++){
+      cards[order[i]].classList.remove('card-front','card-mid','card-back','card-exit');
+      cards[order[i]].classList.add(i < slots.length ? slots[i] : 'card-exit');
+    }
+  }
+  var paused = false;
+  stack.addEventListener('mouseenter', function(){ paused = true; });
+  stack.addEventListener('mouseleave', function(){ paused = false; });
+  setInterval(function(){
+    if(paused) return;
+    order.push(order.shift());
+    apply();
+  }, 3000);
+})();
+</script>
+
+</body>
+</html>
