@@ -1,0 +1,228 @@
+{
+  "sections": {
+    "announcement-ticker": {
+      "type": "announcement-ticker",
+      "settings": {
+        "bg_color": "#0d1b2a",
+        "text_color": "#f0d78c",
+        "height": 36,
+        "speed": 25,
+        "font_size": 12
+      },
+      "blocks": {
+        "ticker_1": {
+          "type": "ticker_item",
+          "settings": {
+            "icon": "\u26bd",
+            "text": "Coupe du Monde 2026 \u2014 USA / Canada / Mexique"
+          }
+        },
+        "ticker_2": {
+          "type": "ticker_item",
+          "settings": {
+            "icon": "\ud83c\udfc6",
+            "text": "Livraison gratuite d\u00e8s 50\u20ac"
+          }
+        },
+        "ticker_3": {
+          "type": "ticker_item",
+          "settings": {
+            "icon": "\ud83c\uddf2\ud83c\udde6\ud83c\udde9\ud83c\uddff\ud83c\udde8\ud83c\uddee\ud83c\uddeb\ud83c\uddf7\ud83c\udde7\ud83c\uddf7",
+            "text": "5 pays, 5 designs exclusifs"
+          }
+        },
+        "ticker_4": {
+          "type": "ticker_item",
+          "settings": {
+            "icon": "\ud83d\udd25",
+            "text": "\u00c9dition limit\u00e9e Coupe du Monde 2026"
+          }
+        },
+        "ticker_5": {
+          "type": "ticker_item",
+          "settings": {
+            "icon": "\ud83d\ude9a",
+            "text": "Fabriqu\u00e9 en Europe \u2014 Livr\u00e9 en 3-5 jours"
+          }
+        }
+      },
+      "block_order": ["ticker_1", "ticker_2", "ticker_3", "ticker_4", "ticker_5"]
+    },
+    "header": {
+      "type": "header-custom",
+      "settings": {
+        "logo_text_1": "NATION",
+        "logo_text_2": "VARSITY",
+        "accent_color": "#d4a843"
+      },
+      "blocks": {
+        "nav_1": { "type": "nav_link", "settings": { "label": "Collections" } },
+        "nav_2": { "type": "nav_link", "settings": { "label": "Notre histoire" } },
+        "nav_3": { "type": "nav_link", "settings": { "label": "FAQ" } },
+        "nav_4": { "type": "nav_link", "settings": { "label": "Nos avis" } }
+      },
+      "block_order": ["nav_1", "nav_2", "nav_3", "nav_4"]
+    },
+    "hero": {
+      "type": "hero-world-cup",
+      "settings": {
+        "bg_color": "#0d1b2a",
+        "accent_color": "#d4a843",
+        "show_countdown": true,
+        "countdown_date": "2026-06-11T00:00:00",
+        "line1": "Coupe du Monde 2026",
+        "line2": "Porte tes",
+        "line3": "Origines",
+        "subtitle": "Jerseys fan premium pour la diaspora. Design exclusif, tissu respirant, fabriqu\u00e9 en Europe. Sois pr\u00eat pour le coup d'envoi.",
+        "cta_text": "Shopper la collection",
+        "cta2_text": "Notre histoire"
+      },
+      "blocks": {
+        "trust_1": { "type": "trust_badge", "settings": { "text": "Rembours\u00e9 30j" } },
+        "trust_2": { "type": "trust_badge", "settings": { "text": "Made in Europe" } },
+        "trust_3": { "type": "trust_badge", "settings": { "text": "3-5 jours" } },
+        "card_1": { "type": "hero_card", "settings": { "flag_emoji": "\ud83c\udde8\ud83c\uddee", "gradient": "linear-gradient(160deg,#FF8200,#cc6500)", "country_name": "C\u00f4te d'Ivoire", "price": "34,99 \u20ac" } },
+        "card_2": { "type": "hero_card", "settings": { "flag_emoji": "\ud83c\udde9\ud83c\uddff", "gradient": "linear-gradient(160deg,#006233,#003d1f)", "country_name": "Alg\u00e9rie", "price": "34,99 \u20ac" } },
+        "card_3": { "type": "hero_card", "settings": { "flag_emoji": "\ud83c\uddf2\ud83c\udde6", "gradient": "linear-gradient(160deg,#c1272d,#7a1018)", "country_name": "Maroc", "price": "34,99 \u20ac" } }
+      },
+      "block_order": ["trust_1", "trust_2", "trust_3", "card_1", "card_2", "card_3"]
+    },
+    "testimonials": {
+      "type": "testimonials-social-proof",
+      "settings": {
+        "bg_color": "#f5f5f3",
+        "accent_color": "#d4a843",
+        "overline": "\u2605 Avis clients",
+        "title": "Ils sont pr\u00eats",
+        "subtitle": "4,8/5 sur plus de 300 avis v\u00e9rifi\u00e9s"
+      },
+      "blocks": {
+        "t1": { "type": "testimonial", "settings": { "stars": 5, "text": "J'ai port\u00e9 le jersey Maroc pendant le match et l'ambiance \u00e9tait folle. Tout le monde me demandait o\u00f9 je l'avais trouv\u00e9. Un truc de ouf.", "initials": "YK", "name": "Youssef K.", "location": "Paris", "verified": true } },
+        "t2": { "type": "testimonial", "settings": { "stars": 5, "text": "Le pack famille Alg\u00e9rie est arriv\u00e9 en 4 jours. On est tous \u00e9quip\u00e9s pour supporter les Fennecs \u00e0 la Coupe du Monde. Qualit\u00e9 dingue.", "initials": "AB", "name": "Amina B.", "location": "Lyon", "verified": true } },
+        "t3": { "type": "testimonial", "settings": { "stars": 5, "text": "Ce jersey c'est pas un maillot g\u00e9n\u00e9rique, c'est une d\u00e9claration. Je repr\u00e9sente mes origines avec style. Vivement les matchs !", "initials": "ID", "name": "Ibrahim D.", "location": "Bruxelles", "verified": true } }
+      },
+      "block_order": ["t1", "t2", "t3"]
+    },
+    "brand": {
+      "type": "brand-presentation",
+      "settings": {
+        "bg_color": "#ffffff",
+        "accent_color": "#d4a843",
+        "divider_color": "#0d1b2a",
+        "overline": "Notre mission"
+      },
+      "blocks": {
+        "tl1": { "type": "title_line", "settings": { "text": "Le foot, c'est", "accent": false } },
+        "tl2": { "type": "title_line", "settings": { "text": "plus qu'un sport", "accent": true } },
+        "p1": { "type": "paragraph", "settings": { "text": "C'est la fiert\u00e9 de tout un peuple. C'est 90 minutes o\u00f9 tout un pays vibre ensemble. C'est les cris dans les salons, les klaxons dans les rues, les larmes de joie." } },
+        "p2": { "type": "paragraph", "settings": { "text": "On a cr\u00e9\u00e9 Nation Varsity pour capturer cette \u00e9nergie. Chaque jersey est con\u00e7u pour que tu ressentes cette fiert\u00e9 \u00e0 chaque fois que tu l'enfiles." } },
+        "p3": { "type": "paragraph", "settings": { "text": "Coupe du Monde 2026, on y sera. Et toi ?" } }
+      },
+      "block_order": ["tl1", "tl2", "p1", "p2", "p3"]
+    },
+    "cta-product": {
+      "type": "cta-product",
+      "settings": {
+        "bg_color": "#f5f5f3",
+        "accent_color": "#d4a843",
+        "overline": "\ud83d\udd25 Best-seller",
+        "title": "Jersey Maroc Heritage",
+        "reviews_count": "127 avis",
+        "price": "34,99\u20ac",
+        "compare_price": "49,99\u20ac",
+        "flag_emoji": "\ud83c\uddf2\ud83c\udde6",
+        "product_gradient": "linear-gradient(160deg,#c1272d,#7a1018)",
+        "button_text": "Voir le produit"
+      },
+      "blocks": {
+        "b1": { "type": "benefit", "settings": { "text": "Design exclusif inspir\u00e9 du Maroc" } },
+        "b2": { "type": "benefit", "settings": { "text": "Tissu jersey premium respirant" } },
+        "b3": { "type": "benefit", "settings": { "text": "Sublimation \u2014 couleurs qui durent \u00e0 vie" } },
+        "b4": { "type": "benefit", "settings": { "text": "Fabriqu\u00e9 en Europe, chez toi en 3-5j" } },
+        "b5": { "type": "benefit", "settings": { "text": "Satisfait ou rembours\u00e9 30 jours" } }
+      },
+      "block_order": ["b1", "b2", "b3", "b4", "b5"]
+    },
+    "collections": {
+      "type": "collection-grid",
+      "settings": {
+        "bg_color": "#ffffff",
+        "accent_color": "#d4a843",
+        "overline": "\ud83c\udfc6 Collections",
+        "title": "Choisis ton camp",
+        "subtitle": "5 pays, 5 designs exclusifs \u2014 \u00c9dition Coupe du Monde 2026"
+      },
+      "blocks": {
+        "ma": { "type": "country_card", "settings": { "flag_emoji": "\ud83c\uddf2\ud83c\udde6", "country": "Maroc", "price_from": "D\u00e8s 34,99\u20ac", "gradient": "linear-gradient(180deg,#c1272d,#5a0f14)" } },
+        "dz": { "type": "country_card", "settings": { "flag_emoji": "\ud83c\udde9\ud83c\uddff", "country": "Alg\u00e9rie", "price_from": "D\u00e8s 34,99\u20ac", "gradient": "linear-gradient(180deg,#006233,#002614)" } },
+        "ci": { "type": "country_card", "settings": { "flag_emoji": "\ud83c\udde8\ud83c\uddee", "country": "C\u00f4te d'Ivoire", "price_from": "D\u00e8s 34,99\u20ac", "gradient": "linear-gradient(180deg,#FF8200,#7a3e00)" } },
+        "fr": { "type": "country_card", "settings": { "flag_emoji": "\ud83c\uddeb\ud83c\uddf7", "country": "France", "price_from": "D\u00e8s 34,99\u20ac", "gradient": "linear-gradient(180deg,#0055A4,#002952)" } },
+        "br": { "type": "country_card", "settings": { "flag_emoji": "\ud83c\udde7\ud83c\uddf7", "country": "Br\u00e9sil", "price_from": "D\u00e8s 34,99\u20ac", "gradient": "linear-gradient(180deg,#009C3B,#FFDF00)" } }
+      },
+      "block_order": ["ma", "dz", "ci", "fr", "br"]
+    },
+    "story": {
+      "type": "our-story",
+      "settings": {
+        "bg_color": "#f5f5f3",
+        "accent_color": "#d4a843",
+        "overline": "Notre histoire",
+        "title_line1": "N\u00e9s entre",
+        "title_line2_before": "deux",
+        "title_line2_accent": "cultures",
+        "emoji": "\u26bd\ud83c\udf0d",
+        "link_text": "Lire toute notre histoire"
+      },
+      "blocks": {
+        "p1": { "type": "paragraph", "settings": { "text": "On a grandi en vibrant pour deux \u00e9quipes. En criant devant la t\u00e9l\u00e9 avec nos parents pour un match, puis en c\u00e9l\u00e9brant dans la rue avec nos potes pour l'autre." } },
+        "p2": { "type": "paragraph", "settings": { "text": "Nation Varsity est n\u00e9 de cette double fiert\u00e9. Chaque jersey raconte l'histoire d'un pays, d'une diaspora, d'une passion partag\u00e9e." } }
+      },
+      "block_order": ["p1", "p2"]
+    },
+    "faq": {
+      "type": "faq-section",
+      "settings": {
+        "bg_color": "#ffffff",
+        "accent_color": "#d4a843",
+        "overline": "FAQ",
+        "title": "Questions fr\u00e9quentes"
+      },
+      "blocks": {
+        "q1": { "type": "faq_item", "settings": { "question": "Quels sont les d\u00e9lais de livraison ?", "answer": "Production 1-2j + livraison 3-5j ouvr\u00e9s en Europe. Suivi par email en temps r\u00e9el." } },
+        "q2": { "type": "faq_item", "settings": { "question": "Quelle taille choisir ?", "answer": "Taille normalement. H\u00e9sitation ? Taille au-dessus pour d\u00e9contract\u00e9, en-dessous pour ajust\u00e9." } },
+        "q3": { "type": "faq_item", "settings": { "question": "C'est un maillot officiel ?", "answer": "Non. Designs originaux ind\u00e9pendants, non affili\u00e9s aux f\u00e9d\u00e9rations, FIFA ou \u00e9quipementiers." } },
+        "q4": { "type": "faq_item", "settings": { "question": "Politique de retour ?", "answer": "30 jours satisfait ou rembours\u00e9, sans conditions." } },
+        "q5": { "type": "faq_item", "settings": { "question": "Livraison hors France ?", "answer": "Oui ! Toute l'Europe : Belgique, Allemagne, Espagne, Italie, Pays-Bas, Portugal..." } },
+        "q6": { "type": "faq_item", "settings": { "question": "Comment sont imprim\u00e9s les jerseys ?", "answer": "Sublimation : couleurs int\u00e9gr\u00e9es dans le tissu. Durable, r\u00e9sistant, couleurs \u00e9ternelles." } }
+      },
+      "block_order": ["q1", "q2", "q3", "q4", "q5", "q6"]
+    },
+    "footer": {
+      "type": "footer-custom",
+      "settings": {
+        "bg_color": "#0f1f30",
+        "accent_color": "#d4a843",
+        "copyright": "\u00a9 2026 Nation Varsity \u00b7 Propuls\u00e9 par Shopify"
+      },
+      "blocks": {
+        "col1": { "type": "column", "settings": { "heading": "Nation Varsity", "links_text": "Accueil|Tous les produits|Notre histoire|Contact", "links_url": "/|/collections/all|/pages/notre-histoire|/pages/contact" } },
+        "col2": { "type": "column", "settings": { "heading": "Collections", "links_text": "Maroc|Alg\u00e9rie|C\u00f4te d'Ivoire|France|Br\u00e9sil", "links_url": "/collections/maroc|/collections/algerie|/collections/cote-divoire|/collections/france|/collections/bresil" } },
+        "col3": { "type": "column", "settings": { "heading": "Informations", "links_text": "Guide des tailles|Livraison & retours|CGV|Confidentialit\u00e9", "links_url": "/pages/guide-tailles|/pages/livraison-retours|/policies/terms-of-service|/policies/privacy-policy" } },
+        "col4": { "type": "column", "settings": { "heading": "Suivez-nous", "links_text": "Instagram|TikTok|YouTube|Pinterest", "links_url": "#|#|#|#" } }
+      },
+      "block_order": ["col1", "col2", "col3", "col4"]
+    }
+  },
+  "order": [
+    "announcement-ticker",
+    "header",
+    "hero",
+    "testimonials",
+    "brand",
+    "cta-product",
+    "collections",
+    "story",
+    "faq",
+    "footer"
+  ]
+}

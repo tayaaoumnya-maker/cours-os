@@ -1,0 +1,153 @@
+{% comment %}
+  Section: Testimonials Social Proof
+  Temoignages clients avec cartes
+{% endcomment %}
+
+<div id="shopify-section-{{ section.id }}">
+  <section class="fh-testimonials" style="background:{{ section.settings.bg_color }}">
+    <div class="fh-section-header">
+      <div class="fh-section-overline" style="color:{{ section.settings.accent_color }}">{{ section.settings.overline }}</div>
+      <div class="fh-section-title">{{ section.settings.title }}</div>
+      <div class="fh-section-subtitle">{{ section.settings.subtitle }}</div>
+    </div>
+    <div class="fh-testi-grid">
+      {% for block in section.blocks %}
+        <div class="fh-testi-card" {{ block.shopify_attributes }}>
+          <div class="fh-testi-stars">{% for i in (1..5) %}{% if i <= block.settings.stars %}&#9733;{% else %}&#9734;{% endif %}{% endfor %}</div>
+          <p class="fh-testi-text">&laquo; {{ block.settings.text }} &raquo;</p>
+          <div class="fh-testi-author">
+            <div class="fh-testi-avatar">{{ block.settings.initials }}</div>
+            <div>
+              <div class="fh-testi-name">{{ block.settings.name }}</div>
+              <div class="fh-testi-loc">{{ block.settings.location }}</div>
+            </div>
+          </div>
+          {% if block.settings.verified %}
+            <div class="fh-testi-verified">&#10003; Client Nation Varsity</div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <style>
+    #shopify-section-{{ section.id }} .fh-testimonials{padding:100px 48px;position:relative}
+    #shopify-section-{{ section.id }} .fh-testimonials::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,{{ section.settings.accent_color }},#0d1b2a,{{ section.settings.accent_color }});opacity:.6}
+    #shopify-section-{{ section.id }} .fh-section-header{text-align:center;margin-bottom:56px}
+    #shopify-section-{{ section.id }} .fh-section-overline{font-size:11px;text-transform:uppercase;letter-spacing:4px;font-weight:700;margin-bottom:12px}
+    #shopify-section-{{ section.id }} .fh-section-title{font-family:'Bebas Neue',Impact,sans-serif;font-size:52px;letter-spacing:2px;text-transform:uppercase;color:#0d1b2a}
+    #shopify-section-{{ section.id }} .fh-section-subtitle{font-size:14px;color:#777;margin-top:8px;font-weight:300;font-family:'Inter',sans-serif}
+    #shopify-section-{{ section.id }} .fh-testi-grid{display:flex;justify-content:center;gap:24px;flex-wrap:wrap;max-width:1100px;margin:0 auto}
+    #shopify-section-{{ section.id }} .fh-testi-card{background:#fff;border:1px solid #e0e0dc;border-radius:16px;padding:32px;flex:1;min-width:280px;max-width:340px;transition:all .4s;position:relative;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.04)}
+    #shopify-section-{{ section.id }} .fh-testi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#0d1b2a,{{ section.settings.accent_color }});opacity:0;transition:opacity .4s}
+    #shopify-section-{{ section.id }} .fh-testi-card:hover{transform:translateY(-6px);box-shadow:0 16px 48px rgba(0,0,0,0.08)}
+    #shopify-section-{{ section.id }} .fh-testi-card:hover::before{opacity:1}
+    #shopify-section-{{ section.id }} .fh-testi-stars{color:{{ section.settings.accent_color }};font-size:14px;margin-bottom:16px;letter-spacing:2px}
+    #shopify-section-{{ section.id }} .fh-testi-text{font-size:15px;color:#444;line-height:1.7;margin-bottom:20px;font-weight:300;font-family:'Inter',sans-serif}
+    #shopify-section-{{ section.id }} .fh-testi-author{display:flex;align-items:center;gap:12px}
+    #shopify-section-{{ section.id }} .fh-testi-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#0d1b2a,{{ section.settings.accent_color }});display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#fff}
+    #shopify-section-{{ section.id }} .fh-testi-name{font-size:14px;font-weight:700;color:#0d1b2a}
+    #shopify-section-{{ section.id }} .fh-testi-loc{font-size:12px;color:#777}
+    #shopify-section-{{ section.id }} .fh-testi-verified{font-size:11px;color:#2e7d32;font-weight:600;margin-top:12px}
+    @media(max-width:900px){
+      #shopify-section-{{ section.id }} .fh-testimonials{padding:64px 20px}
+      #shopify-section-{{ section.id }} .fh-section-title{font-size:36px}
+    }
+  </style>
+</div>
+
+{% schema %}
+{
+  "name": "Témoignages",
+  "tag": "section",
+  "class": "fh-testimonials-section",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Couleur de fond",
+      "default": "#f5f5f3"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Couleur accent",
+      "default": "#d4a843"
+    },
+    {
+      "type": "text",
+      "id": "overline",
+      "label": "Surtitre",
+      "default": "★ Avis clients"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titre",
+      "default": "Ils sont prêts"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Sous-titre",
+      "default": "Rejoins la communauté Nation Varsity"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Témoignage",
+      "settings": [
+        {
+          "type": "range",
+          "id": "stars",
+          "label": "Etoiles",
+          "min": 1,
+          "max": 5,
+          "default": 5
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Texte",
+          "default": "J'ai porté le t-shirt Maroc pendant le match et l'ambiance était folle. Tout le monde me demandait où je l'avais trouvé."
+        },
+        {
+          "type": "text",
+          "id": "initials",
+          "label": "Initiales",
+          "default": "YK"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Nom",
+          "default": "Youssef K."
+        },
+        {
+          "type": "text",
+          "id": "location",
+          "label": "Ville",
+          "default": "Paris"
+        },
+        {
+          "type": "checkbox",
+          "id": "verified",
+          "label": "Client vérifié",
+          "default": true
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Témoignages",
+      "blocks": [
+        { "type": "testimonial", "settings": { "stars": 5, "text": "J'ai porté le t-shirt Maroc pendant le match et l'ambiance était folle. Tout le monde me demandait où je l'avais trouvé. Un truc de ouf.", "initials": "YK", "name": "Youssef K.", "location": "Paris", "verified": true } },
+        { "type": "testimonial", "settings": { "stars": 5, "text": "Le pack famille Algérie est arrivé en 4 jours. On est tous équipés pour supporter les Fennecs à la Coupe du Monde. Qualité dingue.", "initials": "AB", "name": "Amina B.", "location": "Lyon", "verified": true } },
+        { "type": "testimonial", "settings": { "stars": 5, "text": "Ce t-shirt c'est pas un maillot générique, c'est une déclaration. Je représente mes origines avec style. Vivement les matchs !", "initials": "ID", "name": "Ibrahim D.", "location": "Bruxelles", "verified": true } }
+      ]
+    }
+  ]
+}
+{% endschema %}

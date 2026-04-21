@@ -1,0 +1,153 @@
+{% comment %}
+  Section: Comparison Table
+  Tableau comparatif Nation Varsity vs generiques vs officiels
+{% endcomment %}
+
+<div id="shopify-section-{{ section.id }}">
+  <section class="fh-comparison" style="background:{{ section.settings.bg_color }}">
+    <div class="fh-section-header">
+      <div class="fh-section-overline" style="color:{{ section.settings.accent_color }}">{{ section.settings.overline }}</div>
+      <div class="fh-section-title">{{ section.settings.title }}</div>
+    </div>
+    <table class="fh-comp-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th class="fh-us-col">{{ section.settings.col_us }}</th>
+          <th>{{ section.settings.col_generic }}</th>
+          <th>{{ section.settings.col_official }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for block in section.blocks %}
+          <tr {{ block.shopify_attributes }}>
+            <td>{{ block.settings.feature }}</td>
+            <td class="fh-us-td"><span class="{% if block.settings.us %}fh-c-yes{% else %}fh-c-no{% endif %}">{% if block.settings.us %}&#10003;{% else %}&#10007;{% endif %}</span></td>
+            <td><span class="{% if block.settings.generic %}fh-c-yes{% else %}fh-c-no{% endif %}">{% if block.settings.generic %}&#10003;{% else %}&#10007;{% endif %}</span></td>
+            <td><span class="{% if block.settings.official %}fh-c-yes{% else %}fh-c-no{% endif %}">{% if block.settings.official %}&#10003;{% else %}&#10007;{% endif %}</span></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+
+  <style>
+    #shopify-section-{{ section.id }} .fh-comparison{padding:100px 48px;position:relative}
+    #shopify-section-{{ section.id }} .fh-comparison::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(13,27,42,0.03),transparent 50%)}
+    #shopify-section-{{ section.id }} .fh-section-header{text-align:center;margin-bottom:56px}
+    #shopify-section-{{ section.id }} .fh-section-overline{font-size:11px;text-transform:uppercase;letter-spacing:4px;font-weight:700;margin-bottom:12px}
+    #shopify-section-{{ section.id }} .fh-section-title{font-family:'Bebas Neue',Impact,sans-serif;font-size:48px;letter-spacing:2px;text-transform:uppercase;color:#0d1b2a}
+    #shopify-section-{{ section.id }} .fh-comp-table{max-width:750px;margin:0 auto;border-collapse:collapse;width:100%;position:relative;z-index:1}
+    #shopify-section-{{ section.id }} .fh-comp-table thead th{padding:16px;font-size:12px;font-weight:700;text-align:center;border-bottom:2px solid #e0e0dc;text-transform:uppercase;letter-spacing:1.5px;color:#777;font-family:'Inter',sans-serif}
+    #shopify-section-{{ section.id }} .fh-comp-table thead th:first-child{text-align:left}
+    #shopify-section-{{ section.id }} .fh-us-col{color:{{ section.settings.accent_color }} !important;position:relative}
+    #shopify-section-{{ section.id }} .fh-us-col::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#0d1b2a,{{ section.settings.accent_color }});border-radius:0 0 2px 2px}
+    #shopify-section-{{ section.id }} .fh-comp-table tbody td{padding:16px;font-size:14px;border-bottom:1px solid #e0e0dc;text-align:center;color:#777;font-weight:300;font-family:'Inter',sans-serif}
+    #shopify-section-{{ section.id }} .fh-comp-table tbody td:first-child{text-align:left;color:#0d1b2a;font-weight:500}
+    #shopify-section-{{ section.id }} .fh-us-td{background:rgba(13,27,42,0.03)}
+    #shopify-section-{{ section.id }} .fh-c-yes{color:{{ section.settings.accent_color }};font-size:18px}
+    #shopify-section-{{ section.id }} .fh-c-no{color:#e0e0dc;font-size:18px}
+    @media(max-width:900px){
+      #shopify-section-{{ section.id }} .fh-comparison{padding:64px 20px}
+      #shopify-section-{{ section.id }} .fh-section-title{font-size:32px}
+    }
+  </style>
+</div>
+
+{% schema %}
+{
+  "name": "Tableau comparatif",
+  "tag": "section",
+  "class": "fh-comparison-section",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Couleur de fond",
+      "default": "#f5f5f3"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Couleur accent",
+      "default": "#d4a843"
+    },
+    {
+      "type": "text",
+      "id": "overline",
+      "label": "Surtitre",
+      "default": "🏆 Comparaison"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titre",
+      "default": "Pourquoi nous choisir ?"
+    },
+    {
+      "type": "text",
+      "id": "col_us",
+      "label": "Colonne nous",
+      "default": "Nation Varsity"
+    },
+    {
+      "type": "text",
+      "id": "col_generic",
+      "label": "Colonne génériques",
+      "default": "Génériques"
+    },
+    {
+      "type": "text",
+      "id": "col_official",
+      "label": "Colonne officiels",
+      "default": "Officiels"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "row",
+      "name": "Ligne comparaison",
+      "settings": [
+        {
+          "type": "text",
+          "id": "feature",
+          "label": "Caractéristique",
+          "default": "Design exclusif"
+        },
+        {
+          "type": "checkbox",
+          "id": "us",
+          "label": "Nation Varsity",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "generic",
+          "label": "Génériques",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "official",
+          "label": "Officiels",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Tableau comparatif",
+      "blocks": [
+        { "type": "row", "settings": { "feature": "Design exclusif", "us": true, "generic": false, "official": false } },
+        { "type": "row", "settings": { "feature": "Célèbre tes origines", "us": true, "generic": false, "official": false } },
+        { "type": "row", "settings": { "feature": "Made in Europe", "us": true, "generic": false, "official": true } },
+        { "type": "row", "settings": { "feature": "Livraison 3-5j", "us": true, "generic": false, "official": true } },
+        { "type": "row", "settings": { "feature": "Remboursé 30j", "us": true, "generic": false, "official": false } },
+        { "type": "row", "settings": { "feature": "Prix < 35€", "us": true, "generic": true, "official": false } },
+        { "type": "row", "settings": { "feature": "Style stade + ville", "us": true, "generic": false, "official": true } }
+      ]
+    }
+  ]
+}
+{% endschema %}

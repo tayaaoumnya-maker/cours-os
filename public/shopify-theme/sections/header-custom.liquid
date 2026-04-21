@@ -1,0 +1,110 @@
+{% comment %}
+  Section: Header Custom
+  Header sticky avec logo, navigation et icones
+{% endcomment %}
+
+<div id="shopify-section-{{ section.id }}">
+  <header class="fh-header">
+    <a href="{{ routes.root_url }}" class="fh-header-logo" style="text-decoration:none;color:inherit">
+      {{ section.settings.logo_text_1 }} <span style="color:{{ section.settings.accent_color }}">{{ section.settings.logo_text_2 }}</span>
+    </a>
+    <nav class="fh-header-nav">
+      {% for block in section.blocks %}
+        {% if block.type == 'nav_link' %}
+          <a href="{{ block.settings.link }}" {{ block.shopify_attributes }}>{{ block.settings.label }}</a>
+        {% endif %}
+      {% endfor %}
+    </nav>
+    <div class="fh-header-icons">
+      <a href="{{ routes.search_url }}" aria-label="Recherche">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      </a>
+      <a href="{{ routes.cart_url }}" class="fh-cart-badge" aria-label="Panier">
+        <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        <span class="fh-cart-count">{{ cart.item_count }}</span>
+      </a>
+    </div>
+    <button class="fh-menu-toggle" aria-label="Menu">
+      <svg viewBox="0 0 24 24" width="24" height="24"><line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="1.5"/><line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="1.5"/><line x1="3" y1="18" x2="21" y2="18" stroke="currentColor" stroke-width="1.5"/></svg>
+    </button>
+  </header>
+
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    #shopify-section-{{ section.id }} .fh-header{display:flex;align-items:center;justify-content:space-between;padding:18px 48px;position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid rgba(0,0,0,0.06)}
+    #shopify-section-{{ section.id }} .fh-header-logo{font-family:'Bebas Neue',Impact,sans-serif;font-size:32px;letter-spacing:3px;color:#0d1b2a}
+    #shopify-section-{{ section.id }} .fh-header-nav{display:flex;gap:28px}
+    #shopify-section-{{ section.id }} .fh-header-nav a{text-decoration:none;color:#444;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;transition:color .3s;font-family:'Inter',sans-serif}
+    #shopify-section-{{ section.id }} .fh-header-nav a:hover{color:{{ section.settings.accent_color }}}
+    #shopify-section-{{ section.id }} .fh-header-icons{display:flex;gap:18px;align-items:center}
+    #shopify-section-{{ section.id }} .fh-header-icons a{text-decoration:none;color:inherit}
+    #shopify-section-{{ section.id }} .fh-header-icons svg{width:20px;height:20px;cursor:pointer;stroke:#444;fill:none;stroke-width:1.5;transition:stroke .3s}
+    #shopify-section-{{ section.id }} .fh-header-icons svg:hover{stroke:{{ section.settings.accent_color }}}
+    #shopify-section-{{ section.id }} .fh-cart-badge{position:relative}
+    #shopify-section-{{ section.id }} .fh-cart-count{position:absolute;top:-8px;right:-10px;background:#0d1b2a;color:#fff;font-size:9px;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800}
+    #shopify-section-{{ section.id }} .fh-menu-toggle{display:none;background:none;border:none;cursor:pointer;color:#444}
+    @media(max-width:900px){
+      #shopify-section-{{ section.id }} .fh-header{padding:14px 20px}
+      #shopify-section-{{ section.id }} .fh-header-nav{display:none}
+      #shopify-section-{{ section.id }} .fh-menu-toggle{display:block}
+    }
+  </style>
+</div>
+
+{% schema %}
+{
+  "name": "Header custom",
+  "tag": "section",
+  "class": "fh-header-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "logo_text_1",
+      "label": "Logo texte partie 1",
+      "default": "NATION"
+    },
+    {
+      "type": "text",
+      "id": "logo_text_2",
+      "label": "Logo texte partie 2 (accent)",
+      "default": "VARSITY"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Couleur accent",
+      "default": "#d4a843"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "nav_link",
+      "name": "Lien navigation",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Texte",
+          "default": "Collections"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Lien"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Header custom",
+      "blocks": [
+        { "type": "nav_link", "settings": { "label": "Collections" } },
+        { "type": "nav_link", "settings": { "label": "Notre histoire" } },
+        { "type": "nav_link", "settings": { "label": "FAQ" } },
+        { "type": "nav_link", "settings": { "label": "Nos avis" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

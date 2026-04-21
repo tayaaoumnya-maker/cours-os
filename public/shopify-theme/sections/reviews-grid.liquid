@@ -1,0 +1,137 @@
+{% comment %}
+  Section: Reviews Grid
+  Avis clients ecrits en grille
+{% endcomment %}
+
+<div id="shopify-section-{{ section.id }}">
+  <section class="fh-reviews" style="background:{{ section.settings.bg_color }}">
+    <div class="fh-section-header">
+      <div class="fh-section-overline" style="color:{{ section.settings.accent_color }}">{{ section.settings.overline }}</div>
+      <div class="fh-section-title">{{ section.settings.title }}</div>
+    </div>
+    <div class="fh-reviews-grid">
+      {% for block in section.blocks %}
+        <div class="fh-rev-card" {{ block.shopify_attributes }}>
+          <div class="fh-rev-stars" style="color:{{ section.settings.accent_color }}">{% for i in (1..5) %}{% if i <= block.settings.stars %}&#9733;{% else %}&#9734;{% endif %}{% endfor %}</div>
+          <div class="fh-rev-title">{{ block.settings.title }}</div>
+          <p class="fh-rev-text">{{ block.settings.text }}</p>
+          <div class="fh-rev-author">
+            <div class="fh-rev-avatar">{{ block.settings.initials }}</div>
+            <div>
+              <div class="fh-rev-name">{{ block.settings.name }}</div>
+              <div class="fh-rev-verified">&#10003; Client Nation Varsity</div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <style>
+    #shopify-section-{{ section.id }} .fh-reviews{padding:100px 48px}
+    #shopify-section-{{ section.id }} .fh-section-header{text-align:center;margin-bottom:56px}
+    #shopify-section-{{ section.id }} .fh-section-overline{font-size:11px;text-transform:uppercase;letter-spacing:4px;font-weight:700;margin-bottom:12px}
+    #shopify-section-{{ section.id }} .fh-section-title{font-family:'Bebas Neue',Impact,sans-serif;font-size:48px;letter-spacing:2px;text-transform:uppercase;color:#0d1b2a}
+    #shopify-section-{{ section.id }} .fh-reviews-grid{display:flex;justify-content:center;gap:24px;flex-wrap:wrap;max-width:1100px;margin:0 auto}
+    #shopify-section-{{ section.id }} .fh-rev-card{background:#fff;border:1px solid #e0e0dc;border-radius:16px;padding:28px;flex:1;min-width:280px;max-width:340px;transition:all .4s;position:relative;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.04)}
+    #shopify-section-{{ section.id }} .fh-rev-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#0d1b2a,{{ section.settings.accent_color }});opacity:0;transition:opacity .4s}
+    #shopify-section-{{ section.id }} .fh-rev-card:hover{transform:translateY(-6px);box-shadow:0 16px 48px rgba(0,0,0,0.08)}
+    #shopify-section-{{ section.id }} .fh-rev-card:hover::before{opacity:1}
+    #shopify-section-{{ section.id }} .fh-rev-stars{font-size:14px;margin-bottom:12px;letter-spacing:2px}
+    #shopify-section-{{ section.id }} .fh-rev-title{font-weight:700;font-size:16px;margin-bottom:8px;color:#0d1b2a;font-family:'Inter',sans-serif}
+    #shopify-section-{{ section.id }} .fh-rev-text{font-size:14px;color:#777;line-height:1.7;margin-bottom:16px;font-weight:300;font-family:'Inter',sans-serif}
+    #shopify-section-{{ section.id }} .fh-rev-author{display:flex;align-items:center;gap:10px}
+    #shopify-section-{{ section.id }} .fh-rev-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#0d1b2a,{{ section.settings.accent_color }});display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;color:#fff}
+    #shopify-section-{{ section.id }} .fh-rev-name{font-size:13px;font-weight:600;color:#0d1b2a;font-family:'Inter',sans-serif}
+    #shopify-section-{{ section.id }} .fh-rev-verified{font-size:11px;color:#2e7d32;font-weight:500;font-family:'Inter',sans-serif}
+    @media(max-width:900px){
+      #shopify-section-{{ section.id }} .fh-reviews{padding:64px 20px}
+      #shopify-section-{{ section.id }} .fh-section-title{font-size:32px}
+      #shopify-section-{{ section.id }} .fh-reviews-grid{flex-direction:column;align-items:center}
+    }
+  </style>
+</div>
+
+{% schema %}
+{
+  "name": "Avis clients",
+  "tag": "section",
+  "class": "fh-reviews-grid-section",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Couleur de fond",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Couleur accent",
+      "default": "#d4a843"
+    },
+    {
+      "type": "text",
+      "id": "overline",
+      "label": "Surtitre",
+      "default": "★ Avis vérifiés"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titre",
+      "default": "+300 supporters équipés"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Avis",
+      "settings": [
+        {
+          "type": "range",
+          "id": "stars",
+          "label": "Etoiles",
+          "min": 1,
+          "max": 5,
+          "default": 5
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Titre avis",
+          "default": "L'ambiance au stade avec ce t-shirt"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Texte",
+          "default": "Je l'ai porté pour Maroc-Espagne en fan zone. L'ambiance était folle et tout le monde me demandait où je l'avais trouvé. Qualité dingue."
+        },
+        {
+          "type": "text",
+          "id": "initials",
+          "label": "Initiales",
+          "default": "KL"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Nom",
+          "default": "Karim L."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Avis clients",
+      "blocks": [
+        { "type": "review", "settings": { "stars": 5, "title": "L'ambiance au stade avec ce t-shirt", "text": "Je l'ai porté pour Maroc-Espagne en fan zone. L'ambiance était folle et tout le monde me demandait où je l'avais trouvé. Qualité dingue.", "initials": "KL", "name": "Karim L." } },
+        { "type": "review", "settings": { "stars": 5, "title": "Cadeau parfait avant le Mondial", "text": "Offert à mon père pour la Coupe du Monde. Il l'a adoré, il dit que c'est le plus beau t-shirt qu'il ait jamais eu. Livré en 4 jours.", "initials": "SM", "name": "Sarah M." } },
+        { "type": "review", "settings": { "stars": 4, "title": "Top, taille un peu grand", "text": "T-shirt magnifique. Taille légèrement grand, prenez votre taille ou en dessous. Sinon la qualité est 10/10. Prêt pour le Mondial.", "initials": "RB", "name": "Rachid B." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

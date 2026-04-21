@@ -1,0 +1,115 @@
+{% comment %}
+  Section: Brand Presentation
+  Presentation de la marque Nation Varsity
+{% endcomment %}
+
+<div id="shopify-section-{{ section.id }}">
+  <section class="fh-brand" style="background:{{ section.settings.bg_color }}">
+    <div class="fh-brand-inner">
+      <div class="fh-section-overline" style="color:{{ section.settings.accent_color }}">{{ section.settings.overline }}</div>
+      <div class="fh-brand-divider" style="background:{{ section.settings.divider_color }}"></div>
+      <h2 class="fh-brand-title">{%- for block in section.blocks -%}
+        {%- if block.type == 'title_line' -%}
+          {% if block.settings.accent %}<span style="color:{{ section.settings.accent_color }}">{{ block.settings.text }}</span>{% else %}{{ block.settings.text }}{% endif %}{% unless forloop.last %}<br>{% endunless %}
+        {%- endif -%}
+      {%- endfor -%}</h2>
+      {% for block in section.blocks %}
+        {% if block.type == 'paragraph' %}
+          <p class="fh-brand-p" {{ block.shopify_attributes }}>{{ block.settings.text }}</p>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </section>
+
+  <style>
+    #shopify-section-{{ section.id }} .fh-brand{padding:100px 48px;text-align:center;position:relative;overflow:hidden}
+    #shopify-section-{{ section.id }} .fh-brand::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(13,27,42,0.03),transparent 60%)}
+    #shopify-section-{{ section.id }} .fh-brand-inner{max-width:750px;margin:0 auto;position:relative;z-index:1}
+    #shopify-section-{{ section.id }} .fh-section-overline{font-size:11px;text-transform:uppercase;letter-spacing:4px;font-weight:700;margin-bottom:12px}
+    #shopify-section-{{ section.id }} .fh-brand-divider{width:60px;height:3px;margin:0 auto 28px;border-radius:2px}
+    #shopify-section-{{ section.id }} .fh-brand-title{font-family:'Bebas Neue',Impact,sans-serif;font-size:56px;letter-spacing:2px;text-transform:uppercase;margin-bottom:28px;line-height:1.1;color:#0d1b2a}
+    #shopify-section-{{ section.id }} .fh-brand-p{font-size:16px;color:#444;line-height:1.8;margin-bottom:18px;font-weight:300;font-family:'Inter',sans-serif}
+    @media(max-width:900px){
+      #shopify-section-{{ section.id }} .fh-brand{padding:64px 20px}
+      #shopify-section-{{ section.id }} .fh-brand-title{font-size:36px}
+    }
+  </style>
+</div>
+
+{% schema %}
+{
+  "name": "Présentation marque",
+  "tag": "section",
+  "class": "fh-brand-section",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Couleur de fond",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Couleur accent",
+      "default": "#d4a843"
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Couleur séparateur",
+      "default": "#0d1b2a"
+    },
+    {
+      "type": "text",
+      "id": "overline",
+      "label": "Surtitre",
+      "default": "Notre mission"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "title_line",
+      "name": "Ligne de titre",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Texte",
+          "default": "Le foot, c'est"
+        },
+        {
+          "type": "checkbox",
+          "id": "accent",
+          "label": "Couleur accent",
+          "default": false
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "name": "Paragraphe",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Texte",
+          "default": "C'est la fierté de tout un peuple. C'est 90 minutes où tout un pays vibre ensemble."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Présentation marque",
+      "blocks": [
+        { "type": "title_line", "settings": { "text": "Le foot, c'est", "accent": false } },
+        { "type": "title_line", "settings": { "text": "plus qu'un sport", "accent": true } },
+        { "type": "paragraph", "settings": { "text": "C'est la fierté de tout un peuple. C'est 90 minutes où tout un pays vibre ensemble. C'est les cris dans les salons, les klaxons dans les rues, les larmes de joie." } },
+        { "type": "paragraph", "settings": { "text": "On a créé Nation Varsity pour capturer cette énergie. Chaque t-shirt est conçu pour que tu ressentes cette fierté à chaque fois que tu l'enfiles." } },
+        { "type": "paragraph", "settings": { "text": "Coupe du Monde 2026, on y sera. Et toi ?" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

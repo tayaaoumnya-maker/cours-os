@@ -1,0 +1,233 @@
+{
+  "sections": {
+    "announcement-ticker": {
+      "type": "announcement-ticker",
+      "settings": {
+        "bg_color": "#0d1b2a",
+        "text_color": "#f0d78c",
+        "height": 36,
+        "speed": 25,
+        "font_size": 12
+      },
+      "blocks": {
+        "ticker_1": {
+          "type": "ticker_item",
+          "settings": {
+            "icon": "\u26bd",
+            "text": "Coupe du Monde 2026 \u2014 \u00c9dition limit\u00e9e"
+          }
+        },
+        "ticker_2": {
+          "type": "ticker_item",
+          "settings": {
+            "icon": "\ud83d\udd25",
+            "text": "Stock limit\u00e9 \u2014 Ne rate pas ta taille"
+          }
+        },
+        "ticker_3": {
+          "type": "ticker_item",
+          "settings": {
+            "icon": "\ud83d\ude9a",
+            "text": "Livraison gratuite d\u00e8s 50\u20ac en Europe"
+          }
+        },
+        "ticker_4": {
+          "type": "ticker_item",
+          "settings": {
+            "icon": "\ud83c\udfc6",
+            "text": "Satisfait ou rembours\u00e9 30 jours"
+          }
+        }
+      },
+      "block_order": ["ticker_1", "ticker_2", "ticker_3", "ticker_4"]
+    },
+    "header": {
+      "type": "header-custom",
+      "settings": {
+        "logo_text_1": "NATION",
+        "logo_text_2": "VARSITY",
+        "accent_color": "#d4a843"
+      },
+      "blocks": {
+        "nav_1": { "type": "nav_link", "settings": { "label": "Collections" } },
+        "nav_2": { "type": "nav_link", "settings": { "label": "Notre histoire" } },
+        "nav_3": { "type": "nav_link", "settings": { "label": "FAQ" } },
+        "nav_4": { "type": "nav_link", "settings": { "label": "Nos avis" } }
+      },
+      "block_order": ["nav_1", "nav_2", "nav_3", "nav_4"]
+    },
+    "buybox": {
+      "type": "product-buybox-custom",
+      "settings": {
+        "flag_emoji": "\ud83c\uddf2\ud83c\udde6",
+        "reviews_summary": "4,8/5 \u2014 127 avis",
+        "edition_text": "\u00c9dition Coupe du Monde 2026",
+        "show_badge": true,
+        "badge_text": "\ud83d\udd25 \u00c9dition limit\u00e9e",
+        "show_urgency": true,
+        "urgency_text": "\ud83d\udd25 Plus que 12 en stock \u2014 Ne rate pas ta taille",
+        "show_express": true
+      },
+      "blocks": {
+        "b1": { "type": "benefit", "settings": { "text": "Design exclusif qui c\u00e9l\u00e8bre tes racines marocaines" } },
+        "b2": { "type": "benefit", "settings": { "text": "Tissu jersey premium ultra-respirant \u2014 confort toute la journ\u00e9e" } },
+        "b3": { "type": "benefit", "settings": { "text": "Port\u00e9 au stade, en terrasse, en ville \u2014 partout" } },
+        "b4": { "type": "benefit", "settings": { "text": "Sublimation durable \u2014 couleurs qui ne fanent jamais" } },
+        "b5": { "type": "benefit", "settings": { "text": "Fabriqu\u00e9 en Europe, chez toi en 3-5 jours" } },
+        "g1": { "type": "guarantee", "settings": { "icon": "\ud83d\udcb0", "text": "Rembours\u00e9 30j" } },
+        "g2": { "type": "guarantee", "settings": { "icon": "\ud83d\ude9a", "text": "Livraison gratuite 50\u20ac+" } },
+        "mf1": { "type": "mini_faq", "settings": { "question": "Quand vais-je le recevoir ?", "answer": "Production 1-2j + livraison 3-5j ouvr\u00e9s en Europe." } },
+        "mf2": { "type": "mini_faq", "settings": { "question": "C'est un maillot officiel ?", "answer": "Non, design original ind\u00e9pendant. Art fan premium." } },
+        "mf3": { "type": "mini_faq", "settings": { "question": "Comment choisir ma taille ?", "answer": "Taille normalement. H\u00e9sitation ? Au-dessus pour d\u00e9contract\u00e9." } }
+      },
+      "block_order": ["b1", "b2", "b3", "b4", "b5", "g1", "g2", "mf1", "mf2", "mf3"]
+    },
+    "video-testimonials": {
+      "type": "video-testimonials",
+      "settings": {
+        "bg_color": "#f5f5f3",
+        "accent_color": "#d4a843",
+        "overline": "\ud83c\udfa8 T\u00e9moignages",
+        "title": "Ils sont pr\u00eats pour 2026",
+        "subtitle": "Des vrais supporters, des vrais retours"
+      },
+      "blocks": {
+        "v1": { "type": "video_card", "settings": { "name": "Youssef K.", "stars": 5 } },
+        "v2": { "type": "video_card", "settings": { "name": "Amina B.", "stars": 5 } },
+        "v3": { "type": "video_card", "settings": { "name": "Ibrahim D.", "stars": 5 } },
+        "v4": { "type": "video_card", "settings": { "name": "Fatou S.", "stars": 5 } },
+        "v5": { "type": "video_card", "settings": { "name": "Mehdi R.", "stars": 4 } }
+      },
+      "block_order": ["v1", "v2", "v3", "v4", "v5"]
+    },
+    "benefit-quality": {
+      "type": "benefit-section",
+      "settings": {
+        "bg_color": "#ffffff",
+        "accent_color": "#d4a843",
+        "alt_bg": false,
+        "reverse_layout": false,
+        "overline": "Qualit\u00e9 match-day",
+        "title": "Un tissu qui respire comme au stade",
+        "description": "100% polyester premium avec sublimation. Les couleurs sont dans le tissu, pas dessus. R\u00e9sultat : impeccable apr\u00e8s des dizaines de matchs et de lavages.",
+        "emoji": "\ud83c\udf08",
+        "image_bg": "linear-gradient(135deg,#fef9ef,#f5f0e8)",
+        "cta_text": "Ajouter au panier"
+      },
+      "blocks": {
+        "f1": { "type": "feature", "settings": { "text": "Ultra-respirant et l\u00e9ger" } },
+        "f2": { "type": "feature", "settings": { "text": "Coutures renforc\u00e9es double-aiguille" } },
+        "f3": { "type": "feature", "settings": { "text": "Couleurs garanties sans d\u00e9coloration" } },
+        "f4": { "type": "feature", "settings": { "text": "S\u00e8che en un \u00e9clair" } }
+      },
+      "block_order": ["f1", "f2", "f3", "f4"]
+    },
+    "benefit-europe": {
+      "type": "benefit-section",
+      "settings": {
+        "bg_color": "#f5f5f3",
+        "accent_color": "#d4a843",
+        "alt_bg": true,
+        "reverse_layout": true,
+        "overline": "Fabriqu\u00e9 en Europe",
+        "title": "Pas de Chine. Pas d'attente.",
+        "description": "Production europ\u00e9enne, exp\u00e9dition directe. Ton jersey part de l'atelier et arrive chez toi en 3-5 jours. Avec suivi en temps r\u00e9el.",
+        "emoji": "\ud83c\uddea\ud83c\uddfa",
+        "image_bg": "linear-gradient(135deg,#eef5ff,#e0ecf8)",
+        "cta_text": "Ajouter au panier"
+      },
+      "blocks": {
+        "f1": { "type": "feature", "settings": { "text": "3-5 jours ouvr\u00e9s partout en Europe" } },
+        "f2": { "type": "feature", "settings": { "text": "Suivi email en temps r\u00e9el" } },
+        "f3": { "type": "feature", "settings": { "text": "Emballage soign\u00e9" } },
+        "f4": { "type": "feature", "settings": { "text": "Service client en fran\u00e7ais" } }
+      },
+      "block_order": ["f1", "f2", "f3", "f4"]
+    },
+    "reviews": {
+      "type": "reviews-grid",
+      "settings": {
+        "bg_color": "#ffffff",
+        "accent_color": "#d4a843",
+        "overline": "\u2605 Avis v\u00e9rifi\u00e9s",
+        "title": "+300 supporters \u00e9quip\u00e9s"
+      },
+      "blocks": {
+        "r1": { "type": "review", "settings": { "stars": 5, "title": "L'ambiance au stade avec ce jersey", "text": "Je l'ai port\u00e9 pour Maroc-Espagne en fan zone. L'ambiance \u00e9tait folle et tout le monde me demandait o\u00f9 je l'avais trouv\u00e9. Qualit\u00e9 dingue.", "initials": "KL", "name": "Karim L." } },
+        "r2": { "type": "review", "settings": { "stars": 5, "title": "Cadeau parfait avant le Mondial", "text": "Offert \u00e0 mon p\u00e8re pour la Coupe du Monde. Il l'a ador\u00e9, il dit que c'est le plus beau jersey qu'il ait jamais eu. Livr\u00e9 en 4 jours.", "initials": "SM", "name": "Sarah M." } },
+        "r3": { "type": "review", "settings": { "stars": 4, "title": "Top, taille un peu grand", "text": "Jersey magnifique. Taille l\u00e9g\u00e8rement grand, prenez votre taille ou en dessous. Sinon la qualit\u00e9 est 10/10. Pr\u00eat pour le Mondial.", "initials": "RB", "name": "Rachid B." } }
+      },
+      "block_order": ["r1", "r2", "r3"]
+    },
+    "comparison": {
+      "type": "comparison-table",
+      "settings": {
+        "bg_color": "#f5f5f3",
+        "accent_color": "#d4a843",
+        "overline": "\ud83c\udfc6 Comparaison",
+        "title": "Pourquoi nous choisir ?",
+        "col_us": "Nation Varsity",
+        "col_generic": "G\u00e9n\u00e9riques",
+        "col_official": "Officiels"
+      },
+      "blocks": {
+        "c1": { "type": "row", "settings": { "feature": "Design exclusif", "us": true, "generic": false, "official": false } },
+        "c2": { "type": "row", "settings": { "feature": "C\u00e9l\u00e8bre tes origines", "us": true, "generic": false, "official": false } },
+        "c3": { "type": "row", "settings": { "feature": "Made in Europe", "us": true, "generic": false, "official": true } },
+        "c4": { "type": "row", "settings": { "feature": "Livraison 3-5j", "us": true, "generic": false, "official": true } },
+        "c5": { "type": "row", "settings": { "feature": "Rembours\u00e9 30j", "us": true, "generic": false, "official": false } },
+        "c6": { "type": "row", "settings": { "feature": "Prix < 35\u20ac", "us": true, "generic": true, "official": false } },
+        "c7": { "type": "row", "settings": { "feature": "Style stade + ville", "us": true, "generic": false, "official": true } }
+      },
+      "block_order": ["c1", "c2", "c3", "c4", "c5", "c6", "c7"]
+    },
+    "product-faq": {
+      "type": "product-faq",
+      "settings": {
+        "bg_color": "#ffffff",
+        "accent_color": "#d4a843",
+        "overline": "FAQ",
+        "title": "Questions fr\u00e9quentes",
+        "cta_text": "\u26bd Ajouter au panier"
+      },
+      "blocks": {
+        "q1": { "type": "faq_item", "settings": { "question": "D\u00e9lais de livraison ?", "answer": "Production 1-2j + livraison 3-5j ouvr\u00e9s en Europe. Suivi email en temps r\u00e9el." } },
+        "q2": { "type": "faq_item", "settings": { "question": "Quelle taille ?", "answer": "Taille normalement \u00e0 l\u00e9g\u00e8rement grand. H\u00e9sitation ? Au-dessus pour d\u00e9contract\u00e9." } },
+        "q3": { "type": "faq_item", "settings": { "question": "Maillot officiel ?", "answer": "Non. Design original ind\u00e9pendant. Non affili\u00e9 FIFA / f\u00e9d\u00e9rations / \u00e9quipementiers." } },
+        "q4": { "type": "faq_item", "settings": { "question": "Retours ?", "answer": "30 jours satisfait ou rembours\u00e9, sans conditions." } },
+        "q5": { "type": "faq_item", "settings": { "question": "Mat\u00e9riau ?", "answer": "100% polyester premium, sublimation. Couleurs int\u00e9gr\u00e9es au tissu, r\u00e9sistant aux lavages." } },
+        "q6": { "type": "faq_item", "settings": { "question": "Hors France ?", "answer": "Oui ! Toute l'Europe : Belgique, Allemagne, Espagne, Italie, Pays-Bas..." } },
+        "q7": { "type": "faq_item", "settings": { "question": "Paiement ?", "answer": "CB, Apple Pay, Google Pay, PayPal. Paiement s\u00e9curis\u00e9 Shopify." } },
+        "q8": { "type": "faq_item", "settings": { "question": "Pack famille ?", "answer": "Oui ! Adulte, femme cintr\u00e9, enfant, b\u00e9b\u00e9. Packs avec r\u00e9duction dans Collections." } }
+      },
+      "block_order": ["q1", "q2", "q3", "q4", "q5", "q6", "q7", "q8"]
+    },
+    "footer": {
+      "type": "footer-custom",
+      "settings": {
+        "bg_color": "#0d1b2a",
+        "accent_color": "#d4a843",
+        "copyright": "\u00a9 2026 Nation Varsity \u00b7 Propuls\u00e9 par Shopify"
+      },
+      "blocks": {
+        "col1": { "type": "column", "settings": { "heading": "Nation Varsity", "links_text": "Accueil|Produits|Notre histoire|Contact", "links_url": "/|/collections/all|/pages/notre-histoire|/pages/contact" } },
+        "col2": { "type": "column", "settings": { "heading": "Collections", "links_text": "Maroc|Alg\u00e9rie|C\u00f4te d'Ivoire|France|Br\u00e9sil", "links_url": "/collections/maroc|/collections/algerie|/collections/cote-divoire|/collections/france|/collections/bresil" } },
+        "col3": { "type": "column", "settings": { "heading": "Infos", "links_text": "Guide tailles|Livraison & retours|CGV|Confidentialit\u00e9", "links_url": "/pages/guide-tailles|/pages/livraison-retours|/policies/terms-of-service|/policies/privacy-policy" } },
+        "col4": { "type": "column", "settings": { "heading": "Suivez-nous", "links_text": "Instagram|TikTok|YouTube|Pinterest", "links_url": "#|#|#|#" } }
+      },
+      "block_order": ["col1", "col2", "col3", "col4"]
+    }
+  },
+  "order": [
+    "announcement-ticker",
+    "header",
+    "buybox",
+    "video-testimonials",
+    "benefit-quality",
+    "benefit-europe",
+    "reviews",
+    "comparison",
+    "product-faq",
+    "footer"
+  ]
+}
