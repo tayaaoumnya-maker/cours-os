@@ -1027,6 +1027,7 @@ export default function ATMApp() {
   const cartHT  = cartTotal
   const cartTVA = cartTotal * 0.2
   const cartTTC = cartTotal * 1.2
+  const cartItemCount = cartItems.reduce((sum, { qty }) => sum + qty, 0)
 
   const lowStockProducts  = products.filter(p => p.stock <= p.alertThreshold && p.stock > 0)
   const outOfStockProducts = products.filter(p => p.stock === 0)
@@ -3534,7 +3535,7 @@ export default function ATMApp() {
                       onClick={() => setShowPayModal(true)}
                       className="flex-1 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-sm font-bold text-black transition-colors shadow-lg shadow-amber-500/20"
                     >
-                      Encaisser
+                      Encaisser · {cartItemCount} article{cartItemCount > 1 ? "s" : ""}
                     </button>
                   </div>
                 </div>
@@ -3636,7 +3637,7 @@ export default function ATMApp() {
                       <button
                         onClick={() => { setShowMobileCart(false); setShowPayModal(true) }}
                         className="py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-sm transition-colors">
-                        ✓ Valider
+                        ✓ Valider · {cartItemCount} article{cartItemCount > 1 ? "s" : ""}
                       </button>
                     </div>
                   </div>
@@ -5129,7 +5130,7 @@ export default function ATMApp() {
                 <>
                   <h2 className="text-lg font-bold">Mode de paiement</h2>
                   <p className="text-sm text-white/40 mt-0.5">
-                    Total à encaisser : <span className="text-amber-400 font-bold">{formatPrice(cartTTC)}</span>
+                    {cartItemCount} article{cartItemCount > 1 ? "s" : ""} · Total à encaisser : <span className="text-amber-400 font-bold">{formatPrice(cartTTC)}</span>
                     {discountValue > 0 && (
                       <span className="text-cyan-400 ml-1">
                         (−{discountType === "percent" ? `${discountValue}%` : `${discountValue} €`})
