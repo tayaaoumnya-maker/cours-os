@@ -13,7 +13,10 @@
             {% assign links = block.settings.links_text | split: '|' %}
             {% assign urls = block.settings.links_url | split: '|' %}
             {% for link_text in links %}
-              <a href="{% if urls[forloop.index0] != blank %}{{ urls[forloop.index0] }}{% else %}#{% endif %}">{{ link_text | strip }}</a>
+              {% assign link_stripped = link_text | strip | downcase %}
+              {% unless link_stripped == 'tiktok' %}
+                <a href="{% if urls[forloop.index0] != blank %}{{ urls[forloop.index0] }}{% else %}#{% endif %}">{{ link_text | strip }}</a>
+              {% endunless %}
             {% endfor %}
           </div>
         {% endif %}
@@ -91,7 +94,7 @@
         { "type": "column", "settings": { "heading": "Nation Varsity", "links_text": "Accueil|Tous les produits|Notre histoire|Contact", "links_url": "/|/collections/all|/pages/notre-histoire|/pages/contact" } },
         { "type": "column", "settings": { "heading": "Collections", "links_text": "Maroc|Algérie|Côte d'Ivoire|France|Brésil", "links_url": "/collections/maroc|/collections/algerie|/collections/cote-divoire|/collections/france|/collections/bresil" } },
         { "type": "column", "settings": { "heading": "Informations", "links_text": "Guide des tailles|Livraison & retours|CGV|Confidentialité", "links_url": "/pages/guide-tailles|/pages/livraison-retours|/policies/terms-of-service|/policies/privacy-policy" } },
-        { "type": "column", "settings": { "heading": "Suivez-nous", "links_text": "Instagram|TikTok|YouTube|Pinterest", "links_url": "#|#|#|#" } }
+        { "type": "column", "settings": { "heading": "Suivez-nous", "links_text": "Instagram|YouTube|Pinterest", "links_url": "#|#|#" } }
       ]
     }
   ]

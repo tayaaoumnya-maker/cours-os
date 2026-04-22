@@ -53,10 +53,24 @@
           {% for block in section.blocks %}
             {% if block.type == 'hero_card' %}
               <div class="fh-hero-card fh-hc-{{ forloop.index }}" style="background:{{ block.settings.gradient }}" {{ block.shopify_attributes }}>
+                {% comment %} Priority: image_picker > image_url > asset_filename > auto-detect by emoji > fallback emoji {% endcomment %}
                 {% if block.settings.image != blank %}
                   {{ block.settings.image | image_url: width: 900 | image_tag: loading: 'eager', class: 'fh-card-img' }}
+                {% elsif block.settings.image_url != blank %}
+                  <img src="{{ block.settings.image_url }}" alt="{{ block.settings.country_name }}" class="fh-card-img" loading="eager">
+                {% elsif block.settings.asset_filename != blank %}
+                  <img src="{{ block.settings.asset_filename | asset_url }}" alt="{{ block.settings.country_name }}" class="fh-card-img" loading="eager">
                 {% else %}
-                  <span class="fh-flag">{{ block.settings.flag_emoji }}</span>
+                  {% assign jersey_file = '' %}
+                  {% if block.settings.flag_emoji contains '🇲🇦' %}{% assign jersey_file = 'jersey-maroc.png' %}
+                  {% elsif block.settings.flag_emoji contains '🇩🇿' %}{% assign jersey_file = 'jersey-algerie.png' %}
+                  {% elsif block.settings.flag_emoji contains '🇨🇮' %}{% assign jersey_file = 'jersey-ci.png' %}
+                  {% endif %}
+                  {% if jersey_file != '' %}
+                    <img src="{{ jersey_file | asset_url }}" alt="{{ block.settings.country_name }}" class="fh-card-img" loading="eager">
+                  {% else %}
+                    <span class="fh-flag">{{ block.settings.flag_emoji }}</span>
+                  {% endif %}
                 {% endif %}
                 <div class="fh-hero-card-label">
                   <div class="fh-hc-name">{{ block.settings.country_name }}</div>
@@ -113,7 +127,7 @@
     #shopify-section-{{ section.id }} .fh-hero-card-stack{position:relative;width:340px;height:480px}
     #shopify-section-{{ section.id }} .fh-hero-card{position:absolute;width:300px;height:440px;border-radius:20px;overflow:hidden;display:flex;align-items:center;justify-content:center;box-shadow:0 30px 80px rgba(0,0,0,0.5);transition:all .6s cubic-bezier(.4,0,.2,1)}
     #shopify-section-{{ section.id }} .fh-hero-card .fh-flag{font-size:120px;filter:drop-shadow(0 10px 30px rgba(0,0,0,0.4))}
-    #shopify-section-{{ section.id }} .fh-hero-card .fh-card-img{width:100%;height:100%;object-fit:contain;object-position:center 40%;padding:20px 16px 60px}
+    #shopify-section-{{ section.id }} .fh-hero-card .fh-card-img{width:100%;height:100%;object-fit:contain;object-position:center 40%;padding:0}
     #shopify-section-{{ section.id }} .fh-hero-card::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(0,0,0,0.6) 100%)}
     #shopify-section-{{ section.id }} .fh-hero-card-label{position:absolute;bottom:20px;left:20px;z-index:2}
     #shopify-section-{{ section.id }} .fh-hc-name{font-family:'Bebas Neue',Impact,sans-serif;font-size:24px;color:#fff;letter-spacing:1px}
@@ -248,7 +262,7 @@
       "type": "textarea",
       "id": "subtitle",
       "label": "Sous-titre",
-      "default": "T-shirts fan premium pour la diaspora. Design exclusif, coton respirant, fabriqué en Europe. Sois prêt pour le coup d'envoi."
+      "default": "T-shirts fan premium pour la diaspora. Design exclusif, coton respirant, impression premium sur commande. Sois prêt pour le coup d'envoi."
     },
     {
       "type": "text",
@@ -303,6 +317,18 @@
         },
         {
           "type": "text",
+          "id": "image_url",
+          "label": "URL image produit (alternative)",
+          "info": "Coller l'URL d'une image. Utilisé si aucune image sélectionnée ci-dessus."
+        },
+        {
+          "type": "text",
+          "id": "asset_filename",
+          "label": "Nom fichier asset (ex: jersey-maroc.png)",
+          "info": "Nom du fichier dans le dossier assets/ du thème."
+        },
+        {
+          "type": "text",
           "id": "gradient",
           "label": "Gradient CSS",
           "default": "linear-gradient(160deg,#c1272d,#7a1018)"
@@ -327,8 +353,8 @@
       "name": "Hero World Cup",
       "blocks": [
         { "type": "trust_badge", "settings": { "text": "Remboursé 30j" } },
-        { "type": "trust_badge", "settings": { "text": "Made in Europe" } },
-        { "type": "trust_badge", "settings": { "text": "3-5 jours" } },
+        { "type": "trust_badge", "settings": { "text": "Qualité premium" } },
+        { "type": "trust_badge", "settings": { "text": "10-20 jours" } },
         { "type": "hero_card", "settings": { "flag_emoji": "🇨🇮", "gradient": "linear-gradient(160deg,#FF8200,#cc6500)", "country_name": "Côte d'Ivoire", "price": "34,99 €" } },
         { "type": "hero_card", "settings": { "flag_emoji": "🇩🇿", "gradient": "linear-gradient(160deg,#006233,#003d1f)", "country_name": "Algérie", "price": "34,99 €" } },
         { "type": "hero_card", "settings": { "flag_emoji": "🇲🇦", "gradient": "linear-gradient(160deg,#c1272d,#7a1018)", "country_name": "Maroc", "price": "34,99 €" } }

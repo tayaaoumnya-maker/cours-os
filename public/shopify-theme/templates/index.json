@@ -42,7 +42,7 @@
           "type": "ticker_item",
           "settings": {
             "icon": "\ud83d\ude9a",
-            "text": "Fabriqu\u00e9 en Europe \u2014 Livr\u00e9 en 3-5 jours"
+            "text": "Livraison mondiale \u2014 10-20 jours ouvr\u00e9s"
           }
         }
       },
@@ -73,14 +73,14 @@
         "line1": "Coupe du Monde 2026",
         "line2": "Porte tes",
         "line3": "Origines",
-        "subtitle": "Jerseys fan premium pour la diaspora. Design exclusif, tissu respirant, fabriqu\u00e9 en Europe. Sois pr\u00eat pour le coup d'envoi.",
+        "subtitle": "Jerseys fan premium pour la diaspora. Design exclusif, tissu respirant, impression premium sur commande. Sois pr\u00eat pour le coup d'envoi.",
         "cta_text": "Shopper la collection",
         "cta2_text": "Notre histoire"
       },
       "blocks": {
         "trust_1": { "type": "trust_badge", "settings": { "text": "Rembours\u00e9 30j" } },
-        "trust_2": { "type": "trust_badge", "settings": { "text": "Made in Europe" } },
-        "trust_3": { "type": "trust_badge", "settings": { "text": "3-5 jours" } },
+        "trust_2": { "type": "trust_badge", "settings": { "text": "Qualité premium" } },
+        "trust_3": { "type": "trust_badge", "settings": { "text": "10-20 jours" } },
         "card_1": { "type": "hero_card", "settings": { "flag_emoji": "\ud83c\udde8\ud83c\uddee", "gradient": "linear-gradient(160deg,#FF8200,#cc6500)", "country_name": "C\u00f4te d'Ivoire", "price": "34,99 \u20ac" } },
         "card_2": { "type": "hero_card", "settings": { "flag_emoji": "\ud83c\udde9\ud83c\uddff", "gradient": "linear-gradient(160deg,#006233,#003d1f)", "country_name": "Alg\u00e9rie", "price": "34,99 \u20ac" } },
         "card_3": { "type": "hero_card", "settings": { "flag_emoji": "\ud83c\uddf2\ud83c\udde6", "gradient": "linear-gradient(160deg,#c1272d,#7a1018)", "country_name": "Maroc", "price": "34,99 \u20ac" } }
@@ -132,13 +132,14 @@
         "compare_price": "49,99\u20ac",
         "flag_emoji": "\ud83c\uddf2\ud83c\udde6",
         "product_gradient": "linear-gradient(160deg,#c1272d,#7a1018)",
-        "button_text": "Voir le produit"
+        "button_text": "Voir le produit",
+        "video_url": "https://cdn.shopify.com/videos/c/o/v/f4fdb9c8d9d145e2a95750a36ddeae7b.mp4"
       },
       "blocks": {
         "b1": { "type": "benefit", "settings": { "text": "Design exclusif inspir\u00e9 du Maroc" } },
         "b2": { "type": "benefit", "settings": { "text": "Tissu jersey premium respirant" } },
         "b3": { "type": "benefit", "settings": { "text": "Sublimation \u2014 couleurs qui durent \u00e0 vie" } },
-        "b4": { "type": "benefit", "settings": { "text": "Fabriqu\u00e9 en Europe, chez toi en 3-5j" } },
+        "b4": { "type": "benefit", "settings": { "text": "Impression premium, chez toi en 10-20j" } },
         "b5": { "type": "benefit", "settings": { "text": "Satisfait ou rembours\u00e9 30 jours" } }
       },
       "block_order": ["b1", "b2", "b3", "b4", "b5"]
@@ -188,7 +189,7 @@
         "title": "Questions fr\u00e9quentes"
       },
       "blocks": {
-        "q1": { "type": "faq_item", "settings": { "question": "Quels sont les d\u00e9lais de livraison ?", "answer": "Production 1-2j + livraison 3-5j ouvr\u00e9s en Europe. Suivi par email en temps r\u00e9el." } },
+        "q1": { "type": "faq_item", "settings": { "question": "Quels sont les d\u00e9lais de livraison ?", "answer": "Production 6-8j + livraison 10-14j ouvr\u00e9s en Europe. Suivi par email en temps r\u00e9el." } },
         "q2": { "type": "faq_item", "settings": { "question": "Quelle taille choisir ?", "answer": "Taille normalement. H\u00e9sitation ? Taille au-dessus pour d\u00e9contract\u00e9, en-dessous pour ajust\u00e9." } },
         "q3": { "type": "faq_item", "settings": { "question": "C'est un maillot officiel ?", "answer": "Non. Designs originaux ind\u00e9pendants, non affili\u00e9s aux f\u00e9d\u00e9rations, FIFA ou \u00e9quipementiers." } },
         "q4": { "type": "faq_item", "settings": { "question": "Politique de retour ?", "answer": "30 jours satisfait ou rembours\u00e9, sans conditions." } },
@@ -208,7 +209,7 @@
         "col1": { "type": "column", "settings": { "heading": "Nation Varsity", "links_text": "Accueil|Tous les produits|Notre histoire|Contact", "links_url": "/|/collections/all|/pages/notre-histoire|/pages/contact" } },
         "col2": { "type": "column", "settings": { "heading": "Collections", "links_text": "Maroc|Alg\u00e9rie|C\u00f4te d'Ivoire|France|Br\u00e9sil", "links_url": "/collections/maroc|/collections/algerie|/collections/cote-divoire|/collections/france|/collections/bresil" } },
         "col3": { "type": "column", "settings": { "heading": "Informations", "links_text": "Guide des tailles|Livraison & retours|CGV|Confidentialit\u00e9", "links_url": "/pages/guide-tailles|/pages/livraison-retours|/policies/terms-of-service|/policies/privacy-policy" } },
-        "col4": { "type": "column", "settings": { "heading": "Suivez-nous", "links_text": "Instagram|TikTok|YouTube|Pinterest", "links_url": "#|#|#|#" } }
+        "col4": { "type": "column", "settings": { "heading": "Suivez-nous", "links_text": "Instagram|YouTube|Pinterest", "links_url": "#|#|#" } }
       },
       "block_order": ["col1", "col2", "col3", "col4"]
     }

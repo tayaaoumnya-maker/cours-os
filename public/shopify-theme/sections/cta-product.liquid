@@ -9,7 +9,9 @@
       <div class="fh-cta-image">
         <div class="fh-cta-jersey" style="background:{{ section.settings.product_gradient }}">
           {% if section.settings.video_url != blank %}
-            <video class="fh-cta-video" src="{{ section.settings.video_url }}" playsinline loop muted autoplay></video>
+            <video class="fh-cta-video" id="fh-cta-vid-{{ section.id }}" playsinline loop muted autoplay preload="auto">
+              <source src="{{ section.settings.video_url }}" type="video/mp4">
+            </video>
           {% elsif section.settings.product_image != blank %}
             {{ section.settings.product_image | image_url: width: 800 | image_tag: loading: 'lazy', class: 'fh-cta-img' }}
           {% else %}
@@ -65,6 +67,26 @@
       #shopify-section-{{ section.id }} .fh-cta-inner{flex-direction:column}
     }
   </style>
+
+  {% if section.settings.video_url != blank %}
+  <script>
+    (function(){
+      var vid = document.getElementById('fh-cta-vid-{{ section.id }}');
+      if(!vid) return;
+      vid.muted = true;
+      var tryPlay = function(){
+        var p = vid.play();
+        if(p && p.catch) p.catch(function(){});
+      };
+      tryPlay();
+      document.addEventListener('scroll', function once(){
+        tryPlay();
+        document.removeEventListener('scroll', once);
+      });
+      vid.addEventListener('loadeddata', tryPlay);
+    })();
+  </script>
+  {% endif %}
 </div>
 
 {% schema %}
@@ -147,6 +169,7 @@
       "type": "text",
       "id": "video_url",
       "label": "URL vidéo produit (MP4)",
+      "default": "https://cdn.shopify.com/videos/c/o/v/f4fdb9c8d9d145e2a95750a36ddeae7b.mp4",
       "info": "Coller l'URL de la vidéo MP4 uploadée dans Shopify Files. Prioritaire sur l'image."
     }
   ],

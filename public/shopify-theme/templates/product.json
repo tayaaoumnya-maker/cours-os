@@ -73,10 +73,10 @@
         "b2": { "type": "benefit", "settings": { "text": "Tissu jersey premium ultra-respirant \u2014 confort toute la journ\u00e9e" } },
         "b3": { "type": "benefit", "settings": { "text": "Port\u00e9 au stade, en terrasse, en ville \u2014 partout" } },
         "b4": { "type": "benefit", "settings": { "text": "Sublimation durable \u2014 couleurs qui ne fanent jamais" } },
-        "b5": { "type": "benefit", "settings": { "text": "Fabriqu\u00e9 en Europe, chez toi en 3-5 jours" } },
+        "b5": { "type": "benefit", "settings": { "text": "Impression premium, chez toi en 10-20 jours" } },
         "g1": { "type": "guarantee", "settings": { "icon": "\ud83d\udcb0", "text": "Rembours\u00e9 30j" } },
         "g2": { "type": "guarantee", "settings": { "icon": "\ud83d\ude9a", "text": "Livraison gratuite 50\u20ac+" } },
-        "mf1": { "type": "mini_faq", "settings": { "question": "Quand vais-je le recevoir ?", "answer": "Production 1-2j + livraison 3-5j ouvr\u00e9s en Europe." } },
+        "mf1": { "type": "mini_faq", "settings": { "question": "Quand vais-je le recevoir ?", "answer": "Production 6-8j + livraison 10-14j ouvr\u00e9s en Europe." } },
         "mf2": { "type": "mini_faq", "settings": { "question": "C'est un maillot officiel ?", "answer": "Non, design original ind\u00e9pendant. Art fan premium." } },
         "mf3": { "type": "mini_faq", "settings": { "question": "Comment choisir ma taille ?", "answer": "Taille normalement. H\u00e9sitation ? Au-dessus pour d\u00e9contract\u00e9." } }
       },
@@ -129,15 +129,15 @@
         "accent_color": "#d4a843",
         "alt_bg": true,
         "reverse_layout": true,
-        "overline": "Fabriqu\u00e9 en Europe",
-        "title": "Pas de Chine. Pas d'attente.",
-        "description": "Production europ\u00e9enne, exp\u00e9dition directe. Ton jersey part de l'atelier et arrive chez toi en 3-5 jours. Avec suivi en temps r\u00e9el.",
+        "overline": "Impression sur commande",
+        "title": "Imprimé pour toi, livré chez toi",
+        "description": "Chaque jersey est imprimé à la commande avec sublimation premium. Livré chez toi en 10-20 jours ouvrés avec suivi en temps réel.",
         "emoji": "\ud83c\uddea\ud83c\uddfa",
         "image_bg": "linear-gradient(135deg,#eef5ff,#e0ecf8)",
         "cta_text": "Ajouter au panier"
       },
       "blocks": {
-        "f1": { "type": "feature", "settings": { "text": "3-5 jours ouvr\u00e9s partout en Europe" } },
+        "f1": { "type": "feature", "settings": { "text": "10-20 jours ouvr\u00e9s partout en Europe" } },
         "f2": { "type": "feature", "settings": { "text": "Suivi email en temps r\u00e9el" } },
         "f3": { "type": "feature", "settings": { "text": "Emballage soign\u00e9" } },
         "f4": { "type": "feature", "settings": { "text": "Service client en fran\u00e7ais" } }
@@ -173,8 +173,8 @@
       "blocks": {
         "c1": { "type": "row", "settings": { "feature": "Design exclusif", "us": true, "generic": false, "official": false } },
         "c2": { "type": "row", "settings": { "feature": "C\u00e9l\u00e8bre tes origines", "us": true, "generic": false, "official": false } },
-        "c3": { "type": "row", "settings": { "feature": "Made in Europe", "us": true, "generic": false, "official": true } },
-        "c4": { "type": "row", "settings": { "feature": "Livraison 3-5j", "us": true, "generic": false, "official": true } },
+        "c3": { "type": "row", "settings": { "feature": "Qualité premium", "us": true, "generic": false, "official": true } },
+        "c4": { "type": "row", "settings": { "feature": "Livraison 10-20j", "us": true, "generic": false, "official": true } },
         "c5": { "type": "row", "settings": { "feature": "Rembours\u00e9 30j", "us": true, "generic": false, "official": false } },
         "c6": { "type": "row", "settings": { "feature": "Prix < 35\u20ac", "us": true, "generic": true, "official": false } },
         "c7": { "type": "row", "settings": { "feature": "Style stade + ville", "us": true, "generic": false, "official": true } }
@@ -191,7 +191,7 @@
         "cta_text": "\u26bd Ajouter au panier"
       },
       "blocks": {
-        "q1": { "type": "faq_item", "settings": { "question": "D\u00e9lais de livraison ?", "answer": "Production 1-2j + livraison 3-5j ouvr\u00e9s en Europe. Suivi email en temps r\u00e9el." } },
+        "q1": { "type": "faq_item", "settings": { "question": "D\u00e9lais de livraison ?", "answer": "Production 6-8j + livraison 10-14j ouvr\u00e9s en Europe. Suivi email en temps r\u00e9el." } },
         "q2": { "type": "faq_item", "settings": { "question": "Quelle taille ?", "answer": "Taille normalement \u00e0 l\u00e9g\u00e8rement grand. H\u00e9sitation ? Au-dessus pour d\u00e9contract\u00e9." } },
         "q3": { "type": "faq_item", "settings": { "question": "Maillot officiel ?", "answer": "Non. Design original ind\u00e9pendant. Non affili\u00e9 FIFA / f\u00e9d\u00e9rations / \u00e9quipementiers." } },
         "q4": { "type": "faq_item", "settings": { "question": "Retours ?", "answer": "30 jours satisfait ou rembours\u00e9, sans conditions." } },
@@ -213,7 +213,7 @@
         "col1": { "type": "column", "settings": { "heading": "Nation Varsity", "links_text": "Accueil|Produits|Notre histoire|Contact", "links_url": "/|/collections/all|/pages/notre-histoire|/pages/contact" } },
         "col2": { "type": "column", "settings": { "heading": "Collections", "links_text": "Maroc|Alg\u00e9rie|C\u00f4te d'Ivoire|France|Br\u00e9sil", "links_url": "/collections/maroc|/collections/algerie|/collections/cote-divoire|/collections/france|/collections/bresil" } },
         "col3": { "type": "column", "settings": { "heading": "Infos", "links_text": "Guide tailles|Livraison & retours|CGV|Confidentialit\u00e9", "links_url": "/pages/guide-tailles|/pages/livraison-retours|/policies/terms-of-service|/policies/privacy-policy" } },
-        "col4": { "type": "column", "settings": { "heading": "Suivez-nous", "links_text": "Instagram|TikTok|YouTube|Pinterest", "links_url": "#|#|#|#" } }
+        "col4": { "type": "column", "settings": { "heading": "Suivez-nous", "links_text": "Instagram|YouTube|Pinterest", "links_url": "#|#|#" } }
       },
       "block_order": ["col1", "col2", "col3", "col4"]
     }
