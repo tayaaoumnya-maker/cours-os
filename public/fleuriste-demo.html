@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Maison Pétale — Artisan fleuriste à Paris. Bouquets sur mesure, livraison le jour même.">
+<title>Maison Pétale — Artisan Fleuriste Paris</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --primary:#34352D;
+  --accent:#C67D4A;
+  --accent-hover:#A8623A;
+  --green:#859839;
+  --green-light:#A4B85C;
+  --nude:#F2C0A3;
+  --nude-light:#FDF6F0;
+  --bg:#FAFAF7;
+  --white:#fff;
+  --text:#34352D;
+  --text-light:#6B6B60;
+  --border:#E8E6E1;
+  --shadow:0 2px 20px rgba(52,53,45,.08);
+  --radius:6px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;color:var(--text);background:var(--bg);line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4,h5{font-family:'Cormorant Garamond',serif;font-weight:400;line-height:1.2}
+a{color:inherit;text-decoration:none;transition:color .3s}
+img{max-width:100%;display:block}
+button{cursor:pointer;border:none;background:none;font-family:inherit}
+.container{max-width:1300px;margin:0 auto;padding:0 30px}
+
+/* ─── ANNOUNCEMENT BAR ─── */
+.announcement{background:var(--primary);color:var(--white);text-align:center;padding:10px;font-size:13px;letter-spacing:.5px}
+.announcement a{color:var(--nude);text-decoration:underline}
+
+/* ─── HEADER ─── */
+.header{background:var(--white);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:1000}
+.header-top{display:flex;justify-content:space-between;align-items:center;padding:18px 0}
+.logo{display:flex;flex-direction:column;align-items:center;gap:2px}
+.logo h1{font-size:32px;letter-spacing:3px;color:var(--primary)}
+.logo span{font-size:11px;letter-spacing:6px;text-transform:uppercase;color:var(--text-light)}
+.header-actions{display:flex;gap:20px;align-items:center}
+.header-actions button,.header-actions a{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-light);transition:color .3s}
+.header-actions button:hover,.header-actions a:hover{color:var(--accent)}
+.cart-count{background:var(--accent);color:var(--white);border-radius:50%;width:18px;height:18px;font-size:10px;display:flex;align-items:center;justify-content:center}
+
+/* NAV */
+.nav{border-top:1px solid var(--border)}
+.nav-list{display:flex;justify-content:center;gap:0;list-style:none;padding:0}
+.nav-item{position:relative}
+.nav-item>a{display:block;padding:14px 22px;font-size:13px;letter-spacing:.8px;text-transform:uppercase;color:var(--text);transition:all .3s}
+.nav-item>a:hover,.nav-item.active>a{color:var(--accent);background:var(--nude-light)}
+.nav-item .dropdown{display:none;position:absolute;top:100%;left:0;background:var(--white);min-width:260px;border:1px solid var(--border);box-shadow:var(--shadow);z-index:100;padding:10px 0}
+.nav-item:hover .dropdown{display:block}
+.dropdown a{display:block;padding:10px 24px;font-size:13px;color:var(--text-light);transition:all .2s}
+.dropdown a:hover{color:var(--accent);background:var(--nude-light);padding-left:30px}
+
+/* MOBILE NAV */
+.mobile-toggle{display:none;font-size:24px;padding:10px;color:var(--primary)}
+.mobile-nav{display:none;background:var(--white);border-top:1px solid var(--border);padding:20px;position:absolute;top:100%;left:0;right:0;z-index:999;box-shadow:var(--shadow)}
+.mobile-nav.open{display:block}
+.mobile-nav a{display:block;padding:12px 0;font-size:14px;border-bottom:1px solid var(--border);color:var(--text)}
+.mobile-nav a:last-child{border:none}
+
+@media(max-width:960px){
+  .nav-list{display:none}
+  .mobile-toggle{display:block}
+}
+
+/* ─── HERO ─── */
+.hero{position:relative;height:85vh;min-height:550px;overflow:hidden;background:var(--primary)}
+.hero-slides{position:relative;width:100%;height:100%}
+.hero-slide{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;transition:opacity 1.2s ease}
+.hero-slide.active{opacity:1}
+.hero-slide .overlay{position:absolute;inset:0;background:linear-gradient(to right,rgba(52,53,45,.65) 0%,rgba(52,53,45,.2) 100%)}
+.hero-slide .bg{width:100%;height:100%;object-fit:cover}
+.hero-content{position:absolute;top:50%;left:0;transform:translateY(-50%);z-index:2;padding:0 60px;max-width:700px}
+.hero-content .tag{font-size:12px;letter-spacing:4px;text-transform:uppercase;color:var(--nude);margin-bottom:20px}
+.hero-content h2{font-size:clamp(36px,5vw,64px);color:var(--white);margin-bottom:20px;line-height:1.1}
+.hero-content p{font-size:17px;color:rgba(255,255,255,.85);margin-bottom:35px;max-width:480px;line-height:1.7}
+.btn{display:inline-block;padding:14px 36px;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;border-radius:var(--radius);transition:all .3s}
+.btn-primary{background:var(--accent);color:var(--white)}
+.btn-primary:hover{background:var(--accent-hover);transform:translateY(-2px);box-shadow:0 6px 20px rgba(198,125,74,.3)}
+.btn-outline{border:1.5px solid var(--white);color:var(--white);margin-left:14px}
+.btn-outline:hover{background:var(--white);color:var(--primary)}
+.hero-dots{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);display:flex;gap:10px;z-index:3}
+.hero-dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.4);cursor:pointer;transition:all .3s}
+.hero-dot.active{background:var(--white);transform:scale(1.3)}
+
+@media(max-width:768px){
+  .hero{height:60vh;min-height:400px}
+  .hero-content{padding:0 24px}
+}
+
+/* ─── TRUST BAR ─── */
+.trust-bar{background:var(--white);padding:28px 0;border-bottom:1px solid var(--border)}
+.trust-items{display:flex;justify-content:center;gap:50px;flex-wrap:wrap}
+.trust-item{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--text-light)}
+.trust-icon{width:40px;height:40px;border-radius:50%;background:var(--nude-light);display:flex;align-items:center;justify-content:center;font-size:18px}
+
+/* ─── SECTIONS ─── */
+.section{padding:80px 0}
+.section-header{text-align:center;margin-bottom:50px}
+.section-header h2{font-size:clamp(28px,3.5vw,44px);margin-bottom:12px}
+.section-header p{color:var(--text-light);font-size:15px;max-width:550px;margin:0 auto}
+.section-header .line{width:50px;height:2px;background:var(--accent);margin:16px auto 0}
+
+/* ─── CATEGORIES GRID ─── */
+.cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.cat-card{position:relative;overflow:hidden;border-radius:var(--radius);aspect-ratio:3/4;cursor:pointer;background:var(--primary)}
+.cat-card .cat-bg{width:100%;height:100%;object-fit:cover;transition:transform .6s;opacity:.85}
+.cat-card:hover .cat-bg{transform:scale(1.08);opacity:1}
+.cat-card .cat-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(52,53,45,.7) 0%,transparent 60%);display:flex;flex-direction:column;justify-content:flex-end;padding:24px}
+.cat-card h3{color:var(--white);font-size:24px;margin-bottom:4px}
+.cat-card span{color:rgba(255,255,255,.7);font-size:12px;letter-spacing:2px;text-transform:uppercase}
+
+@media(max-width:768px){.cat-grid{grid-template-columns:repeat(2,1fr)}}
+
+/* ─── PRODUCT GRID ─── */
+.product-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.product-card{background:var(--white);border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);transition:all .3s}
+.product-card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.product-img{position:relative;aspect-ratio:1;overflow:hidden;background:var(--nude-light);display:flex;align-items:center;justify-content:center}
+.product-img .placeholder{font-size:64px;opacity:.5}
+.product-badge{position:absolute;top:12px;left:12px;background:var(--accent);color:var(--white);padding:4px 12px;font-size:11px;letter-spacing:1px;text-transform:uppercase;border-radius:3px}
+.product-badge.green{background:var(--green)}
+.product-wishlist{position:absolute;top:12px;right:12px;width:36px;height:36px;border-radius:50%;background:var(--white);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.1);transition:all .3s}
+.product-wishlist:hover{background:var(--accent);color:var(--white)}
+.product-hover{position:absolute;bottom:0;left:0;right:0;background:rgba(52,53,45,.9);padding:12px;transform:translateY(100%);transition:transform .3s;display:flex;gap:8px}
+.product-card:hover .product-hover{transform:translateY(0)}
+.product-hover button{flex:1;padding:10px;font-size:12px;color:var(--white);border:1px solid rgba(255,255,255,.3);border-radius:var(--radius);text-transform:uppercase;letter-spacing:.5px;transition:all .2s}
+.product-hover button:hover{background:var(--accent);border-color:var(--accent)}
+.product-info{padding:18px}
+.product-info .cat{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-light);margin-bottom:6px}
+.product-info h4{font-family:'Cormorant Garamond',serif;font-size:18px;margin-bottom:8px;font-weight:500}
+.product-info .price{font-size:16px;font-weight:600;color:var(--accent)}
+.product-info .price del{color:var(--text-light);font-weight:400;font-size:14px;margin-left:8px}
+
+@media(max-width:960px){.product-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.product-grid{grid-template-columns:1fr}}
+
+/* ─── LOOKBOOK / BANNER ─── */
+.banner{position:relative;height:450px;overflow:hidden;border-radius:var(--radius);background:var(--primary);display:flex;align-items:center}
+.banner .banner-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.6}
+.banner-content{position:relative;z-index:2;padding:60px;max-width:550px}
+.banner-content h2{font-size:clamp(28px,3.5vw,42px);color:var(--white);margin-bottom:16px}
+.banner-content p{color:rgba(255,255,255,.8);font-size:15px;margin-bottom:30px;line-height:1.7}
+
+/* ─── OCCASIONS ─── */
+.occasions-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.occasion-card{background:var(--white);border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);transition:all .3s;cursor:pointer;text-align:center;padding:40px 24px}
+.occasion-card:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:var(--accent)}
+.occasion-card .icon{font-size:42px;margin-bottom:16px}
+.occasion-card h4{font-family:'Cormorant Garamond',serif;font-size:22px;margin-bottom:8px}
+.occasion-card p{font-size:13px;color:var(--text-light);margin-bottom:16px}
+.occasion-card .link{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--accent);font-weight:600}
+
+@media(max-width:768px){.occasions-grid{grid-template-columns:1fr}}
+
+/* ─── SAVOIR-FAIRE ─── */
+.savoir-faire{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.sf-img{border-radius:var(--radius);overflow:hidden;aspect-ratio:4/5;background:var(--nude-light);display:flex;align-items:center;justify-content:center;font-size:80px}
+.sf-content h2{font-size:clamp(28px,3.5vw,42px);margin-bottom:20px}
+.sf-content p{color:var(--text-light);font-size:15px;line-height:1.8;margin-bottom:16px}
+.sf-content .stats{display:flex;gap:40px;margin-top:30px}
+.sf-content .stat{text-align:center}
+.sf-content .stat .num{font-family:'Cormorant Garamond',serif;font-size:36px;color:var(--accent);display:block}
+.sf-content .stat .label{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--text-light)}
+
+@media(max-width:768px){.savoir-faire{grid-template-columns:1fr}}
+
+/* ─── TESTIMONIALS ─── */
+.testimonials{background:var(--nude-light)}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.testi-card{background:var(--white);border-radius:var(--radius);padding:32px;border:1px solid var(--border)}
+.testi-stars{color:var(--accent);font-size:16px;margin-bottom:14px;letter-spacing:2px}
+.testi-text{font-size:14px;color:var(--text-light);line-height:1.7;margin-bottom:18px;font-style:italic}
+.testi-author{font-weight:600;font-size:13px}
+.testi-date{font-size:12px;color:var(--text-light)}
+
+@media(max-width:768px){.testi-grid{grid-template-columns:1fr}}
+
+/* ─── INSTAGRAM ─── */
+.insta-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}
+.insta-item{aspect-ratio:1;background:var(--nude-light);overflow:hidden;cursor:pointer;position:relative;display:flex;align-items:center;justify-content:center;font-size:40px}
+.insta-item:hover .insta-overlay{opacity:1}
+.insta-overlay{position:absolute;inset:0;background:rgba(198,125,74,.7);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .3s;color:var(--white);font-size:24px}
+
+@media(max-width:768px){.insta-grid{grid-template-columns:repeat(3,1fr)}}
+
+/* ─── NEWSLETTER ─── */
+.newsletter{background:var(--primary);padding:70px 0;text-align:center;color:var(--white)}
+.newsletter h3{font-size:clamp(24px,3vw,36px);margin-bottom:12px}
+.newsletter p{color:rgba(255,255,255,.7);font-size:15px;margin-bottom:30px}
+.newsletter-form{display:flex;max-width:500px;margin:0 auto;gap:0}
+.newsletter-form input{flex:1;padding:14px 20px;font-size:14px;border:none;border-radius:var(--radius) 0 0 var(--radius);font-family:inherit}
+.newsletter-form button{padding:14px 28px;background:var(--accent);color:var(--white);font-size:13px;letter-spacing:1px;text-transform:uppercase;border-radius:0 var(--radius) var(--radius) 0;transition:background .3s}
+.newsletter-form button:hover{background:var(--accent-hover)}
+
+/* ─── FOOTER ─── */
+.footer{background:var(--primary);color:rgba(255,255,255,.7);padding:60px 0 0}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:40px;padding-bottom:40px;border-bottom:1px solid rgba(255,255,255,.1)}
+.footer h4{color:var(--white);font-family:'Cormorant Garamond',serif;font-size:20px;margin-bottom:18px}
+.footer p{font-size:13px;line-height:1.7;margin-bottom:12px}
+.footer ul{list-style:none}
+.footer li{margin-bottom:10px}
+.footer a{font-size:13px;color:rgba(255,255,255,.6);transition:color .3s}
+.footer a:hover{color:var(--accent)}
+.footer-social{display:flex;gap:14px;margin-top:16px}
+.footer-social a{width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:14px;color:rgba(255,255,255,.6);transition:all .3s}
+.footer-social a:hover{background:var(--accent);border-color:var(--accent);color:var(--white)}
+.footer-bottom{padding:24px 0;text-align:center;font-size:12px;color:rgba(255,255,255,.4)}
+.footer-payment{display:flex;justify-content:center;gap:16px;margin-top:10px}
+.footer-payment span{background:rgba(255,255,255,.1);padding:4px 12px;border-radius:4px;font-size:11px;color:rgba(255,255,255,.5)}
+
+@media(max-width:960px){.footer-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.footer-grid{grid-template-columns:1fr}}
+
+/* ─── PAGE SYSTEM ─── */
+.page{display:none}
+.page.active{display:block}
+
+/* ─── SUB PAGES ─── */
+.page-hero{background:var(--primary);padding:80px 0 60px;text-align:center;color:var(--white)}
+.page-hero h2{font-size:clamp(32px,4vw,52px);margin-bottom:10px}
+.page-hero p{color:rgba(255,255,255,.7);font-size:15px}
+.page-hero .breadcrumb{margin-top:16px;font-size:13px;color:rgba(255,255,255,.5)}
+.page-hero .breadcrumb a{color:var(--nude)}
+
+.page-content{padding:60px 0}
+.page-content p{color:var(--text-light);font-size:15px;line-height:1.8;margin-bottom:20px;max-width:800px}
+.page-content h3{font-size:28px;margin-bottom:16px;margin-top:30px}
+
+/* CONTACT */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:50px}
+.contact-form label{display:block;font-size:13px;letter-spacing:.5px;text-transform:uppercase;color:var(--text-light);margin-bottom:6px;margin-top:18px}
+.contact-form input,.contact-form textarea,.contact-form select{width:100%;padding:12px 16px;border:1px solid var(--border);border-radius:var(--radius);font-family:inherit;font-size:14px;transition:border .3s}
+.contact-form input:focus,.contact-form textarea:focus{border-color:var(--accent);outline:none}
+.contact-form textarea{height:140px;resize:vertical}
+.contact-info-card{background:var(--nude-light);border-radius:var(--radius);padding:36px;margin-bottom:20px}
+.contact-info-card h4{font-size:20px;margin-bottom:12px}
+.contact-info-card p{font-size:14px;color:var(--text-light);line-height:1.7}
+.map-placeholder{background:var(--border);border-radius:var(--radius);height:220px;display:flex;align-items:center;justify-content:center;color:var(--text-light);font-size:14px}
+
+@media(max-width:768px){.contact-grid{grid-template-columns:1fr}}
+
+/* ─── DELIVERY SLOTS ─── */
+.delivery-bar{background:var(--green);color:var(--white);padding:12px 0;text-align:center;font-size:13px;letter-spacing:.3px}
+.delivery-bar strong{font-weight:600}
+
+/* ─── SCROLL TOP ─── */
+.scroll-top{position:fixed;bottom:24px;right:24px;width:44px;height:44px;border-radius:50%;background:var(--accent);color:var(--white);display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 4px 15px rgba(198,125,74,.4);opacity:0;pointer-events:none;transition:all .3s;z-index:999}
+.scroll-top.visible{opacity:1;pointer-events:auto}
+.scroll-top:hover{transform:translateY(-3px)}
+</style>
+</head>
+<body>
+
+<!-- ANNOUNCEMENT BAR -->
+<div class="announcement">
+  Livraison offerte à Paris dès 60€ d'achat · <a href="#" onclick="showPage('boutique');return false">Découvrir nos bouquets →</a>
+</div>
+
+<!-- DELIVERY BAR -->
+<div class="delivery-bar">
+  🚲 <strong>Livraison express</strong> aujourd'hui avant 19h — Commandez avant 14h
+</div>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="container">
+    <div class="header-top">
+      <button class="mobile-toggle" onclick="toggleMobileNav()" aria-label="Menu">☰</button>
+      <div class="logo">
+        <h1>Maison Pétale</h1>
+        <span>Artisan Fleuriste</span>
+      </div>
+      <div class="header-actions">
+        <button onclick="showPage('boutique')" title="Rechercher">🔍</button>
+        <a href="#" onclick="showPage('contact');return false" title="Compte">👤</a>
+        <button onclick="showPage('boutique')" title="Panier">🛒 <span class="cart-count">0</span></button>
+      </div>
+    </div>
+    <nav class="nav">
+      <ul class="nav-list">
+        <li class="nav-item active"><a href="#" onclick="showPage('home');return false">Accueil</a></li>
+        <li class="nav-item">
+          <a href="#" onclick="showPage('boutique');return false">Boutique</a>
+          <div class="dropdown">
+            <a href="#" onclick="showPage('boutique');return false">Tous les bouquets</a>
+            <a href="#" onclick="showPage('roses');return false">Roses</a>
+            <a href="#" onclick="showPage('pivoines');return false">Pivoines</a>
+            <a href="#" onclick="showPage('hortensias');return false">Hortensias</a>
+            <a href="#" onclick="showPage('tulipes');return false">Tulipes</a>
+            <a href="#" onclick="showPage('plantes');return false">Plantes vertes</a>
+            <a href="#" onclick="showPage('vases');return false">Vases & accessoires</a>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a href="#" onclick="showPage('collections');return false">Collections</a>
+          <div class="dropdown">
+            <a href="#" onclick="showPage('collections');return false">Collection Prestige</a>
+            <a href="#" onclick="showPage('collections');return false">Bouquets de saison</a>
+            <a href="#" onclick="showPage('collections');return false">Tons pastels</a>
+            <a href="#" onclick="showPage('collections');return false">Bouquets rouges</a>
+            <a href="#" onclick="showPage('collections');return false">Bouquets blancs</a>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a href="#" onclick="showPage('occasions');return false">Occasions</a>
+          <div class="dropdown">
+            <a href="#" onclick="showPage('occasions');return false">Anniversaire</a>
+            <a href="#" onclick="showPage('occasions');return false">Mariage</a>
+            <a href="#" onclick="showPage('occasions');return false">Naissance</a>
+            <a href="#" onclick="showPage('occasions');return false">Remerciements</a>
+            <a href="#" onclick="showPage('occasions');return false">Deuil & hommage</a>
+            <a href="#" onclick="showPage('occasions');return false">Fête des Mères</a>
+            <a href="#" onclick="showPage('occasions');return false">Saint-Valentin</a>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a href="#" onclick="showPage('savoir-faire');return false">Notre Maison</a>
+          <div class="dropdown">
+            <a href="#" onclick="showPage('savoir-faire');return false">Savoir-faire</a>
+            <a href="#" onclick="showPage('savoir-faire');return false">Notre équipe</a>
+            <a href="#" onclick="showPage('savoir-faire');return false">Engagements</a>
+            <a href="#" onclick="showPage('savoir-faire');return false">Livraison</a>
+          </div>
+        </li>
+        <li class="nav-item"><a href="#" onclick="showPage('corporate');return false">Corporate</a></li>
+        <li class="nav-item"><a href="#" onclick="showPage('evenements');return false">Événements</a></li>
+        <li class="nav-item"><a href="#" onclick="showPage('blog');return false">Journal</a></li>
+        <li class="nav-item"><a href="#" onclick="showPage('contact');return false">Contact</a></li>
+      </ul>
+    </nav>
+    <!-- MOBILE NAV -->
+    <div class="mobile-nav" id="mobileNav">
+      <a href="#" onclick="showPage('home');return false">Accueil</a>
+      <a href="#" onclick="showPage('boutique');return false">Boutique</a>
+      <a href="#" onclick="showPage('roses');return false">Roses</a>
+      <a href="#" onclick="showPage('pivoines');return false">Pivoines</a>
+      <a href="#" onclick="showPage('collections');return false">Collections</a>
+      <a href="#" onclick="showPage('occasions');return false">Occasions</a>
+      <a href="#" onclick="showPage('savoir-faire');return false">Notre Maison</a>
+      <a href="#" onclick="showPage('corporate');return false">Corporate</a>
+      <a href="#" onclick="showPage('evenements');return false">Événements</a>
+      <a href="#" onclick="showPage('blog');return false">Journal</a>
+      <a href="#" onclick="showPage('contact');return false">Contact</a>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PAGE: HOME -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page active" id="page-home">
+
+  <!-- HERO SLIDER -->
+  <section class="hero">
+    <div class="hero-slides">
+      <div class="hero-slide active" style="background:linear-gradient(135deg,#34352D 0%,#4A4B3F 50%,#859839 100%)">
+        <div class="overlay"></div>
+        <div class="hero-content">
+          <div class="tag">Printemps — Été 2026</div>
+          <h2>L'art floral au service de vos émotions</h2>
+          <p>Bouquets composés à la main par nos artisans, avec des fleurs fraîches sélectionnées chaque matin au marché de Rungis.</p>
+          <a href="#" class="btn btn-primary" onclick="showPage('boutique');return false">Découvrir</a>
+          <a href="#" class="btn btn-outline" onclick="showPage('collections');return false">Collections</a>
+        </div>
+      </div>
+      <div class="hero-slide" style="background:linear-gradient(135deg,#C67D4A 0%,#A8623A 50%,#34352D 100%)">
+        <div class="overlay"></div>
+        <div class="hero-content">
+          <div class="tag">Fête des Mères — 7 juin</div>
+          <h2>Offrez un bouquet qui lui ressemble</h2>
+          <p>Compositions uniques réalisées sur mesure. Livraison gratuite à Paris pour toute commande avant le 5 juin.</p>
+          <a href="#" class="btn btn-primary" onclick="showPage('occasions');return false">Bouquets Fête des Mères</a>
+        </div>
+      </div>
+      <div class="hero-slide" style="background:linear-gradient(135deg,#859839 0%,#6B7C2E 50%,#34352D 100%)">
+        <div class="overlay"></div>
+        <div class="hero-content">
+          <div class="tag">Service Premium</div>
+          <h2>Abonnements floraux pour entreprises</h2>
+          <p>Fleurissez vos espaces de travail chaque semaine. Hôtels, restaurants, bureaux — sur devis personnalisé.</p>
+          <a href="#" class="btn btn-primary" onclick="showPage('corporate');return false">En savoir plus</a>
+        </div>
+      </div>
+    </div>
+    <div class="hero-dots">
+      <div class="hero-dot active" onclick="goSlide(0)"></div>
+      <div class="hero-dot" onclick="goSlide(1)"></div>
+      <div class="hero-dot" onclick="goSlide(2)"></div>
+    </div>
+  </section>
+
+  <!-- TRUST BAR -->
+  <section class="trust-bar">
+    <div class="container">
+      <div class="trust-items">
+        <div class="trust-item"><div class="trust-icon">🚲</div> Livraison le jour même à Paris</div>
+        <div class="trust-item"><div class="trust-icon">🌿</div> Fleurs fraîches du marché</div>
+        <div class="trust-item"><div class="trust-icon">✂️</div> Composés à la main</div>
+        <div class="trust-item"><div class="trust-icon">🔒</div> Paiement 100% sécurisé</div>
+        <div class="trust-item"><div class="trust-icon">💌</div> Message personnalisé offert</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORIES -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Nos Univers Floraux</h2>
+        <p>Explorez nos collections pensées pour chaque moment de vie</p>
+        <div class="line"></div>
+      </div>
+      <div class="cat-grid">
+        <div class="cat-card" onclick="showPage('roses')">
+          <div class="cat-bg" style="background:linear-gradient(135deg,#E8A0A0,#C67070);width:100%;height:100%"></div>
+          <div class="cat-overlay"><h3>Roses</h3><span>12 bouquets</span></div>
+        </div>
+        <div class="cat-card" onclick="showPage('pivoines')">
+          <div class="cat-bg" style="background:linear-gradient(135deg,#F2C0A3,#D4A088);width:100%;height:100%"></div>
+          <div class="cat-overlay"><h3>Pivoines</h3><span>8 bouquets</span></div>
+        </div>
+        <div class="cat-card" onclick="showPage('hortensias')">
+          <div class="cat-bg" style="background:linear-gradient(135deg,#A0B8D8,#7A9CC6);width:100%;height:100%"></div>
+          <div class="cat-overlay"><h3>Hortensias</h3><span>6 bouquets</span></div>
+        </div>
+        <div class="cat-card" onclick="showPage('tulipes')">
+          <div class="cat-bg" style="background:linear-gradient(135deg,#F0D080,#E0B860);width:100%;height:100%"></div>
+          <div class="cat-overlay"><h3>Tulipes</h3><span>9 bouquets</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BESTSELLERS -->
+  <section class="section" style="background:var(--white)">
+    <div class="container">
+      <div class="section-header">
+        <h2>Nos Best-Sellers</h2>
+        <p>Les bouquets préférés de nos clients, composés avec amour</p>
+        <div class="line"></div>
+      </div>
+      <div class="product-grid">
+        <div class="product-card" onclick="showPage('boutique')">
+          <div class="product-img"><span class="placeholder">🌹</span><span class="product-badge">Best-seller</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div>
+          <div class="product-info"><div class="cat">Roses</div><h4>Le Jardin de Diane</h4><div class="price">65,00 €</div></div>
+        </div>
+        <div class="product-card" onclick="showPage('boutique')">
+          <div class="product-img"><span class="placeholder">🌸</span><span class="product-badge green">Nouveau</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div>
+          <div class="product-info"><div class="cat">Pivoines</div><h4>Éclat de Pivoine</h4><div class="price">75,00 €</div></div>
+        </div>
+        <div class="product-card" onclick="showPage('boutique')">
+          <div class="product-img"><span class="placeholder">💐</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div>
+          <div class="product-info"><div class="cat">Compositions</div><h4>Symphonie Pastel</h4><div class="price">55,00 €</div></div>
+        </div>
+        <div class="product-card" onclick="showPage('boutique')">
+          <div class="product-img"><span class="placeholder">🌷</span><span class="product-badge">Best-seller</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div>
+          <div class="product-info"><div class="cat">Tulipes</div><h4>Aurore Printanière</h4><div class="price">48,00 €</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BANNER LOOKBOOK -->
+  <section class="section">
+    <div class="container">
+      <div class="banner" style="background:linear-gradient(135deg,#34352D,#4A4B3F,#859839)">
+        <div class="banner-content">
+          <h2>Collection Prestige</h2>
+          <p>Des compositions d'exception pour les moments qui comptent. Roses de jardin, pivoines premium et orchidées rares assemblées par nos maîtres artisans.</p>
+          <a href="#" class="btn btn-primary" onclick="showPage('collections');return false">Découvrir la collection</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MORE PRODUCTS -->
+  <section class="section" style="background:var(--white)">
+    <div class="container">
+      <div class="section-header">
+        <h2>Bouquets de Saison</h2>
+        <p>Fleurs fraîches sélectionnées selon les arrivages du marché</p>
+        <div class="line"></div>
+      </div>
+      <div class="product-grid">
+        <div class="product-card" onclick="showPage('boutique')">
+          <div class="product-img"><span class="placeholder">🌺</span><span class="product-badge green">Saison</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div>
+          <div class="product-info"><div class="cat">Compositions</div><h4>Brise Méditerranéenne</h4><div class="price">58,00 €</div></div>
+        </div>
+        <div class="product-card" onclick="showPage('boutique')">
+          <div class="product-img"><span class="placeholder">🪻</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div>
+          <div class="product-info"><div class="cat">Lavande</div><h4>Champs de Provence</h4><div class="price">42,00 €</div></div>
+        </div>
+        <div class="product-card" onclick="showPage('boutique')">
+          <div class="product-img"><span class="placeholder">🌻</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div>
+          <div class="product-info"><div class="cat">Tournesols</div><h4>Soleil d'Or</h4><div class="price">45,00 €</div></div>
+        </div>
+        <div class="product-card" onclick="showPage('boutique')">
+          <div class="product-img"><span class="placeholder">🌿</span><span class="product-badge">Nouveau</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div>
+          <div class="product-info"><div class="cat">Plantes</div><h4>Monstera Deliciosa</h4><div class="price">38,00 €</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OCCASIONS -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Pour Chaque Occasion</h2>
+        <p>Trouvez le bouquet parfait selon le moment</p>
+        <div class="line"></div>
+      </div>
+      <div class="occasions-grid">
+        <div class="occasion-card" onclick="showPage('occasions')">
+          <div class="icon">🎂</div><h4>Anniversaire</h4><p>Surprenez avec un bouquet joyeux et coloré</p><span class="link">Voir les bouquets →</span>
+        </div>
+        <div class="occasion-card" onclick="showPage('occasions')">
+          <div class="icon">💒</div><h4>Mariage</h4><p>Bouquets de mariée, centres de table, décoration florale</p><span class="link">Voir les bouquets →</span>
+        </div>
+        <div class="occasion-card" onclick="showPage('occasions')">
+          <div class="icon">👶</div><h4>Naissance</h4><p>Célébrez l'arrivée d'un nouveau-né avec douceur</p><span class="link">Voir les bouquets →</span>
+        </div>
+        <div class="occasion-card" onclick="showPage('occasions')">
+          <div class="icon">💝</div><h4>Saint-Valentin</h4><p>Roses rouges, compositions romantiques</p><span class="link">Voir les bouquets →</span>
+        </div>
+        <div class="occasion-card" onclick="showPage('occasions')">
+          <div class="icon">👩</div><h4>Fête des Mères</h4><p>Le plus beau des cadeaux pour la plus belle des mamans</p><span class="link">Voir les bouquets →</span>
+        </div>
+        <div class="occasion-card" onclick="showPage('occasions')">
+          <div class="icon">🙏</div><h4>Remerciements</h4><p>Dites merci avec élégance et sincérité</p><span class="link">Voir les bouquets →</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SAVOIR-FAIRE -->
+  <section class="section" style="background:var(--white)">
+    <div class="container">
+      <div class="savoir-faire">
+        <div class="sf-img">🌿</div>
+        <div class="sf-content">
+          <h2>Notre Savoir-Faire</h2>
+          <p>Depuis 2012, Maison Pétale perpétue l'art floral parisien avec passion et exigence. Chaque bouquet est une création unique, composée à la main dans notre atelier du Marais.</p>
+          <p>Nos fleurs sont sélectionnées chaque matin au marché de Rungis, directement auprès de producteurs français et européens engagés dans une démarche écoresponsable.</p>
+          <a href="#" class="btn btn-primary" onclick="showPage('savoir-faire');return false">Découvrir notre histoire</a>
+          <div class="stats">
+            <div class="stat"><span class="num">14</span><span class="label">Années d'expérience</span></div>
+            <div class="stat"><span class="num">25k+</span><span class="label">Bouquets livrés</span></div>
+            <div class="stat"><span class="num">4.9</span><span class="label">Note Google</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="section testimonials">
+    <div class="container">
+      <div class="section-header">
+        <h2>Ce que disent nos clients</h2>
+        <p>Plus de 1 200 avis vérifiés — Note moyenne : 4.9/5</p>
+        <div class="line"></div>
+      </div>
+      <div class="testi-grid">
+        <div class="testi-card"><div class="testi-stars">★★★★★</div><div class="testi-text">"Bouquet absolument magnifique, livré à l'heure pile. Les fleurs ont tenu plus de 10 jours. Je recommande les yeux fermés !"</div><div class="testi-author">Sophie M.</div><div class="testi-date">Il y a 3 jours</div></div>
+        <div class="testi-card"><div class="testi-stars">★★★★★</div><div class="testi-text">"Service impeccable pour notre mariage. L'équipe a su comprendre exactement ce que nous voulions. Résultat au-delà de nos espérances."</div><div class="testi-author">Thomas & Julie R.</div><div class="testi-date">Il y a 1 semaine</div></div>
+        <div class="testi-card"><div class="testi-stars">★★★★★</div><div class="testi-text">"Je suis abonnée depuis 6 mois pour mon cabinet d'architecte. Chaque semaine, une composition différente et toujours sublime."</div><div class="testi-author">Claire D.</div><div class="testi-date">Il y a 2 semaines</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INSTAGRAM -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>@maisonpetale</h2>
+        <p>Suivez-nous sur Instagram</p>
+        <div class="line"></div>
+      </div>
+    </div>
+    <div class="insta-grid">
+      <div class="insta-item" style="background:linear-gradient(135deg,#F2C0A3,#E8A0A0)">🌸<div class="insta-overlay">♡</div></div>
+      <div class="insta-item" style="background:linear-gradient(135deg,#A4B85C,#859839)">🌿<div class="insta-overlay">♡</div></div>
+      <div class="insta-item" style="background:linear-gradient(135deg,#E8A0A0,#C67070)">🌹<div class="insta-overlay">♡</div></div>
+      <div class="insta-item" style="background:linear-gradient(135deg,#F0D080,#E0B860)">🌻<div class="insta-overlay">♡</div></div>
+      <div class="insta-item" style="background:linear-gradient(135deg,#A0B8D8,#7A9CC6)">💐<div class="insta-overlay">♡</div></div>
+      <div class="insta-item" style="background:linear-gradient(135deg,#D4A0D4,#B880B8)">🌷<div class="insta-overlay">♡</div></div>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER -->
+  <section class="newsletter">
+    <div class="container">
+      <h3>Rejoignez le Cercle Pétale</h3>
+      <p>Recevez nos nouveautés, conseils d'entretien et offres exclusives en avant-première</p>
+      <form class="newsletter-form" onsubmit="event.preventDefault();alert('Merci pour votre inscription !')">
+        <input type="email" placeholder="Votre adresse email..." required>
+        <button type="submit">S'inscrire</button>
+      </form>
+    </div>
+  </section>
+
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PAGE: BOUTIQUE -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page" id="page-boutique">
+  <div class="page-hero"><div class="container"><h2>Notre Boutique</h2><p>Tous nos bouquets et compositions florales</p><div class="breadcrumb"><a href="#" onclick="showPage('home');return false">Accueil</a> / Boutique</div></div></div>
+  <section class="section"><div class="container">
+    <div class="product-grid">
+      <div class="product-card"><div class="product-img"><span class="placeholder">🌹</span><span class="product-badge">Best-seller</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Roses</div><h4>Le Jardin de Diane</h4><div class="price">65,00 €</div></div></div>
+      <div class="product-card"><div class="product-img"><span class="placeholder">🌸</span><span class="product-badge green">Nouveau</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Pivoines</div><h4>Éclat de Pivoine</h4><div class="price">75,00 €</div></div></div>
+      <div class="product-card"><div class="product-img"><span class="placeholder">💐</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Compositions</div><h4>Symphonie Pastel</h4><div class="price">55,00 €</div></div></div>
+      <div class="product-card"><div class="product-img"><span class="placeholder">🌷</span><span class="product-badge">Best-seller</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Tulipes</div><h4>Aurore Printanière</h4><div class="price">48,00 €</div></div></div>
+      <div class="product-card"><div class="product-img"><span class="placeholder">🌺</span><span class="product-badge green">Saison</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Compositions</div><h4>Brise Méditerranéenne</h4><div class="price">58,00 €</div></div></div>
+      <div class="product-card"><div class="product-img"><span class="placeholder">🪻</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Lavande</div><h4>Champs de Provence</h4><div class="price">42,00 €</div></div></div>
+      <div class="product-card"><div class="product-img"><span class="placeholder">🌻</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Tournesols</div><h4>Soleil d'Or</h4><div class="price">45,00 €</div></div></div>
+      <div class="product-card"><div class="product-img"><span class="placeholder">🌿</span><span class="product-badge green">Nouveau</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Plantes</div><h4>Monstera Deliciosa</h4><div class="price">38,00 €</div></div></div>
+      <div class="product-card"><div class="product-img"><span class="placeholder">🏵️</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Roses</div><h4>Roses Éternelles Coffret</h4><div class="price">89,00 €</div></div></div>
+      <div class="product-card"><div class="product-img"><span class="placeholder">🌼</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Champêtre</div><h4>Prairie Sauvage</h4><div class="price">52,00 €</div></div></div>
+      <div class="product-card"><div class="product-img"><span class="placeholder">🪷</span><span class="product-badge">Prestige</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Orchidées</div><h4>Orchidée Impériale</h4><div class="price">120,00 €</div></div></div>
+      <div class="product-card"><div class="product-img"><span class="placeholder">💮</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Compositions</div><h4>Nuage de Coton</h4><div class="price">62,00 €</div></div></div>
+    </div>
+  </div></section>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PAGE: ROSES -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page" id="page-roses">
+  <div class="page-hero" style="background:linear-gradient(135deg,#C67070,#34352D)"><div class="container"><h2>Roses</h2><p>La fleur de l'amour par excellence</p><div class="breadcrumb"><a href="#" onclick="showPage('home');return false">Accueil</a> / <a href="#" onclick="showPage('boutique');return false">Boutique</a> / Roses</div></div></div>
+  <section class="section"><div class="container">
+    <div class="product-grid">
+      <div class="product-card"><div class="product-img"><span class="placeholder">🌹</span><span class="product-badge">Best-seller</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Roses rouges</div><h4>Le Jardin de Diane</h4><div class="price">65,00 €</div></div></div>
+      <div class="product-card"><div class="product-img"><span class="placeholder">🌹</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Roses roses</div><h4>Douceur Matinale</h4><div class="price">55,00 €</div></div></div>
+      <div class="product-card"><div class="product-img"><span class="placeholder">🤍</span><span class="product-badge green">Nouveau</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Roses blanches</div><h4>Pureté Absolue</h4><div class="price">60,00 €</div></div></div>
+      <div class="product-card"><div class="product-img"><span class="placeholder">🏵️</span><span class="product-badge">Prestige</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Roses éternelles</div><h4>Roses Éternelles Coffret</h4><div class="price">89,00 €</div></div></div>
+    </div>
+  </div></section>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PAGE: PIVOINES -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page" id="page-pivoines">
+  <div class="page-hero" style="background:linear-gradient(135deg,#D4A088,#34352D)"><div class="container"><h2>Pivoines</h2><p>Généreuses et parfumées, les reines du printemps</p><div class="breadcrumb"><a href="#" onclick="showPage('home');return false">Accueil</a> / <a href="#" onclick="showPage('boutique');return false">Boutique</a> / Pivoines</div></div></div>
+  <section class="section"><div class="container">
+    <div class="product-grid">
+      <div class="product-card"><div class="product-img"><span class="placeholder">🌸</span><span class="product-badge green">Nouveau</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Pivoines roses</div><h4>Éclat de Pivoine</h4><div class="price">75,00 €</div></div></div>
+      <div class="product-card"><div class="product-img"><span class="placeholder">🌸</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Pivoines blanches</div><h4>Neige de Mai</h4><div class="price">72,00 €</div></div></div>
+      <div class="product-card"><div class="product-img"><span class="placeholder">🌸</span><span class="product-badge">Prestige</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Pivoines luxe</div><h4>Bouquet Royal 30 pivoines</h4><div class="price">130,00 €</div></div></div>
+    </div>
+  </div></section>
+</div>
+
+<!-- PAGES: HORTENSIAS / TULIPES / PLANTES / VASES (generic) -->
+<div class="page" id="page-hortensias">
+  <div class="page-hero" style="background:linear-gradient(135deg,#7A9CC6,#34352D)"><div class="container"><h2>Hortensias</h2><p>Volumes généreux et couleurs tendres</p><div class="breadcrumb"><a href="#" onclick="showPage('home');return false">Accueil</a> / <a href="#" onclick="showPage('boutique');return false">Boutique</a> / Hortensias</div></div></div>
+  <section class="section"><div class="container"><div class="product-grid">
+    <div class="product-card"><div class="product-img"><span class="placeholder">💠</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Hortensias</div><h4>Nuage Bleu</h4><div class="price">68,00 €</div></div></div>
+    <div class="product-card"><div class="product-img"><span class="placeholder">💠</span><span class="product-badge green">Saison</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Hortensias</div><h4>Rosée du Matin</h4><div class="price">62,00 €</div></div></div>
+  </div></div></section>
+</div>
+
+<div class="page" id="page-tulipes">
+  <div class="page-hero" style="background:linear-gradient(135deg,#E0B860,#34352D)"><div class="container"><h2>Tulipes</h2><p>Fraîcheur et élégance hollandaise</p><div class="breadcrumb"><a href="#" onclick="showPage('home');return false">Accueil</a> / <a href="#" onclick="showPage('boutique');return false">Boutique</a> / Tulipes</div></div></div>
+  <section class="section"><div class="container"><div class="product-grid">
+    <div class="product-card"><div class="product-img"><span class="placeholder">🌷</span><span class="product-badge">Best-seller</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Tulipes</div><h4>Aurore Printanière</h4><div class="price">48,00 €</div></div></div>
+    <div class="product-card"><div class="product-img"><span class="placeholder">🌷</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Tulipes</div><h4>Tulipes Perroquet Mix</h4><div class="price">52,00 €</div></div></div>
+  </div></div></section>
+</div>
+
+<div class="page" id="page-plantes">
+  <div class="page-hero" style="background:linear-gradient(135deg,#859839,#34352D)"><div class="container"><h2>Plantes Vertes</h2><p>Apportez la nature chez vous</p><div class="breadcrumb"><a href="#" onclick="showPage('home');return false">Accueil</a> / <a href="#" onclick="showPage('boutique');return false">Boutique</a> / Plantes</div></div></div>
+  <section class="section"><div class="container"><div class="product-grid">
+    <div class="product-card"><div class="product-img"><span class="placeholder">🌿</span><span class="product-badge green">Nouveau</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Plantes</div><h4>Monstera Deliciosa</h4><div class="price">38,00 €</div></div></div>
+    <div class="product-card"><div class="product-img"><span class="placeholder">🪴</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Plantes</div><h4>Ficus Lyrata</h4><div class="price">55,00 €</div></div></div>
+  </div></div></section>
+</div>
+
+<div class="page" id="page-vases">
+  <div class="page-hero" style="background:linear-gradient(135deg,#C67D4A,#34352D)"><div class="container"><h2>Vases & Accessoires</h2><p>L'écrin parfait pour vos bouquets</p><div class="breadcrumb"><a href="#" onclick="showPage('home');return false">Accueil</a> / <a href="#" onclick="showPage('boutique');return false">Boutique</a> / Vases</div></div></div>
+  <section class="section"><div class="container"><div class="product-grid">
+    <div class="product-card"><div class="product-img"><span class="placeholder">🏺</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Vases</div><h4>Vase Cylindre Fumé</h4><div class="price">28,00 €</div></div></div>
+    <div class="product-card"><div class="product-img"><span class="placeholder">🏺</span><span class="product-badge green">Nouveau</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Vases</div><h4>Vase Boule Opaline</h4><div class="price">35,00 €</div></div></div>
+  </div></div></section>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PAGE: COLLECTIONS -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page" id="page-collections">
+  <div class="page-hero" style="background:linear-gradient(135deg,#34352D,#859839)"><div class="container"><h2>Nos Collections</h2><p>Des bouquets pensés pour chaque style et chaque saison</p><div class="breadcrumb"><a href="#" onclick="showPage('home');return false">Accueil</a> / Collections</div></div></div>
+  <section class="section"><div class="container">
+    <div class="cat-grid">
+      <div class="cat-card" onclick="showPage('boutique')"><div class="cat-bg" style="background:linear-gradient(135deg,#C67D4A,#A8623A);width:100%;height:100%"></div><div class="cat-overlay"><h3>Prestige</h3><span>Compositions d'exception</span></div></div>
+      <div class="cat-card" onclick="showPage('boutique')"><div class="cat-bg" style="background:linear-gradient(135deg,#859839,#6B7C2E);width:100%;height:100%"></div><div class="cat-overlay"><h3>Saison</h3><span>Fleurs de printemps</span></div></div>
+      <div class="cat-card" onclick="showPage('boutique')"><div class="cat-bg" style="background:linear-gradient(135deg,#F2C0A3,#E8A0A0);width:100%;height:100%"></div><div class="cat-overlay"><h3>Tons Pastels</h3><span>Douceur et poésie</span></div></div>
+      <div class="cat-card" onclick="showPage('boutique')"><div class="cat-bg" style="background:linear-gradient(135deg,#C67070,#A04848);width:100%;height:100%"></div><div class="cat-overlay"><h3>Rouges</h3><span>Passion et élégance</span></div></div>
+    </div>
+  </div></section>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PAGE: OCCASIONS -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page" id="page-occasions">
+  <div class="page-hero" style="background:linear-gradient(135deg,#C67D4A,#34352D)"><div class="container"><h2>Occasions Spéciales</h2><p>Un bouquet pour chaque moment de vie</p><div class="breadcrumb"><a href="#" onclick="showPage('home');return false">Accueil</a> / Occasions</div></div></div>
+  <section class="section"><div class="container">
+    <div class="occasions-grid">
+      <div class="occasion-card" onclick="showPage('boutique')"><div class="icon">🎂</div><h4>Anniversaire</h4><p>Bouquets joyeux et colorés pour fêter un jour spécial</p><span class="link">Voir la sélection →</span></div>
+      <div class="occasion-card" onclick="showPage('boutique')"><div class="icon">💒</div><h4>Mariage</h4><p>Bouquets de mariée, boutonnières, décoration de cérémonie</p><span class="link">Voir la sélection →</span></div>
+      <div class="occasion-card" onclick="showPage('boutique')"><div class="icon">👶</div><h4>Naissance</h4><p>Compositions douces pour célébrer l'arrivée de bébé</p><span class="link">Voir la sélection →</span></div>
+      <div class="occasion-card" onclick="showPage('boutique')"><div class="icon">💝</div><h4>Saint-Valentin</h4><p>Roses rouges, cœurs de roses, compositions romantiques</p><span class="link">Voir la sélection →</span></div>
+      <div class="occasion-card" onclick="showPage('boutique')"><div class="icon">👩</div><h4>Fête des Mères</h4><p>Les plus beaux bouquets pour la plus belle des mamans</p><span class="link">Voir la sélection →</span></div>
+      <div class="occasion-card" onclick="showPage('boutique')"><div class="icon">🕊️</div><h4>Deuil & Hommage</h4><p>Compositions sobres et élégantes pour accompagner vos pensées</p><span class="link">Voir la sélection →</span></div>
+    </div>
+  </div></section>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PAGE: SAVOIR-FAIRE -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page" id="page-savoir-faire">
+  <div class="page-hero" style="background:linear-gradient(135deg,#859839,#34352D)"><div class="container"><h2>Notre Maison</h2><p>L'art floral parisien depuis 2012</p><div class="breadcrumb"><a href="#" onclick="showPage('home');return false">Accueil</a> / Notre Maison</div></div></div>
+  <section class="section"><div class="container">
+    <div class="savoir-faire">
+      <div class="sf-img">🌿</div>
+      <div class="sf-content">
+        <h2>Notre Histoire</h2>
+        <p>Fondée en 2012 par Camille Laurent, Maison Pétale est née d'une passion pour l'art floral et d'une vision : rendre accessible la haute fleuristerie parisienne.</p>
+        <p>Depuis notre atelier du Marais, nous composons chaque jour des bouquets uniques à partir de fleurs fraîches sélectionnées au marché de Rungis.</p>
+        <h3>Nos Engagements</h3>
+        <p>100% de nos emballages sont recyclables. Nous travaillons en circuit court avec des producteurs français et européens engagés. Zéro mousse florale synthétique.</p>
+        <h3>L'Équipe</h3>
+        <p>8 artisans fleuristes passionnés, 2 livreurs à vélo, 1 responsable événementiel. Ensemble, nous faisons vivre l'art floral au quotidien.</p>
+        <div class="stats">
+          <div class="stat"><span class="num">14</span><span class="label">Années</span></div>
+          <div class="stat"><span class="num">8</span><span class="label">Artisans</span></div>
+          <div class="stat"><span class="num">25k+</span><span class="label">Bouquets</span></div>
+          <div class="stat"><span class="num">4.9★</span><span class="label">Google</span></div>
+        </div>
+      </div>
+    </div>
+  </div></section>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PAGE: CORPORATE -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page" id="page-corporate">
+  <div class="page-hero" style="background:linear-gradient(135deg,#34352D,#4A4B3F)"><div class="container"><h2>Offre Corporate</h2><p>Fleurissez vos espaces professionnels</p><div class="breadcrumb"><a href="#" onclick="showPage('home');return false">Accueil</a> / Corporate</div></div></div>
+  <section class="section"><div class="container page-content">
+    <h3>Abonnements Floraux</h3>
+    <p>Recevez chaque semaine des compositions fraîches pour vos halls d'accueil, salles de réunion, restaurants ou hôtels. Nos artisans adaptent le style à votre identité visuelle.</p>
+    <h3>Événements d'entreprise</h3>
+    <p>Séminaires, lancements produit, soirées de gala — nous créons des scénographies florales sur mesure pour vos événements.</p>
+    <h3>Cadeaux clients & collaborateurs</h3>
+    <p>Offrez des bouquets personnalisés à vos clients VIP ou collaborateurs. Carte de vœux intégrée, livraison coordonnée.</p>
+    <p style="margin-top:40px"><a href="#" class="btn btn-primary" onclick="showPage('contact');return false">Demander un devis</a></p>
+  </div></section>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PAGE: ÉVÉNEMENTS -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page" id="page-evenements">
+  <div class="page-hero" style="background:linear-gradient(135deg,#C67D4A,#34352D)"><div class="container"><h2>Événements</h2><p>Scénographie florale pour vos moments d'exception</p><div class="breadcrumb"><a href="#" onclick="showPage('home');return false">Accueil</a> / Événements</div></div></div>
+  <section class="section"><div class="container page-content">
+    <h3>Mariages</h3>
+    <p>Du bouquet de la mariée à la décoration de la salle de réception, nous concevons l'ensemble de votre univers floral. Rendez-vous personnalisé à l'atelier pour définir ensemble votre style.</p>
+    <h3>Réceptions & Galas</h3>
+    <p>Centres de table, arches florales, guirlandes suspendues — nos installations transforment n'importe quel lieu en jardin d'exception.</p>
+    <h3>Pop-up & Vitrines</h3>
+    <p>Nous collaborons avec les marques de mode, bijouterie et lifestyle pour créer des installations florales éphémères qui marquent les esprits.</p>
+    <p style="margin-top:40px"><a href="#" class="btn btn-primary" onclick="showPage('contact');return false">Nous contacter</a></p>
+  </div></section>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PAGE: BLOG / JOURNAL -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page" id="page-blog">
+  <div class="page-hero" style="background:linear-gradient(135deg,#859839,#34352D)"><div class="container"><h2>Notre Journal</h2><p>Conseils, inspirations et actualités de notre atelier</p><div class="breadcrumb"><a href="#" onclick="showPage('home');return false">Accueil</a> / Journal</div></div></div>
+  <section class="section"><div class="container">
+    <div class="occasions-grid">
+      <div class="occasion-card"><div class="icon">📖</div><h4>Comment entretenir vos roses</h4><p>Nos 7 conseils pour faire durer votre bouquet jusqu'à 14 jours</p><span class="link">Lire l'article →</span></div>
+      <div class="occasion-card"><div class="icon">📖</div><h4>Tendances florales été 2026</h4><p>Couleurs, variétés et styles qui marqueront la saison</p><span class="link">Lire l'article →</span></div>
+      <div class="occasion-card"><div class="icon">📖</div><h4>Fleurs de mariage : le guide</h4><p>Saisonnalité, budget, styles — tout savoir pour choisir</p><span class="link">Lire l'article →</span></div>
+    </div>
+  </div></section>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PAGE: CONTACT -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page" id="page-contact">
+  <div class="page-hero"><div class="container"><h2>Contactez-Nous</h2><p>Notre équipe vous répond sous 24h</p><div class="breadcrumb"><a href="#" onclick="showPage('home');return false">Accueil</a> / Contact</div></div></div>
+  <section class="section"><div class="container">
+    <div class="contact-grid">
+      <div>
+        <div class="contact-form">
+          <label>Nom complet</label>
+          <input type="text" placeholder="Votre nom">
+          <label>Email</label>
+          <input type="email" placeholder="votre@email.com">
+          <label>Téléphone</label>
+          <input type="tel" placeholder="06 00 00 00 00">
+          <label>Objet</label>
+          <select><option>Commande de bouquet</option><option>Événement / Mariage</option><option>Offre Corporate</option><option>Réclamation</option><option>Autre</option></select>
+          <label>Message</label>
+          <textarea placeholder="Décrivez votre demande..."></textarea>
+          <button class="btn btn-primary" style="margin-top:20px;width:100%" onclick="alert('Message envoyé ! Nous vous répondrons sous 24h.')">Envoyer le message</button>
+        </div>
+      </div>
+      <div>
+        <div class="contact-info-card">
+          <h4>Notre Atelier</h4>
+          <p>12 rue des Rosiers<br>75004 Paris — Le Marais</p>
+          <p>Du mardi au samedi : 9h–19h<br>Dimanche : 9h–14h</p>
+        </div>
+        <div class="contact-info-card">
+          <h4>Nous joindre</h4>
+          <p>contact@maisonpetale.fr<br>01 42 00 00 00</p>
+        </div>
+        <div class="map-placeholder">📍 Carte — 12 rue des Rosiers, 75004 Paris</div>
+      </div>
+    </div>
+  </div></section>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- FOOTER (toujours visible) -->
+<!-- ══════════════════════════════════════════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h4>Maison Pétale</h4>
+        <p>Artisan fleuriste à Paris depuis 2012. Bouquets composés à la main, fleurs fraîches du marché de Rungis, livraison le jour même.</p>
+        <p>12 rue des Rosiers<br>75004 Paris — Le Marais</p>
+        <div class="footer-social">
+          <a href="#" title="Instagram">📷</a>
+          <a href="#" title="Facebook">📘</a>
+          <a href="#" title="Pinterest">📌</a>
+        </div>
+      </div>
+      <div>
+        <h4>Boutique</h4>
+        <ul>
+          <li><a href="#" onclick="showPage('roses');return false">Roses</a></li>
+          <li><a href="#" onclick="showPage('pivoines');return false">Pivoines</a></li>
+          <li><a href="#" onclick="showPage('hortensias');return false">Hortensias</a></li>
+          <li><a href="#" onclick="showPage('tulipes');return false">Tulipes</a></li>
+          <li><a href="#" onclick="showPage('plantes');return false">Plantes vertes</a></li>
+          <li><a href="#" onclick="showPage('vases');return false">Vases</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Occasions</h4>
+        <ul>
+          <li><a href="#" onclick="showPage('occasions');return false">Anniversaire</a></li>
+          <li><a href="#" onclick="showPage('occasions');return false">Mariage</a></li>
+          <li><a href="#" onclick="showPage('occasions');return false">Naissance</a></li>
+          <li><a href="#" onclick="showPage('occasions');return false">Saint-Valentin</a></li>
+          <li><a href="#" onclick="showPage('occasions');return false">Fête des Mères</a></li>
+          <li><a href="#" onclick="showPage('occasions');return false">Deuil</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Informations</h4>
+        <ul>
+          <li><a href="#" onclick="showPage('savoir-faire');return false">Notre Maison</a></li>
+          <li><a href="#" onclick="showPage('corporate');return false">Offre Corporate</a></li>
+          <li><a href="#" onclick="showPage('evenements');return false">Événements</a></li>
+          <li><a href="#" onclick="showPage('blog');return false">Journal</a></li>
+          <li><a href="#" onclick="showPage('contact');return false">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="mailto:contact@maisonpetale.fr">contact@maisonpetale.fr</a></li>
+          <li><a href="tel:+33142000000">01 42 00 00 00</a></li>
+          <li><a href="#">Paris, France</a></li>
+        </ul>
+        <h4 style="margin-top:24px">Horaires</h4>
+        <ul>
+          <li>Mar–Sam : 9h–19h</li>
+          <li>Dim : 9h–14h</li>
+          <li>Lun : Fermé</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Maison Pétale — Tous droits réservés · CGV · Mentions légales · Politique de confidentialité</p>
+      <div class="footer-payment">
+        <span>Visa</span><span>Mastercard</span><span>Amex</span><span>Apple Pay</span><span>PayPal</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- SCROLL TOP -->
+<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+// ─── PAGE NAVIGATION ───
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const page=document.getElementById('page-'+id);
+  if(page){page.classList.add('active')}else{document.getElementById('page-home').classList.add('active')}
+  window.scrollTo({top:0,behavior:'smooth'});
+  // Update active nav
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const navMap={'home':0,'boutique':1,'roses':1,'pivoines':1,'hortensias':1,'tulipes':1,'plantes':1,'vases':1,'collections':2,'occasions':3,'savoir-faire':4,'corporate':5,'evenements':6,'blog':7,'contact':8};
+  const idx=navMap[id];
+  if(idx!==undefined){document.querySelectorAll('.nav-item')[idx]?.classList.add('active')}
+  // Close mobile nav
+  document.getElementById('mobileNav').classList.remove('open');
+}
+
+// ─── MOBILE NAV ───
+function toggleMobileNav(){
+  document.getElementById('mobileNav').classList.toggle('open');
+}
+
+// ─── HERO SLIDER ───
+let currentSlide=0;
+const slides=document.querySelectorAll('.hero-slide');
+const dots=document.querySelectorAll('.hero-dot');
+function goSlide(n){
+  slides[currentSlide].classList.remove('active');
+  dots[currentSlide].classList.remove('active');
+  currentSlide=n;
+  slides[currentSlide].classList.add('active');
+  dots[currentSlide].classList.add('active');
+}
+setInterval(()=>{goSlide((currentSlide+1)%slides.length)},5000);
+
+// ─── SCROLL TOP BUTTON ───
+window.addEventListener('scroll',()=>{
+  document.getElementById('scrollTop').classList.toggle('visible',window.scrollY>400);
+});
+
+// ─── WISHLIST TOGGLE ───
+document.querySelectorAll('.product-wishlist').forEach(btn=>{
+  btn.addEventListener('click',e=>{
+    e.stopPropagation();
+    btn.textContent=btn.textContent==='♡'?'♥':'♡';
+    btn.style.color=btn.textContent==='♥'?'#C67D4A':'';
+  });
+});
+</script>
+</body>
+</html>
