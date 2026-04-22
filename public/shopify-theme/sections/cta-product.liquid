@@ -1,0 +1,180 @@
+{% comment %}
+  Section: CTA Product
+  Mise en avant du produit best-seller
+{% endcomment %}
+
+<div id="shopify-section-{{ section.id }}">
+  <section class="fh-cta-product" style="background:{{ section.settings.bg_color }}">
+    <div class="fh-cta-inner">
+      <div class="fh-cta-image">
+        <div class="fh-cta-jersey" style="background:{{ section.settings.product_gradient }}">
+          {% if section.settings.video_url != blank %}
+            <video class="fh-cta-video" src="{{ section.settings.video_url }}" playsinline loop muted autoplay></video>
+          {% elsif section.settings.product_image != blank %}
+            {{ section.settings.product_image | image_url: width: 800 | image_tag: loading: 'lazy', class: 'fh-cta-img' }}
+          {% else %}
+            <span class="fh-flag">{{ section.settings.flag_emoji }}</span>
+          {% endif %}
+        </div>
+      </div>
+      <div class="fh-cta-info">
+        <div class="fh-section-overline" style="color:{{ section.settings.accent_color }}">{{ section.settings.overline }}</div>
+        <h3 class="fh-cta-title">{{ section.settings.title }}</h3>
+        <div class="fh-cta-stars"><span class="fh-stars" style="color:{{ section.settings.accent_color }}">&#9733;&#9733;&#9733;&#9733;&#9733;</span><span class="fh-count">{{ section.settings.reviews_count }}</span></div>
+        <div class="fh-cta-price">
+          {{ section.settings.price }}
+          {% if section.settings.compare_price != blank %}
+            <span class="fh-old">{{ section.settings.compare_price }}</span>
+          {% endif %}
+        </div>
+        <ul class="fh-cta-benefits">
+          {% for block in section.blocks %}
+            <li {{ block.shopify_attributes }}><span class="fh-ck" style="color:{{ section.settings.accent_color }}">&#10003;</span> {{ block.settings.text }}</li>
+          {% endfor %}
+        </ul>
+        <a href="{{ section.settings.button_link }}" class="fh-btn-stadium">{{ section.settings.button_text }} &rarr;</a>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    #shopify-section-{{ section.id }} .fh-cta-product{padding:100px 48px;position:relative;overflow:hidden}
+    #shopify-section-{{ section.id }} .fh-cta-product::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(13,27,42,0.04),transparent 50%)}
+    #shopify-section-{{ section.id }} .fh-cta-inner{max-width:1100px;margin:0 auto;display:flex;gap:64px;align-items:center;flex-wrap:wrap;position:relative;z-index:1}
+    #shopify-section-{{ section.id }} .fh-cta-image{flex:1;min-width:320px}
+    #shopify-section-{{ section.id }} .fh-cta-jersey{width:100%;aspect-ratio:3/4;border-radius:20px;display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 30px 80px rgba(193,39,45,0.2);overflow:hidden}
+    #shopify-section-{{ section.id }} .fh-cta-jersey .fh-flag{font-size:180px;filter:drop-shadow(0 20px 60px rgba(0,0,0,0.3))}
+    #shopify-section-{{ section.id }} .fh-cta-jersey .fh-cta-img{width:100%;height:100%;object-fit:cover}
+    #shopify-section-{{ section.id }} .fh-cta-jersey .fh-cta-video{width:100%;height:100%;object-fit:cover;border-radius:20px}
+    #shopify-section-{{ section.id }} .fh-cta-jersey::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,0.08) 0%,transparent 30%);pointer-events:none}
+    #shopify-section-{{ section.id }} .fh-cta-info{flex:1;min-width:320px}
+    #shopify-section-{{ section.id }} .fh-section-overline{font-size:11px;text-transform:uppercase;letter-spacing:4px;font-weight:700;margin-bottom:12px;text-align:left}
+    #shopify-section-{{ section.id }} .fh-cta-title{font-family:'Bebas Neue',Impact,sans-serif;font-size:48px;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;color:#0d1b2a}
+    #shopify-section-{{ section.id }} .fh-cta-stars{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+    #shopify-section-{{ section.id }} .fh-stars{font-size:14px}
+    #shopify-section-{{ section.id }} .fh-count{color:#777;font-size:13px;font-family:'Inter',sans-serif}
+    #shopify-section-{{ section.id }} .fh-cta-price{font-size:40px;font-family:'Bebas Neue',Impact,sans-serif;color:{{ section.settings.accent_color }};letter-spacing:1px;margin-bottom:24px}
+    #shopify-section-{{ section.id }} .fh-old{font-size:24px;color:#777;text-decoration:line-through;margin-left:12px;font-family:'Inter',sans-serif;font-weight:300}
+    #shopify-section-{{ section.id }} .fh-cta-benefits{list-style:none;margin-bottom:32px;padding:0}
+    #shopify-section-{{ section.id }} .fh-cta-benefits li{font-size:15px;color:#444;padding:8px 0;display:flex;align-items:center;gap:12px;font-weight:400;font-family:'Inter',sans-serif}
+    #shopify-section-{{ section.id }} .fh-ck{width:20px;height:20px;border-radius:50%;background:rgba(13,27,42,0.1);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0}
+    #shopify-section-{{ section.id }} .fh-btn-stadium{display:inline-flex;align-items:center;gap:12px;background:linear-gradient(135deg,#0d1b2a,#162d4a);color:#fff;padding:18px 40px;border-radius:6px;font-size:14px;font-weight:800;text-decoration:none;text-transform:uppercase;letter-spacing:2px;transition:all .3s;box-shadow:0 8px 32px rgba(13,27,42,0.3)}
+    #shopify-section-{{ section.id }} .fh-btn-stadium:hover{transform:translateY(-2px);box-shadow:0 16px 48px rgba(13,27,42,0.45)}
+    @media(max-width:900px){
+      #shopify-section-{{ section.id }} .fh-cta-product{padding:64px 20px}
+      #shopify-section-{{ section.id }} .fh-cta-inner{flex-direction:column}
+    }
+  </style>
+</div>
+
+{% schema %}
+{
+  "name": "CTA Produit",
+  "tag": "section",
+  "class": "fh-cta-product-section",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Couleur de fond",
+      "default": "#f5f5f3"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Couleur accent",
+      "default": "#d4a843"
+    },
+    {
+      "type": "text",
+      "id": "overline",
+      "label": "Surtitre",
+      "default": "🔥 Best-seller"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titre produit",
+      "default": "Jersey Maroc Heritage"
+    },
+    {
+      "type": "text",
+      "id": "reviews_count",
+      "label": "Nombre d'avis",
+      "default": "127 avis"
+    },
+    {
+      "type": "text",
+      "id": "price",
+      "label": "Prix",
+      "default": "34,99€"
+    },
+    {
+      "type": "text",
+      "id": "compare_price",
+      "label": "Ancien prix",
+      "default": "49,99€"
+    },
+    {
+      "type": "text",
+      "id": "flag_emoji",
+      "label": "Emoji drapeau",
+      "default": "🇲🇦"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_image",
+      "label": "Image produit (optionnel)"
+    },
+    {
+      "type": "text",
+      "id": "product_gradient",
+      "label": "Gradient fond produit",
+      "default": "linear-gradient(160deg,#c1272d,#7a1018)"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Texte bouton",
+      "default": "Voir le produit"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Lien bouton"
+    },
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "URL vidéo produit (MP4)",
+      "info": "Coller l'URL de la vidéo MP4 uploadée dans Shopify Files. Prioritaire sur l'image."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Avantage",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Texte",
+          "default": "Design exclusif inspiré du Maroc"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "CTA Produit",
+      "blocks": [
+        { "type": "benefit", "settings": { "text": "Design exclusif inspiré du Maroc" } },
+        { "type": "benefit", "settings": { "text": "Coton premium 180g/m² respirant" } },
+        { "type": "benefit", "settings": { "text": "Impression DTG — couleurs qui durent à vie" } },
+        { "type": "benefit", "settings": { "text": "Impression premium, chez toi en 10-20j" } },
+        { "type": "benefit", "settings": { "text": "Satisfait ou remboursé 30 jours" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
