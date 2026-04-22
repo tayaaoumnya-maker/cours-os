@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="L'Atelier du Barbier — Barbier & Coiffeur Homme à Paris. Coupes, barbes, rasages traditionnels.">
+<title>L'Atelier du Barbier — Barbershop Paris</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✂️</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Oswald:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --black:#111;--dark:#1a1a1a;--dark2:#222;--gold:#C8A97E;--gold-hover:#B8955E;
+  --white:#fff;--off-white:#F5F0EB;--gray:#999;--gray-light:#ccc;--gray-dark:#444;
+  --border:rgba(255,255,255,.1);--shadow:0 4px 30px rgba(0,0,0,.3);--radius:4px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;color:var(--white);background:var(--black);line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4,h5{font-family:'Playfair Display',serif;font-weight:400}
+a{color:inherit;text-decoration:none;transition:all .3s}
+img{max-width:100%;display:block}
+button{cursor:pointer;border:none;background:none;font-family:inherit}
+.container{max-width:1200px;margin:0 auto;padding:0 30px}
+.btn{display:inline-block;padding:14px 36px;font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:2px;text-transform:uppercase;border-radius:var(--radius);transition:all .3s}
+.btn-gold{background:var(--gold);color:var(--black)}
+.btn-gold:hover{background:var(--gold-hover);transform:translateY(-2px);box-shadow:0 6px 20px rgba(200,169,126,.3)}
+.btn-outline{border:1.5px solid var(--gold);color:var(--gold)}
+.btn-outline:hover{background:var(--gold);color:var(--black)}
+
+/* HEADER */
+.header{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(17,17,17,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);transition:all .3s}
+.header-inner{display:flex;justify-content:space-between;align-items:center;padding:16px 0}
+.logo{font-family:'Playfair Display',serif;font-size:22px;letter-spacing:1px}
+.logo span{color:var(--gold)}
+.nav-list{display:flex;gap:0;list-style:none}
+.nav-item a{display:block;padding:10px 18px;font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--gray);transition:color .3s}
+.nav-item a:hover,.nav-item.active a{color:var(--gold)}
+.nav-cta{margin-left:20px}
+.mobile-toggle{display:none;font-size:22px;color:var(--white);padding:8px}
+.mobile-nav{display:none;position:absolute;top:100%;left:0;right:0;background:var(--dark);border-top:1px solid var(--border);padding:20px 30px}
+.mobile-nav.open{display:block}
+.mobile-nav a{display:block;padding:14px 0;font-family:'Oswald',sans-serif;font-size:14px;letter-spacing:2px;text-transform:uppercase;color:var(--gray);border-bottom:1px solid var(--border)}
+.mobile-nav a:hover{color:var(--gold)}
+@media(max-width:960px){.nav-list,.nav-cta{display:none}.mobile-toggle{display:block}}
+
+/* HERO */
+.hero{position:relative;height:100vh;min-height:600px;overflow:hidden}
+.hero-slides{position:relative;width:100%;height:100%}
+.hero-slide{position:absolute;inset:0;opacity:0;transition:opacity 1.2s}
+.hero-slide.active{opacity:1}
+.hero-slide img{width:100%;height:100%;object-fit:cover}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(17,17,17,.6) 0%,rgba(17,17,17,.4) 50%,rgba(17,17,17,.8) 100%)}
+.hero-content{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;z-index:2;width:90%;max-width:700px}
+.hero-content .tag{font-family:'Oswald',sans-serif;font-size:14px;letter-spacing:6px;text-transform:uppercase;color:var(--gold);margin-bottom:20px}
+.hero-content h2{font-size:clamp(40px,6vw,72px);line-height:1.05;margin-bottom:12px}
+.hero-content h2 span{font-style:italic;color:var(--gold)}
+.hero-content p{font-size:16px;color:var(--gray-light);margin-bottom:35px;max-width:500px;margin-left:auto;margin-right:auto}
+.hero-dots{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);display:flex;gap:12px;z-index:3}
+.hero-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer;transition:all .3s}
+.hero-dot.active{background:var(--gold);transform:scale(1.4)}
+.hero-scroll{position:absolute;bottom:80px;left:50%;transform:translateX(-50%);z-index:3;width:24px;height:40px;border:2px solid var(--gold);border-radius:12px;display:flex;justify-content:center;padding-top:8px}
+.hero-scroll::after{content:'';width:3px;height:8px;background:var(--gold);border-radius:2px;animation:scrollDown 1.5s infinite}
+@keyframes scrollDown{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(12px)}}
+
+/* SECTIONS */
+.section{padding:100px 0}
+.section-header{text-align:center;margin-bottom:60px}
+.section-header .tag{font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.section-header h2{font-size:clamp(28px,4vw,48px);margin-bottom:14px}
+.section-header p{color:var(--gray);font-size:15px;max-width:550px;margin:0 auto}
+.section-header .line{width:50px;height:2px;background:var(--gold);margin:20px auto 0}
+.section-light{background:var(--off-white);color:var(--black)}
+.section-light .section-header p{color:var(--gray-dark)}
+.section-dark{background:var(--dark)}
+
+/* CONCEPT */
+.concept-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:30px}
+.concept-card{text-align:center;padding:40px 24px;border:1px solid var(--border);border-radius:var(--radius);transition:all .3s}
+.concept-card:hover{border-color:var(--gold);transform:translateY(-4px)}
+.concept-card img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:var(--radius);margin-bottom:20px}
+.concept-card h4{font-size:20px;margin-bottom:10px}
+.concept-card p{font-size:14px;color:var(--gray);line-height:1.7}
+@media(max-width:768px){.concept-grid{grid-template-columns:1fr}}
+
+/* SALON */
+.salon-card{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-bottom:2px;overflow:hidden;border-radius:var(--radius);background:var(--dark2)}
+.salon-card.reverse{direction:rtl}
+.salon-card.reverse>*{direction:ltr}
+.salon-img{aspect-ratio:16/10;overflow:hidden}
+.salon-img img{width:100%;height:100%;object-fit:cover;transition:transform .6s}
+.salon-card:hover .salon-img img{transform:scale(1.05)}
+.salon-info{display:flex;flex-direction:column;justify-content:center;padding:40px 50px}
+.salon-info h3{font-size:28px;margin-bottom:14px}
+.salon-info .address{font-size:14px;color:var(--gray);margin-bottom:6px}
+.salon-info .phone{font-size:14px;color:var(--gold);margin-bottom:20px}
+.salon-info .hours{font-size:13px;color:var(--gray);margin-bottom:20px;line-height:1.8}
+@media(max-width:768px){.salon-card,.salon-card.reverse{grid-template-columns:1fr;direction:ltr}.salon-info{padding:30px 24px}}
+
+/* TARIFS */
+.tarif-tabs{display:flex;justify-content:center;gap:4px;margin-bottom:40px;flex-wrap:wrap}
+.tarif-tab{padding:12px 24px;font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray);border:1px solid var(--border);border-radius:var(--radius);transition:all .3s;cursor:pointer}
+.tarif-tab.active,.tarif-tab:hover{background:var(--gold);color:var(--black);border-color:var(--gold)}
+.tarif-content{display:none}
+.tarif-content.active{display:block}
+.tarif-item{display:flex;justify-content:space-between;align-items:center;padding:20px 0;border-bottom:1px solid var(--border)}
+.tarif-item:last-child{border:none}
+.tarif-name{font-family:'Playfair Display',serif;font-size:18px}
+.tarif-desc{font-size:13px;color:var(--gray);margin-top:4px}
+.tarif-right{text-align:right;flex-shrink:0;margin-left:20px}
+.tarif-price{font-family:'Oswald',sans-serif;font-size:22px;color:var(--gold);font-weight:500}
+.tarif-duration{font-size:12px;color:var(--gray)}
+
+/* EQUIPE */
+.team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.team-card{position:relative;overflow:hidden;border-radius:var(--radius);aspect-ratio:3/4;cursor:pointer}
+.team-card img{width:100%;height:100%;object-fit:cover;transition:transform .6s}
+.team-card:hover img{transform:scale(1.08)}
+.team-overlay{position:absolute;bottom:0;left:0;right:0;padding:24px;background:linear-gradient(to top,rgba(17,17,17,.9) 0%,transparent 100%)}
+.team-overlay h4{font-size:20px;margin-bottom:2px}
+.team-overlay span{font-size:12px;color:var(--gold);font-family:'Oswald',sans-serif;letter-spacing:1.5px;text-transform:uppercase}
+@media(max-width:768px){.team-grid{grid-template-columns:repeat(2,1fr)}}
+
+/* GALERIE */
+.gallery-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.gallery-item{aspect-ratio:1;overflow:hidden;position:relative;cursor:pointer}
+.gallery-item img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.gallery-item:hover img{transform:scale(1.1)}
+.gallery-item::after{content:'';position:absolute;inset:0;background:rgba(200,169,126,0);transition:background .3s}
+.gallery-item:hover::after{background:rgba(200,169,126,.2)}
+@media(max-width:768px){.gallery-grid{grid-template-columns:repeat(2,1fr)}}
+
+/* AVIS */
+.avis-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.avis-card{background:var(--dark2);border:1px solid var(--border);border-radius:var(--radius);padding:32px}
+.avis-stars{color:var(--gold);font-size:16px;margin-bottom:14px;letter-spacing:2px}
+.avis-text{font-size:14px;color:var(--gray-light);line-height:1.7;margin-bottom:18px;font-style:italic}
+.avis-author{font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:1px;text-transform:uppercase}
+.avis-date{font-size:12px;color:var(--gray)}
+@media(max-width:768px){.avis-grid{grid-template-columns:1fr}}
+
+/* CONTACT */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:start}
+.contact-form label{display:block;font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray);margin-bottom:6px;margin-top:20px}
+.contact-form input,.contact-form textarea,.contact-form select{width:100%;padding:14px 16px;background:var(--dark2);border:1px solid var(--border);border-radius:var(--radius);color:var(--white);font-family:inherit;font-size:14px;transition:border .3s}
+.contact-form input:focus,.contact-form textarea:focus{border-color:var(--gold);outline:none}
+.contact-form textarea{height:140px;resize:vertical}
+.contact-info-block{margin-bottom:30px}
+.contact-info-block h4{font-size:20px;margin-bottom:12px;color:var(--gold)}
+.contact-info-block p{font-size:14px;color:var(--gray);line-height:1.8}
+.map-placeholder{background:var(--dark2);border:1px solid var(--border);border-radius:var(--radius);height:200px;display:flex;align-items:center;justify-content:center;color:var(--gray);font-size:14px;margin-top:20px}
+@media(max-width:768px){.contact-grid{grid-template-columns:1fr}}
+
+/* FOOTER */
+.footer{background:var(--dark);border-top:1px solid var(--border);padding:50px 0 0}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;padding-bottom:40px}
+.footer h4{font-size:18px;margin-bottom:16px;color:var(--gold)}
+.footer p{font-size:13px;color:var(--gray);line-height:1.7}
+.footer ul{list-style:none}
+.footer li{margin-bottom:10px}
+.footer a{font-size:13px;color:var(--gray);transition:color .3s}
+.footer a:hover{color:var(--gold)}
+.footer-social{display:flex;gap:14px;margin-top:16px}
+.footer-social a{width:38px;height:38px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:14px;transition:all .3s}
+.footer-social a:hover{background:var(--gold);border-color:var(--gold);color:var(--black)}
+.footer-bottom{border-top:1px solid var(--border);padding:20px 0;text-align:center;font-size:12px;color:var(--gray)}
+@media(max-width:768px){.footer-grid{grid-template-columns:1fr 1fr}}
+
+/* PAGE SYSTEM */
+.page{display:none}.page.active{display:block}
+.page-hero{padding:140px 0 60px;text-align:center;background:var(--dark);border-bottom:1px solid var(--border)}
+.page-hero h2{font-size:clamp(32px,4vw,52px);margin-bottom:10px}
+.page-hero p{color:var(--gray);font-size:15px}
+.page-hero .breadcrumb{margin-top:14px;font-size:13px;color:var(--gray)}
+.page-hero .breadcrumb a{color:var(--gold)}
+.scroll-top{position:fixed;bottom:24px;right:24px;width:44px;height:44px;border-radius:50%;background:var(--gold);color:var(--black);display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 4px 15px rgba(200,169,126,.4);opacity:0;pointer-events:none;transition:all .3s;z-index:999}
+.scroll-top.visible{opacity:1;pointer-events:auto}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="container">
+    <div class="header-inner">
+      <a href="#" class="logo" onclick="showPage('home');return false">L'Atelier du <span>Barbier</span></a>
+      <nav>
+        <ul class="nav-list">
+          <li class="nav-item active"><a href="#" onclick="showPage('home');return false">Accueil</a></li>
+          <li class="nav-item"><a href="#" onclick="showPage('concept');return false">Concept</a></li>
+          <li class="nav-item"><a href="#" onclick="showPage('salon');return false">Notre Salon</a></li>
+          <li class="nav-item"><a href="#" onclick="showPage('tarifs');return false">Prestations</a></li>
+          <li class="nav-item"><a href="#" onclick="showPage('equipe');return false">Nos Barbiers</a></li>
+          <li class="nav-item"><a href="#" onclick="showPage('galerie');return false">Galerie</a></li>
+          <li class="nav-item"><a href="#" onclick="showPage('contact');return false">Contact</a></li>
+        </ul>
+      </nav>
+      <a href="#" class="btn btn-gold nav-cta" onclick="showPage('tarifs');return false">Prendre RDV</a>
+      <button class="mobile-toggle" onclick="toggleMobileNav()" aria-label="Menu">☰</button>
+    </div>
+    <div class="mobile-nav" id="mobileNav">
+      <a href="#" onclick="showPage('home');return false">Accueil</a>
+      <a href="#" onclick="showPage('concept');return false">Concept</a>
+      <a href="#" onclick="showPage('salon');return false">Notre Salon</a>
+      <a href="#" onclick="showPage('tarifs');return false">Prestations & Tarifs</a>
+      <a href="#" onclick="showPage('equipe');return false">Nos Barbiers</a>
+      <a href="#" onclick="showPage('galerie');return false">Galerie</a>
+      <a href="#" onclick="showPage('contact');return false">Contact & Accès</a>
+      <a href="#" onclick="showPage('tarifs');return false" style="color:var(--gold);margin-top:10px">→ Prendre rendez-vous</a>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PAGE: HOME -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page active" id="page-home">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-slides">
+      <div class="hero-slide active"><img src="/img/barber/hero1.jpg" alt="Barbershop"><div class="hero-overlay"></div></div>
+      <div class="hero-slide"><img src="/img/barber/hero2.jpg" alt="Coupe"><div class="hero-overlay"></div></div>
+      <div class="hero-slide"><img src="/img/barber/hero3.jpg" alt="Barbe"><div class="hero-overlay"></div></div>
+    </div>
+    <div class="hero-content">
+      <div class="tag">Barbier & Coiffeur Homme</div>
+      <h2>L'Atelier du <span>Barbier</span></h2>
+      <p>L'art du rasage traditionnel et de la coupe masculine, au cœur de Paris depuis 2016.</p>
+      <a href="#" class="btn btn-gold" onclick="showPage('tarifs');return false">Réserver</a>
+      <a href="#" class="btn btn-outline" style="margin-left:14px" onclick="showPage('concept');return false">Découvrir</a>
+    </div>
+    <div class="hero-scroll"></div>
+    <div class="hero-dots">
+      <div class="hero-dot active" onclick="goSlide(0)"></div>
+      <div class="hero-dot" onclick="goSlide(1)"></div>
+      <div class="hero-dot" onclick="goSlide(2)"></div>
+    </div>
+  </section>
+
+  <!-- CONCEPT -->
+  <section class="section section-dark">
+    <div class="container">
+      <div class="section-header">
+        <div class="tag">Notre Concept</div>
+        <h2>L'excellence au masculin</h2>
+        <p>Faites rimer la beauté au masculin. Nos barbiers experts vous accueillent dans un cadre authentique.</p>
+        <div class="line"></div>
+      </div>
+      <div class="concept-grid">
+        <div class="concept-card" onclick="showPage('tarifs')">
+          <img src="/img/barber/coupe.jpg" alt="Coupe homme">
+          <h4>Coupes sur mesure</h4>
+          <p>Classique, dégradé, texturé — nos barbiers maîtrisent tous les styles pour sublimer votre look.</p>
+        </div>
+        <div class="concept-card" onclick="showPage('tarifs')">
+          <img src="/img/barber/barbe.jpg" alt="Taille de barbe">
+          <h4>Barbe & Rasage</h4>
+          <p>Rasage traditionnel au coupe-chou, taille de barbe sculptée, entretien — le soin complet.</p>
+        </div>
+        <div class="concept-card" onclick="showPage('tarifs')">
+          <img src="/img/barber/coloration.jpg" alt="Coloration">
+          <h4>Coloration & Soins</h4>
+          <p>Camouflage cheveux gris, coloration tendance, défrisage — des solutions pour tous.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SALON -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <div class="tag">Notre Salon</div>
+        <h2>Un cadre authentique</h2>
+        <p>Ambiance vintage, fauteuils en cuir et savoir-faire artisanal au cœur de Paris.</p>
+        <div class="line"></div>
+      </div>
+      <div class="salon-card">
+        <div class="salon-img"><img src="/img/barber/gallery7.jpg" alt="Salon"></div>
+        <div class="salon-info">
+          <h3>Paris — Le Marais</h3>
+          <p class="address">28 rue des Archives, 75004 Paris</p>
+          <p class="phone">01 42 00 00 00</p>
+          <div class="hours">Lundi — Vendredi : 10h – 20h<br>Samedi : 9h – 19h<br>Dimanche : Fermé</div>
+          <a href="#" class="btn btn-outline" onclick="showPage('contact');return false">Contact & Accès</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TARIFS APERÇU -->
+  <section class="section section-dark">
+    <div class="container">
+      <div class="section-header">
+        <div class="tag">Nos Prestations</div>
+        <h2>Tarifs</h2>
+        <p>Des prestations premium à prix juste</p>
+        <div class="line"></div>
+      </div>
+      <div style="max-width:700px;margin:0 auto">
+        <div class="tarif-item"><div><div class="tarif-name">Forfait Coupe + Barbe</div><div class="tarif-desc">Coupe complète et taille de barbe sculptée</div></div><div class="tarif-right"><div class="tarif-price">55€</div><div class="tarif-duration">50 min</div></div></div>
+        <div class="tarif-item"><div><div class="tarif-name">Coupe Homme</div><div class="tarif-desc">Coupe, lavage, coiffage et conseils personnalisés</div></div><div class="tarif-right"><div class="tarif-price">32€</div><div class="tarif-duration">30 min</div></div></div>
+        <div class="tarif-item"><div><div class="tarif-name">Rasage Traditionnel</div><div class="tarif-desc">Serviette chaude, mousse, rasage au coupe-chou</div></div><div class="tarif-right"><div class="tarif-price">28€</div><div class="tarif-duration">30 min</div></div></div>
+        <div class="tarif-item"><div><div class="tarif-name">Taille de Barbe</div><div class="tarif-desc">Sculpture, contours nets, baume hydratant</div></div><div class="tarif-right"><div class="tarif-price">22€</div><div class="tarif-duration">20 min</div></div></div>
+      </div>
+      <div style="text-align:center;margin-top:40px"><a href="#" class="btn btn-gold" onclick="showPage('tarifs');return false">Voir tous les tarifs</a></div>
+    </div>
+  </section>
+
+  <!-- ÉQUIPE APERÇU -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <div class="tag">L'Équipe</div>
+        <h2>Nos meilleurs barbiers à votre service</h2>
+        <p>Des artisans passionnés, formés aux techniques traditionnelles et modernes</p>
+        <div class="line"></div>
+      </div>
+      <div class="team-grid">
+        <div class="team-card" onclick="showPage('equipe')"><img src="/img/barber/barber1.jpg" alt="Karim"><div class="team-overlay"><h4>Karim</h4><span>Expert Barbier</span></div></div>
+        <div class="team-card" onclick="showPage('equipe')"><img src="/img/barber/barber2.jpg" alt="Lucas"><div class="team-overlay"><h4>Lucas</h4><span>Coiffeur & Barbier</span></div></div>
+        <div class="team-card" onclick="showPage('equipe')"><img src="/img/barber/barber3.jpg" alt="Youssef"><div class="team-overlay"><h4>Youssef</h4><span>Expert Barbier</span></div></div>
+      </div>
+      <div style="text-align:center;margin-top:40px"><a href="#" class="btn btn-outline" onclick="showPage('equipe');return false">Voir toute l'équipe</a></div>
+    </div>
+  </section>
+
+  <!-- GALERIE -->
+  <section class="section section-dark" style="padding-bottom:0">
+    <div class="container"><div class="section-header"><div class="tag">Galerie</div><h2>Notre savoir-faire en images</h2><div class="line"></div></div></div>
+    <div class="gallery-grid">
+      <div class="gallery-item"><img src="/img/barber/gallery1.jpg" alt="Gallery"></div>
+      <div class="gallery-item"><img src="/img/barber/gallery2.jpg" alt="Gallery"></div>
+      <div class="gallery-item"><img src="/img/barber/gallery3.jpg" alt="Gallery"></div>
+      <div class="gallery-item"><img src="/img/barber/gallery4.jpg" alt="Gallery"></div>
+      <div class="gallery-item"><img src="/img/barber/gallery5.jpg" alt="Gallery"></div>
+      <div class="gallery-item"><img src="/img/barber/gallery6.jpg" alt="Gallery"></div>
+      <div class="gallery-item"><img src="/img/barber/gallery7.jpg" alt="Gallery"></div>
+      <div class="gallery-item"><img src="/img/barber/gallery8.jpg" alt="Gallery"></div>
+    </div>
+  </section>
+
+  <!-- AVIS -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header"><div class="tag">Avis Clients</div><h2>Ce qu'ils disent de nous</h2><p>Plus de 800 avis Google — Note moyenne : 4.8/5</p><div class="line"></div></div>
+      <div class="avis-grid">
+        <div class="avis-card"><div class="avis-stars">★★★★★</div><div class="avis-text">"Meilleur barbier de Paris, sans hésiter. Karim a compris exactement ce que je voulais. Résultat impeccable, ambiance top."</div><div class="avis-author">Mehdi R.</div><div class="avis-date">Il y a 5 jours</div></div>
+        <div class="avis-card"><div class="avis-stars">★★★★★</div><div class="avis-text">"Rasage au coupe-chou incroyable. On se croirait dans un film. Le soin barbe avec serviette chaude, un vrai moment de détente."</div><div class="avis-author">Alexandre T.</div><div class="avis-date">Il y a 1 semaine</div></div>
+        <div class="avis-card"><div class="avis-stars">★★★★★</div><div class="avis-text">"J'y vais tous les mois depuis 2 ans. L'accueil est toujours chaleureux, le cadre est superbe et la coupe toujours parfaite."</div><div class="avis-author">Thomas L.</div><div class="avis-date">Il y a 2 semaines</div></div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PAGE: CONCEPT -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page" id="page-concept">
+  <div class="page-hero"><div class="container"><h2>Notre Concept</h2><p>L'art du barbier traditionnel revisité</p><div class="breadcrumb"><a href="#" onclick="showPage('home');return false">Accueil</a> / Concept</div></div></div>
+  <section class="section">
+    <div class="container">
+      <div class="concept-grid">
+        <div class="concept-card"><img src="/img/barber/coupe.jpg" alt="Coupe"><h4>Coupes sur mesure</h4><p>De la coupe classique au dégradé le plus précis, nos barbiers experts adaptent chaque prestation à la morphologie de votre visage et à votre style de vie.</p></div>
+        <div class="concept-card"><img src="/img/barber/barbe.jpg" alt="Barbe"><h4>Barbe & Rasage Traditionnel</h4><p>Serviette chaude, mousse fouettée au blaireau, rasage au coupe-chou. Un rituel ancestral pour un résultat impeccable et une peau parfaitement lisse.</p></div>
+        <div class="concept-card"><img src="/img/barber/coloration.jpg" alt="Coloration"><h4>Coloration & Camouflage</h4><p>Solutions discrètes pour cheveux gris, colorations tendance, décolorations — nos experts maîtrisent toutes les techniques pour un résultat naturel.</p></div>
+      </div>
+      <div style="text-align:center;margin-top:60px;padding:40px;border:1px solid var(--border);border-radius:var(--radius)">
+        <h3 style="margin-bottom:16px">L'expérience Atelier du Barbier</h3>
+        <p style="color:var(--gray);max-width:600px;margin:0 auto 30px;font-size:15px;line-height:1.8">Chaque visite est un moment pour soi. Café offert, musique soignée, produits haut de gamme — nous avons pensé chaque détail pour que vous repartiez avec le sourire.</p>
+        <a href="#" class="btn btn-gold" onclick="showPage('tarifs');return false">Réserver maintenant</a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PAGE: SALON -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page" id="page-salon">
+  <div class="page-hero"><div class="container"><h2>Notre Salon</h2><p>Un cadre d'exception au cœur du Marais</p><div class="breadcrumb"><a href="#" onclick="showPage('home');return false">Accueil</a> / Notre Salon</div></div></div>
+  <section class="section">
+    <div class="container">
+      <div class="salon-card" style="margin-bottom:40px">
+        <div class="salon-img"><img src="/img/barber/gallery7.jpg" alt="Salon"></div>
+        <div class="salon-info">
+          <h3>Paris — Le Marais</h3>
+          <p class="address">28 rue des Archives, 75004 Paris</p>
+          <p class="phone">01 42 00 00 00</p>
+          <div class="hours">Lundi — Vendredi : 10h – 20h<br>Samedi : 9h – 19h<br>Dimanche : Fermé</div>
+          <a href="#" class="btn btn-gold" onclick="showPage('tarifs');return false">Prendre rendez-vous</a>
+        </div>
+      </div>
+      <div class="gallery-grid" style="border-radius:var(--radius);overflow:hidden">
+        <div class="gallery-item"><img src="/img/barber/gallery1.jpg" alt="Salon"></div>
+        <div class="gallery-item"><img src="/img/barber/gallery2.jpg" alt="Salon"></div>
+        <div class="gallery-item"><img src="/img/barber/gallery3.jpg" alt="Salon"></div>
+        <div class="gallery-item"><img src="/img/barber/gallery4.jpg" alt="Salon"></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PAGE: TARIFS -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page" id="page-tarifs">
+  <div class="page-hero"><div class="container"><h2>Prestations & Tarifs</h2><p>Des services premium à prix juste</p><div class="breadcrumb"><a href="#" onclick="showPage('home');return false">Accueil</a> / Tarifs</div></div></div>
+  <section class="section">
+    <div class="container">
+      <div class="tarif-tabs">
+        <button class="tarif-tab active" onclick="showTarif('forfaits')">Forfaits</button>
+        <button class="tarif-tab" onclick="showTarif('coupes')">Coupes</button>
+        <button class="tarif-tab" onclick="showTarif('barbe')">Barbe & Rasage</button>
+        <button class="tarif-tab" onclick="showTarif('coloration')">Coloration</button>
+        <button class="tarif-tab" onclick="showTarif('epilation')">Épilations</button>
+      </div>
+      <div style="max-width:750px;margin:0 auto">
+        <div class="tarif-content active" id="tarif-forfaits">
+          <div class="tarif-item"><div><div class="tarif-name">Forfait Coupe + Barbe</div><div class="tarif-desc">Coupe complète et taille de barbe sculptée</div></div><div class="tarif-right"><div class="tarif-price">55€</div><div class="tarif-duration">50 min</div></div></div>
+          <div class="tarif-item"><div><div class="tarif-name">Forfait Coupe + Rasage Traditionnel</div><div class="tarif-desc">Coupe et rasage au coupe-chou, serviette chaude</div></div><div class="tarif-right"><div class="tarif-price">59€</div><div class="tarif-duration">55 min</div></div></div>
+          <div class="tarif-item"><div><div class="tarif-name">Forfait Premium</div><div class="tarif-desc">Coupe, barbe, soin visage, massage crânien</div></div><div class="tarif-right"><div class="tarif-price">75€</div><div class="tarif-duration">1h15</div></div></div>
+        </div>
+        <div class="tarif-content" id="tarif-coupes">
+          <div class="tarif-item"><div><div class="tarif-name">Coupe Homme</div><div class="tarif-desc">Coupe, lavage, coiffage</div></div><div class="tarif-right"><div class="tarif-price">32€</div><div class="tarif-duration">30 min</div></div></div>
+          <div class="tarif-item"><div><div class="tarif-name">Coupe + Coiffage</div><div class="tarif-desc">Coupe détaillée avec finition stylée</div></div><div class="tarif-right"><div class="tarif-price">38€</div><div class="tarif-duration">35 min</div></div></div>
+          <div class="tarif-item"><div><div class="tarif-name">Coupe Enfant (-12 ans)</div><div class="tarif-desc">Coupe adaptée aux plus jeunes</div></div><div class="tarif-right"><div class="tarif-price">22€</div><div class="tarif-duration">20 min</div></div></div>
+          <div class="tarif-item"><div><div class="tarif-name">Tondeuse Crâne</div><div class="tarif-desc">Rasage intégral à la tondeuse</div></div><div class="tarif-right"><div class="tarif-price">25€</div><div class="tarif-duration">20 min</div></div></div>
+        </div>
+        <div class="tarif-content" id="tarif-barbe">
+          <div class="tarif-item"><div><div class="tarif-name">Taille de Barbe</div><div class="tarif-desc">Sculpture, contours nets, baume hydratant</div></div><div class="tarif-right"><div class="tarif-price">22€</div><div class="tarif-duration">20 min</div></div></div>
+          <div class="tarif-item"><div><div class="tarif-name">Rasage Traditionnel</div><div class="tarif-desc">Serviette chaude, mousse, coupe-chou</div></div><div class="tarif-right"><div class="tarif-price">28€</div><div class="tarif-duration">30 min</div></div></div>
+          <div class="tarif-item"><div><div class="tarif-name">Entretien Barbe Longue</div><div class="tarif-desc">Taille, huile, brossage et mise en forme</div></div><div class="tarif-right"><div class="tarif-price">35€</div><div class="tarif-duration">30 min</div></div></div>
+          <div class="tarif-item"><div><div class="tarif-name">Coloration Barbe</div><div class="tarif-desc">Camouflage gris ou coloration complète</div></div><div class="tarif-right"><div class="tarif-price">30€</div><div class="tarif-duration">25 min</div></div></div>
+        </div>
+        <div class="tarif-content" id="tarif-coloration">
+          <div class="tarif-item"><div><div class="tarif-name">Coloration Complète</div><div class="tarif-desc">Coloration cheveux ton sur ton</div></div><div class="tarif-right"><div class="tarif-price">40€</div><div class="tarif-duration">45 min</div></div></div>
+          <div class="tarif-item"><div><div class="tarif-name">Décoloration</div><div class="tarif-desc">Blond platine, mèches, pointes</div></div><div class="tarif-right"><div class="tarif-price">45€</div><div class="tarif-duration">50 min</div></div></div>
+          <div class="tarif-item"><div><div class="tarif-name">Défrisage</div><div class="tarif-desc">Lissage brésilien ou japonais</div></div><div class="tarif-right"><div class="tarif-price">60€</div><div class="tarif-duration">1h</div></div></div>
+          <div class="tarif-item"><div><div class="tarif-name">Coloration Complexe + Coupe</div><div class="tarif-desc">Mèches, balayage ou coloration créative</div></div><div class="tarif-right"><div class="tarif-price">95€</div><div class="tarif-duration">1h30</div></div></div>
+        </div>
+        <div class="tarif-content" id="tarif-epilation">
+          <div class="tarif-item"><div><div class="tarif-name">Épilation Sourcils</div><div class="tarif-desc">Cire ou pince, finition impeccable</div></div><div class="tarif-right"><div class="tarif-price">12€</div><div class="tarif-duration">15 min</div></div></div>
+          <div class="tarif-item"><div><div class="tarif-name">Épilation Nez</div><div class="tarif-desc">Cire chaude</div></div><div class="tarif-right"><div class="tarif-price">8€</div><div class="tarif-duration">10 min</div></div></div>
+          <div class="tarif-item"><div><div class="tarif-name">Épilation Oreilles</div><div class="tarif-desc">Cire chaude</div></div><div class="tarif-right"><div class="tarif-price">8€</div><div class="tarif-duration">10 min</div></div></div>
+          <div class="tarif-item"><div><div class="tarif-name">Soin Visage Complet</div><div class="tarif-desc">Nettoyage, gommage et masque purifiant</div></div><div class="tarif-right"><div class="tarif-price">35€</div><div class="tarif-duration">30 min</div></div></div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:50px;padding:40px;border:1px solid var(--border);border-radius:var(--radius)">
+        <h3 style="margin-bottom:16px">Prendre rendez-vous</h3>
+        <p style="color:var(--gray);margin-bottom:24px;font-size:15px">Réservez en ligne ou appelez-nous au <span style="color:var(--gold)">01 42 00 00 00</span></p>
+        <a href="#" class="btn btn-gold" onclick="alert('Redirection vers la plateforme de réservation...');return false">Réserver en ligne</a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PAGE: EQUIPE -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page" id="page-equipe">
+  <div class="page-hero"><div class="container"><h2>Nos Barbiers</h2><p>Des artisans passionnés à votre service</p><div class="breadcrumb"><a href="#" onclick="showPage('home');return false">Accueil</a> / Nos Barbiers</div></div></div>
+  <section class="section">
+    <div class="container">
+      <div class="team-grid">
+        <div class="team-card"><img src="/img/barber/barber1.jpg" alt="Karim"><div class="team-overlay"><h4>Karim</h4><span>Expert Barbier — 12 ans d'exp.</span></div></div>
+        <div class="team-card"><img src="/img/barber/barber2.jpg" alt="Lucas"><div class="team-overlay"><h4>Lucas</h4><span>Coiffeur & Barbier — 8 ans d'exp.</span></div></div>
+        <div class="team-card"><img src="/img/barber/barber3.jpg" alt="Youssef"><div class="team-overlay"><h4>Youssef</h4><span>Expert Barbier — 10 ans d'exp.</span></div></div>
+        <div class="team-card"><img src="/img/barber/barber4.jpg" alt="Maxime"><div class="team-overlay"><h4>Maxime</h4><span>Coiffeur & Coloriste — 6 ans d'exp.</span></div></div>
+        <div class="team-card"><img src="/img/barber/barber5.jpg" alt="Sofiane"><div class="team-overlay"><h4>Sofiane</h4><span>Expert Barbier — 9 ans d'exp.</span></div></div>
+        <div class="team-card"><img src="/img/barber/barber6.jpg" alt="Romain"><div class="team-overlay"><h4>Romain</h4><span>Coiffeur & Barbier — 7 ans d'exp.</span></div></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PAGE: GALERIE -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page" id="page-galerie">
+  <div class="page-hero"><div class="container"><h2>Galerie</h2><p>Notre savoir-faire en images</p><div class="breadcrumb"><a href="#" onclick="showPage('home');return false">Accueil</a> / Galerie</div></div></div>
+  <section style="padding:0">
+    <div class="gallery-grid">
+      <div class="gallery-item"><img src="/img/barber/gallery1.jpg" alt="Gallery"></div>
+      <div class="gallery-item"><img src="/img/barber/gallery2.jpg" alt="Gallery"></div>
+      <div class="gallery-item"><img src="/img/barber/gallery3.jpg" alt="Gallery"></div>
+      <div class="gallery-item"><img src="/img/barber/gallery4.jpg" alt="Gallery"></div>
+      <div class="gallery-item"><img src="/img/barber/gallery5.jpg" alt="Gallery"></div>
+      <div class="gallery-item"><img src="/img/barber/gallery6.jpg" alt="Gallery"></div>
+      <div class="gallery-item"><img src="/img/barber/gallery7.jpg" alt="Gallery"></div>
+      <div class="gallery-item"><img src="/img/barber/gallery8.jpg" alt="Gallery"></div>
+    </div>
+  </section>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PAGE: CONTACT -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page" id="page-contact">
+  <div class="page-hero"><div class="container"><h2>Contact & Accès</h2><p>Venez nous rendre visite</p><div class="breadcrumb"><a href="#" onclick="showPage('home');return false">Accueil</a> / Contact</div></div></div>
+  <section class="section">
+    <div class="container">
+      <div class="contact-grid">
+        <div>
+          <div class="contact-form">
+            <label>Nom</label><input type="text" placeholder="Votre nom">
+            <label>Email</label><input type="email" placeholder="votre@email.com">
+            <label>Téléphone</label><input type="tel" placeholder="06 00 00 00 00">
+            <label>Prestation souhaitée</label>
+            <select><option>Coupe Homme</option><option>Forfait Coupe + Barbe</option><option>Rasage Traditionnel</option><option>Coloration</option><option>Autre</option></select>
+            <label>Message</label><textarea placeholder="Précisez votre demande..."></textarea>
+            <button class="btn btn-gold" style="margin-top:20px;width:100%" onclick="alert('Message envoyé ! Nous vous répondrons rapidement.')">Envoyer</button>
+          </div>
+        </div>
+        <div>
+          <div class="contact-info-block"><h4>Adresse</h4><p>28 rue des Archives<br>75004 Paris — Le Marais</p></div>
+          <div class="contact-info-block"><h4>Téléphone</h4><p>01 42 00 00 00</p></div>
+          <div class="contact-info-block"><h4>Email</h4><p>contact@atelierdubarbier.fr</p></div>
+          <div class="contact-info-block"><h4>Horaires</h4><p>Lundi — Vendredi : 10h – 20h<br>Samedi : 9h – 19h<br>Dimanche : Fermé</p></div>
+          <div class="map-placeholder">📍 28 rue des Archives, 75004 Paris</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h4>L'Atelier du Barbier</h4>
+        <p>Barbier & coiffeur homme à Paris depuis 2016. Coupes sur mesure, rasages traditionnels au coupe-chou, soins barbe — l'art du masculin.</p>
+        <p style="margin-top:12px">28 rue des Archives<br>75004 Paris — Le Marais</p>
+        <div class="footer-social">
+          <a href="#" title="Instagram">📷</a>
+          <a href="#" title="Facebook">📘</a>
+        </div>
+      </div>
+      <div>
+        <h4>Prestations</h4>
+        <ul>
+          <li><a href="#" onclick="showPage('tarifs');return false">Forfaits</a></li>
+          <li><a href="#" onclick="showPage('tarifs');return false">Coupes</a></li>
+          <li><a href="#" onclick="showPage('tarifs');return false">Barbe & Rasage</a></li>
+          <li><a href="#" onclick="showPage('tarifs');return false">Coloration</a></li>
+          <li><a href="#" onclick="showPage('tarifs');return false">Épilations</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Navigation</h4>
+        <ul>
+          <li><a href="#" onclick="showPage('concept');return false">Concept</a></li>
+          <li><a href="#" onclick="showPage('salon');return false">Notre Salon</a></li>
+          <li><a href="#" onclick="showPage('equipe');return false">Nos Barbiers</a></li>
+          <li><a href="#" onclick="showPage('galerie');return false">Galerie</a></li>
+          <li><a href="#" onclick="showPage('contact');return false">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="mailto:contact@atelierdubarbier.fr">contact@atelierdubarbier.fr</a></li>
+          <li><a href="tel:+33142000000">01 42 00 00 00</a></li>
+          <li>Paris, France</li>
+        </ul>
+        <h4 style="margin-top:24px">Horaires</h4>
+        <ul>
+          <li>Lun–Ven : 10h–20h</li>
+          <li>Sam : 9h–19h</li>
+          <li>Dim : Fermé</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">&copy; 2026 L'Atelier du Barbier — Tous droits réservés · CGV · Mentions légales</div>
+  </div>
+</footer>
+
+<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  (document.getElementById('page-'+id)||document.getElementById('page-home')).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  var m={home:0,concept:1,salon:2,tarifs:3,equipe:4,galerie:5,contact:6};
+  if(m[id]!==undefined)document.querySelectorAll('.nav-item')[m[id]]?.classList.add('active');
+  document.getElementById('mobileNav').classList.remove('open');
+}
+function toggleMobileNav(){document.getElementById('mobileNav').classList.toggle('open')}
+function showTarif(id){
+  document.querySelectorAll('.tarif-content').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tarif-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tarif-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+let cs=0;const sl=document.querySelectorAll('.hero-slide'),dt=document.querySelectorAll('.hero-dot');
+function goSlide(n){sl[cs].classList.remove('active');dt[cs].classList.remove('active');cs=n;sl[cs].classList.add('active');dt[cs].classList.add('active')}
+setInterval(()=>goSlide((cs+1)%sl.length),5000);
+window.addEventListener('scroll',()=>{document.getElementById('scrollTop').classList.toggle('visible',window.scrollY>400)});
+</script>
+</body>
+</html>
