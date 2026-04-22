@@ -1,0 +1,395 @@
+{% comment %}
+  Section: Product Buybox Custom
+  Buybox complet avec galerie, infos produit, urgency, variantes et boutons
+{% endcomment %}
+
+<div id="shopify-section-{{ section.id }}">
+  <section class="fh-buybox">
+    {%- assign current_variant = product.selected_or_first_available_variant -%}
+
+    <!-- GALLERY -->
+    <div class="fh-gallery">
+      <div class="fh-gallery-main">
+        {% if section.settings.show_badge %}
+          <span class="fh-badge">{{ section.settings.badge_text }}</span>
+        {% endif %}
+        {% if current_variant.compare_at_price > current_variant.price %}
+          {%- assign save_pct = current_variant.compare_at_price | minus: current_variant.price | times: 100 | divided_by: current_variant.compare_at_price -%}
+          <span class="fh-save-badge">-{{ save_pct }}%</span>
+        {% endif %}
+        <div class="fh-gallery-main-bg">
+          {% if product.featured_image != blank %}
+            {{ product.featured_image | image_url: width: 900 | image_tag: loading: 'eager', class: 'fh-main-img', id: 'fh-main-product-img' }}
+          {% else %}
+            <span class="fh-flag">{{ section.settings.flag_emoji }}</span>
+          {% endif %}
+          {% if section.settings.video_url != blank %}
+            <video class="fh-main-video" id="fh-main-product-video" src="{{ section.settings.video_url }}" playsinline loop muted autoplay style="display:none;width:100%;height:100%;object-fit:cover;border-radius:20px;"></video>
+          {% endif %}
+        </div>
+      </div>
+      <div class="fh-gallery-thumbs">
+        {% for image in product.images %}
+          <div class="fh-gallery-thumb{% if forloop.first %} active{% endif %}" data-img-src="{{ image | image_url: width: 900 }}" data-type="image">
+            {{ image | image_url: width: 160 | image_tag: loading: 'lazy' }}
+          </div>
+        {% endfor %}
+        {% if section.settings.video_url != blank %}
+          <div class="fh-gallery-thumb fh-thumb-video" data-type="video" data-video-src="{{ section.settings.video_url }}">
+            <span class="fh-thumb-play">▶</span>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- BUYBOX INFO -->
+    <div class="fh-buybox-info">
+      <div class="fh-breadcrumb">
+        <a href="{{ routes.root_url }}">Accueil</a> /
+        {% if product.collections.first %}
+          <a href="{{ product.collections.first.url }}">{{ product.collections.first.title }}</a>
+        {% endif %}
+      </div>
+
+      <div class="fh-bb-stars">
+        <span class="fh-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+        <span class="fh-count">{{ section.settings.reviews_summary }}</span>
+      </div>
+
+      <h1 class="fh-bb-title">{{ product.title }}</h1>
+      <div class="fh-bb-edition"><span class="fh-dot"></span> {{ section.settings.edition_text }}</div>
+
+      <div class="fh-bb-price-row">
+        <span class="fh-bb-price">{{ current_variant.price | money }}</span>
+        {% if current_variant.compare_at_price > current_variant.price %}
+          <span class="fh-bb-compare">{{ current_variant.compare_at_price | money }}</span>
+          <span class="fh-bb-save">-{{ save_pct }}%</span>
+        {% endif %}
+      </div>
+
+      <!-- Benefits -->
+      <ul class="fh-bb-benefits">
+        {% for block in section.blocks %}
+          {% if block.type == 'benefit' %}
+            <li {{ block.shopify_attributes }}><span class="fh-ic">&#10003;</span> {{ block.settings.text }}</li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+
+      <!-- Urgency -->
+      {% if section.settings.show_urgency %}
+      <div class="fh-bb-urgency">
+        <span class="fh-urg-dot"></span>
+        <span class="fh-urg-text">{{ section.settings.urgency_text }}</span>
+      </div>
+      {% endif %}
+
+      <!-- Guarantees -->
+      <div class="fh-bb-guarantees">
+        {% for block in section.blocks %}
+          {% if block.type == 'guarantee' %}
+            <div class="fh-guar" {{ block.shopify_attributes }}>
+              <span class="fh-guar-icon">{{ block.settings.icon }}</span> {{ block.settings.text }}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <!-- Variants -->
+      {%- form 'product', product, id: 'fh-product-form', novalidate: 'novalidate' -%}
+        <input type="hidden" name="id" value="{{ current_variant.id }}" id="fh-variant-id">
+        {% for option in product.options_with_values %}
+          <div class="fh-var-group">
+            <div class="fh-var-label">{{ option.name }}</div>
+            <div class="fh-var-options">
+              {% for value in option.values %}
+                <button type="button" class="fh-var-btn{% if value == option.selected_value %} selected{% endif %}" data-option-index="{{ forloop.parentloop.index0 }}" data-value="{{ value }}">{{ value }}</button>
+              {% endfor %}
+            </div>
+          </div>
+        {% endfor %}
+
+        <button type="submit" class="fh-bb-add" {% unless current_variant.available %}disabled{% endunless %}>
+          {% if current_variant.available %}
+            ⚽ Ajouter au panier
+          {% else %}
+            Rupture de stock
+          {% endif %}
+        </button>
+      {%- endform -%}
+
+      {% if section.settings.show_express %}
+        <button class="fh-bb-express" onclick="var f=document.getElementById('fh-product-form');var inp=document.createElement('input');inp.type='hidden';inp.name='return_to';inp.value='/checkout';f.appendChild(inp);f.submit();">Acheter maintenant &rarr;</button>
+      {% endif %}
+
+      <!-- Mini FAQ -->
+      <div class="fh-mini-faq">
+        {% for block in section.blocks %}
+          {% if block.type == 'mini_faq' %}
+            <div class="fh-mf-item" {{ block.shopify_attributes }}>
+              <button class="fh-mf-q" data-mfaq-toggle>{{ block.settings.question }} <span class="fh-mf-ic">+</span></button>
+              <div class="fh-mf-a">{{ block.settings.answer }}</div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <style>
+    #shopify-section-{{ section.id }} .fh-buybox{max-width:1200px;margin:0 auto;padding:48px;display:flex;gap:64px;flex-wrap:wrap;position:relative}
+    #shopify-section-{{ section.id }} .fh-buybox::before{content:'';position:absolute;top:0;left:0;width:60%;height:100%;background:radial-gradient(ellipse at 30% 50%,rgba(13,27,42,0.03),transparent 60%);pointer-events:none}
+    #shopify-section-{{ section.id }} .fh-gallery{flex:1.2;min-width:360px;position:relative;z-index:1}
+    #shopify-section-{{ section.id }} .fh-gallery-main{width:100%;aspect-ratio:3/4;border-radius:20px;overflow:hidden;position:relative;cursor:zoom-in}
+    #shopify-section-{{ section.id }} .fh-gallery-main-bg{width:100%;height:100%;display:flex;align-items:center;justify-content:center;transition:transform .6s;position:relative;background:var(--fh-product-bg, #f5f5f3)}
+    #shopify-section-{{ section.id }} .fh-gallery-main:hover .fh-gallery-main-bg{transform:scale(1.03)}
+    #shopify-section-{{ section.id }} .fh-main-img{width:100%;height:100%;object-fit:cover}
+    #shopify-section-{{ section.id }} .fh-gallery-main .fh-flag{font-size:200px;filter:drop-shadow(0 20px 60px rgba(0,0,0,0.4));position:relative;z-index:1}
+    #shopify-section-{{ section.id }} .fh-badge{position:absolute;top:20px;left:20px;z-index:3;background:#0d1b2a;color:#fff;font-size:10px;font-weight:800;padding:6px 14px;border-radius:4px;text-transform:uppercase;letter-spacing:1.5px}
+    #shopify-section-{{ section.id }} .fh-save-badge{position:absolute;top:20px;right:20px;z-index:3;background:#d4a843;color:#0d1b2a;font-size:11px;font-weight:800;padding:6px 12px;border-radius:4px}
+    #shopify-section-{{ section.id }} .fh-gallery-thumbs{display:flex;gap:10px;margin-top:16px}
+    #shopify-section-{{ section.id }} .fh-gallery-thumb{width:80px;height:100px;border-radius:12px;border:2px solid #e0e0dc;cursor:pointer;overflow:hidden;transition:all .3s;display:flex;align-items:center;justify-content:center}
+    #shopify-section-{{ section.id }} .fh-gallery-thumb img{width:100%;height:100%;object-fit:cover}
+    #shopify-section-{{ section.id }} .fh-gallery-thumb:hover{border-color:#777}
+    #shopify-section-{{ section.id }} .fh-gallery-thumb.active{border-color:#d4a843;box-shadow:0 0 12px rgba(13,27,42,0.12)}
+    #shopify-section-{{ section.id }} .fh-thumb-video{background:#0d1b2a;display:flex;align-items:center;justify-content:center}
+    #shopify-section-{{ section.id }} .fh-thumb-play{color:#d4a843;font-size:24px;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3))}
+    #shopify-section-{{ section.id }} .fh-buybox-info{flex:1;min-width:340px;position:relative;z-index:1}
+    #shopify-section-{{ section.id }} .fh-breadcrumb{font-size:12px;color:#777;margin-bottom:20px;font-family:'Inter',sans-serif}
+    #shopify-section-{{ section.id }} .fh-breadcrumb a{color:#777;text-decoration:none;transition:color .3s}
+    #shopify-section-{{ section.id }} .fh-breadcrumb a:hover{color:#d4a843}
+    #shopify-section-{{ section.id }} .fh-bb-stars{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+    #shopify-section-{{ section.id }} .fh-stars{color:#d4a843;font-size:16px;letter-spacing:2px}
+    #shopify-section-{{ section.id }} .fh-count{font-size:13px;color:#777;font-family:'Inter',sans-serif}
+    #shopify-section-{{ section.id }} .fh-bb-title{font-family:'Bebas Neue',Impact,sans-serif;font-size:48px;letter-spacing:2px;text-transform:uppercase;line-height:1;margin-bottom:6px;color:#0d1b2a}
+    #shopify-section-{{ section.id }} .fh-bb-edition{font-size:13px;color:#d4a843;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:20px;display:flex;align-items:center;gap:6px;font-family:'Inter',sans-serif}
+    #shopify-section-{{ section.id }} .fh-dot{width:6px;height:6px;background:#0d1b2a;border-radius:50%;animation:fhPulse 1.5s infinite}
+    @keyframes fhPulse{0%,100%{opacity:1}50%{opacity:.3}}
+    #shopify-section-{{ section.id }} .fh-bb-price-row{display:flex;align-items:baseline;gap:14px;margin-bottom:28px;padding-bottom:28px;border-bottom:1px solid #e0e0dc}
+    #shopify-section-{{ section.id }} .fh-bb-price{font-family:'Bebas Neue',Impact,sans-serif;font-size:48px;color:#0d1b2a;letter-spacing:1px}
+    #shopify-section-{{ section.id }} .fh-bb-compare{font-size:20px;color:#777;text-decoration:line-through;font-weight:300}
+    #shopify-section-{{ section.id }} .fh-bb-save{font-size:11px;background:#e8f5e9;color:#2e7d32;padding:5px 12px;border-radius:100px;font-weight:700;text-transform:uppercase;letter-spacing:1px}
+    #shopify-section-{{ section.id }} .fh-bb-benefits{list-style:none;margin-bottom:24px;padding:0}
+    #shopify-section-{{ section.id }} .fh-bb-benefits li{font-size:15px;color:#444;padding:9px 0;display:flex;align-items:flex-start;gap:12px;line-height:1.4;font-weight:400;font-family:'Inter',sans-serif}
+    #shopify-section-{{ section.id }} .fh-ic{width:22px;height:22px;border-radius:50%;background:rgba(13,27,42,0.08);display:flex;align-items:center;justify-content:center;color:#d4a843;font-size:11px;font-weight:800;flex-shrink:0;margin-top:1px}
+    #shopify-section-{{ section.id }} .fh-bb-urgency{display:flex;align-items:center;gap:10px;margin-bottom:20px;padding:14px 18px;background:rgba(13,27,42,0.06);border:1px solid rgba(13,27,42,0.12);border-radius:10px}
+    #shopify-section-{{ section.id }} .fh-urg-dot{width:8px;height:8px;background:#0d1b2a;border-radius:50%;animation:fhPulse 1.5s infinite;flex-shrink:0}
+    #shopify-section-{{ section.id }} .fh-urg-text{font-size:13px;color:#d4a843;font-weight:700;font-family:'Inter',sans-serif}
+    #shopify-section-{{ section.id }} .fh-bb-guarantees{display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap}
+    #shopify-section-{{ section.id }} .fh-guar{display:flex;align-items:center;gap:8px;font-size:12px;color:#444;background:#f5f5f3;padding:10px 14px;border-radius:8px;font-weight:500;border:1px solid #e0e0dc;font-family:'Inter',sans-serif}
+    #shopify-section-{{ section.id }} .fh-guar-icon{font-size:18px}
+    #shopify-section-{{ section.id }} .fh-var-group{margin-bottom:24px}
+    #shopify-section-{{ section.id }} .fh-var-label{font-size:12px;font-weight:700;margin-bottom:10px;text-transform:uppercase;letter-spacing:2px;color:#444;font-family:'Inter',sans-serif}
+    #shopify-section-{{ section.id }} .fh-var-options{display:flex;gap:8px;flex-wrap:wrap}
+    #shopify-section-{{ section.id }} .fh-var-btn{padding:12px 20px;border:2px solid #e0e0dc;border-radius:8px;background:#fff;cursor:pointer;font-size:14px;font-weight:600;transition:all .2s;font-family:'Inter',sans-serif;color:#0d1b2a}
+    #shopify-section-{{ section.id }} .fh-var-btn:hover{border-color:#777}
+    #shopify-section-{{ section.id }} .fh-var-btn.selected{border-color:#d4a843;background:rgba(13,27,42,0.05);color:#d4a843;box-shadow:0 0 12px rgba(13,27,42,0.08)}
+    #shopify-section-{{ section.id }} .fh-bb-add{width:100%;padding:18px;background:linear-gradient(135deg,#0d1b2a,#162d4a);color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:800;cursor:pointer;text-transform:uppercase;letter-spacing:2px;font-family:'Inter',sans-serif;transition:all .3s;margin-bottom:10px;box-shadow:0 8px 30px rgba(13,27,42,0.25)}
+    #shopify-section-{{ section.id }} .fh-bb-add:hover{transform:translateY(-2px);box-shadow:0 16px 48px rgba(13,27,42,0.4)}
+    #shopify-section-{{ section.id }} .fh-bb-add:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+    #shopify-section-{{ section.id }} .fh-bb-express{width:100%;padding:14px;background:#d4a843;color:#0d1b2a;border:none;border-radius:8px;font-size:13px;font-weight:800;cursor:pointer;text-transform:uppercase;letter-spacing:1.5px;font-family:'Inter',sans-serif;margin-bottom:20px;transition:all .3s}
+    #shopify-section-{{ section.id }} .fh-bb-express:hover{background:#f0d78c}
+    #shopify-section-{{ section.id }} .fh-mini-faq{border-top:1px solid #e0e0dc;margin-top:8px}
+    #shopify-section-{{ section.id }} .fh-mf-item{border-bottom:1px solid #e0e0dc}
+    #shopify-section-{{ section.id }} .fh-mf-q{width:100%;background:none;border:none;text-align:left;padding:16px 0;font-size:14px;font-weight:600;color:#0d1b2a;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-family:'Inter',sans-serif;transition:color .3s}
+    #shopify-section-{{ section.id }} .fh-mf-q:hover{color:#d4a843}
+    #shopify-section-{{ section.id }} .fh-mf-ic{font-size:16px;color:#777;transition:transform .3s}
+    #shopify-section-{{ section.id }} .fh-mf-q.open .fh-mf-ic{transform:rotate(45deg);color:#d4a843}
+    #shopify-section-{{ section.id }} .fh-mf-a{display:none;padding:0 0 16px;font-size:14px;color:#777;line-height:1.6;font-weight:300;font-family:'Inter',sans-serif}
+    #shopify-section-{{ section.id }} .fh-mf-a.open{display:block}
+    @media(max-width:900px){
+      #shopify-section-{{ section.id }} .fh-buybox{flex-direction:column;padding:24px 20px;gap:32px}
+      #shopify-section-{{ section.id }} .fh-bb-title{font-size:36px}
+      #shopify-section-{{ section.id }} .fh-bb-price{font-size:36px}
+    }
+  </style>
+
+  <script>
+    (function(){
+      var section = document.getElementById('shopify-section-{{ section.id }}');
+      /* Thumbnail click — image + video support */
+      var mainImg = section.querySelector('#fh-main-product-img');
+      var mainVideo = section.querySelector('#fh-main-product-video');
+      section.querySelectorAll('.fh-gallery-thumb').forEach(function(thumb){
+        thumb.addEventListener('click', function(){
+          section.querySelectorAll('.fh-gallery-thumb').forEach(function(t){t.classList.remove('active')});
+          this.classList.add('active');
+          var type = this.dataset.type;
+          if(type === 'video' && mainVideo){
+            if(mainImg) mainImg.style.display = 'none';
+            mainVideo.style.display = 'block';
+            mainVideo.play();
+          } else {
+            if(mainVideo){ mainVideo.style.display = 'none'; mainVideo.pause(); }
+            if(mainImg){ mainImg.style.display = 'block'; mainImg.src = this.dataset.imgSrc; }
+          }
+        });
+      });
+      /* Variant buttons */
+      var variantJson = {{ product.variants | json }};
+      var optionsJson = {{ product.options | json }};
+      section.querySelectorAll('.fh-var-btn').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          var group = this.closest('.fh-var-options');
+          group.querySelectorAll('.fh-var-btn').forEach(function(b){b.classList.remove('selected')});
+          this.classList.add('selected');
+          /* Find matching variant */
+          var selected = [];
+          section.querySelectorAll('.fh-var-options').forEach(function(g){
+            var sel = g.querySelector('.fh-var-btn.selected');
+            if(sel) selected.push(sel.dataset.value);
+          });
+          for(var i=0;i<variantJson.length;i++){
+            var v = variantJson[i];
+            var match = true;
+            for(var j=0;j<selected.length;j++){
+              if(v['option'+(j+1)] !== selected[j]){match=false;break}
+            }
+            if(match){
+              document.getElementById('fh-variant-id').value = v.id;
+              break;
+            }
+          }
+        });
+      });
+      /* Mini FAQ toggle */
+      section.querySelectorAll('[data-mfaq-toggle]').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          this.classList.toggle('open');
+          this.nextElementSibling.classList.toggle('open');
+        });
+      });
+    })();
+  </script>
+</div>
+
+{% schema %}
+{
+  "name": "Buybox produit",
+  "tag": "section",
+  "class": "fh-buybox-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "flag_emoji",
+      "label": "Emoji drapeau (fallback)",
+      "default": "🇲🇦"
+    },
+    {
+      "type": "text",
+      "id": "reviews_summary",
+      "label": "Resume avis",
+      "default": "4,8/5 — 127 avis"
+    },
+    {
+      "type": "text",
+      "id": "edition_text",
+      "label": "Texte edition",
+      "default": "Édition Coupe du Monde 2026"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_badge",
+      "label": "Afficher badge",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Texte badge",
+      "default": "🔥 Édition limitée"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_urgency",
+      "label": "Afficher urgence",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "urgency_text",
+      "label": "Texte urgence",
+      "default": "🔥 Plus que 12 en stock — Ne rate pas ta taille"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_express",
+      "label": "Bouton achat express",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "URL vidéo produit (slow motion)",
+      "info": "Coller l'URL de la vidéo MP4 uploadée dans Shopify Files"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Avantage",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Texte",
+          "default": "Design exclusif qui célèbre tes racines"
+        }
+      ]
+    },
+    {
+      "type": "guarantee",
+      "name": "Garantie",
+      "settings": [
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "Icone emoji",
+          "default": "💰"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Texte",
+          "default": "Remboursé 30j"
+        }
+      ]
+    },
+    {
+      "type": "mini_faq",
+      "name": "Mini FAQ",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Quand vais-je le recevoir ?"
+        },
+        {
+          "type": "textarea",
+          "id": "answer",
+          "label": "Réponse",
+          "default": "Production 6-8j + livraison 10-14j ouvrés en Europe."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Buybox produit",
+      "blocks": [
+        { "type": "benefit", "settings": { "text": "Design exclusif qui célèbre tes racines marocaines" } },
+        { "type": "benefit", "settings": { "text": "Coton premium 180g/m² ultra-doux — confort toute la journée" } },
+        { "type": "benefit", "settings": { "text": "Porté au stade, en terrasse, en ville — partout" } },
+        { "type": "benefit", "settings": { "text": "Impression DTG durable — couleurs qui ne fanent jamais" } },
+        { "type": "benefit", "settings": { "text": "Impression premium, chez toi en 10-20 jours" } },
+        { "type": "guarantee", "settings": { "icon": "💰", "text": "Remboursé 30j" } },
+        { "type": "guarantee", "settings": { "icon": "🚚", "text": "Livraison gratuite 49€+" } },
+        { "type": "mini_faq", "settings": { "question": "Quand vais-je le recevoir ?", "answer": "Production 6-8j + livraison 10-14j ouvrés en Europe." } },
+        { "type": "mini_faq", "settings": { "question": "C'est un maillot officiel ?", "answer": "Non, design original indépendant. Art fan premium." } },
+        { "type": "mini_faq", "settings": { "question": "Comment choisir ma taille ?", "answer": "Taille normalement. Hésitation ? Au-dessus pour décontracté." } }
+      ]
+    }
+  ]
+}
+{% endschema %}
