@@ -17,10 +17,10 @@ const securityHeaders = [
     value: [
       "default-src 'self'",
       "script-src 'self' 'unsafe-inline' 'unsafe-eval'",   // unsafe-eval requis par React/Next.js
-      "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: https: http:",   // images depuis HTTPS/HTTP (logos produits)
-      "font-src 'self'",
-      "connect-src 'self' https://*.supabase.co",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "img-src 'self' data: https: http:",   // images depuis HTTPS/HTTP (logos produits, Pexels)
+      "font-src 'self' https://fonts.gstatic.com",
+      "connect-src 'self' https://*.supabase.co https://images.pexels.com",
       "frame-src 'none'",
       "object-src 'none'",
       "base-uri 'self'",
