@@ -124,6 +124,7 @@ button{cursor:pointer;border:none;background:none;font-family:inherit}
 .product-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
 .product-card{background:var(--white);border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);transition:all .3s}
 .product-card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.product-img img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}
 .product-img{position:relative;aspect-ratio:1;overflow:hidden;background:var(--nude-light);display:flex;align-items:center;justify-content:center}
 .product-img .placeholder{font-size:64px;opacity:.5}
 .product-badge{position:absolute;top:12px;left:12px;background:var(--accent);color:var(--white);padding:4px 12px;font-size:11px;letter-spacing:1px;text-transform:uppercase;border-radius:3px}
@@ -163,6 +164,7 @@ button{cursor:pointer;border:none;background:none;font-family:inherit}
 
 /* ─── SAVOIR-FAIRE ─── */
 .savoir-faire{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.sf-img img{width:100%;height:100%;object-fit:cover;border-radius:var(--radius)}
 .sf-img{border-radius:var(--radius);overflow:hidden;aspect-ratio:4/5;background:var(--nude-light);display:flex;align-items:center;justify-content:center;font-size:80px}
 .sf-content h2{font-size:clamp(28px,3.5vw,42px);margin-bottom:20px}
 .sf-content p{color:var(--text-light);font-size:15px;line-height:1.8;margin-bottom:16px}
@@ -362,7 +364,7 @@ button{cursor:pointer;border:none;background:none;font-family:inherit}
   <!-- HERO SLIDER -->
   <section class="hero">
     <div class="hero-slides">
-      <div class="hero-slide active" style="background:linear-gradient(135deg,#34352D 0%,#4A4B3F 50%,#859839 100%)">
+      <div class="hero-slide active" style="background:url(https://images.pexels.com/photos/4466585/pexels-photo-4466585.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1) center/cover">
         <div class="overlay"></div>
         <div class="hero-content">
           <div class="tag">Printemps — Été 2026</div>
@@ -372,7 +374,7 @@ button{cursor:pointer;border:none;background:none;font-family:inherit}
           <a href="#" class="btn btn-outline" onclick="showPage('collections');return false">Collections</a>
         </div>
       </div>
-      <div class="hero-slide" style="background:linear-gradient(135deg,#C67D4A 0%,#A8623A 50%,#34352D 100%)">
+      <div class="hero-slide" style="background:url(https://images.pexels.com/photos/931162/pexels-photo-931162.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1) center/cover">
         <div class="overlay"></div>
         <div class="hero-content">
           <div class="tag">Fête des Mères — 7 juin</div>
@@ -381,7 +383,7 @@ button{cursor:pointer;border:none;background:none;font-family:inherit}
           <a href="#" class="btn btn-primary" onclick="showPage('occasions');return false">Bouquets Fête des Mères</a>
         </div>
       </div>
-      <div class="hero-slide" style="background:linear-gradient(135deg,#859839 0%,#6B7C2E 50%,#34352D 100%)">
+      <div class="hero-slide" style="background:url(https://images.pexels.com/photos/1072821/pexels-photo-1072821.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1) center/cover">
         <div class="overlay"></div>
         <div class="hero-content">
           <div class="tag">Service Premium</div>
@@ -421,19 +423,19 @@ button{cursor:pointer;border:none;background:none;font-family:inherit}
       </div>
       <div class="cat-grid">
         <div class="cat-card" onclick="showPage('roses')">
-          <div class="cat-bg" style="background:linear-gradient(135deg,#E8A0A0,#C67070);width:100%;height:100%"></div>
+          <img class="cat-bg" src="https://images.pexels.com/photos/2791043/pexels-photo-2791043.jpeg?auto=compress&cs=tinysrgb&w=800&dpr=1" alt="Roses" loading="lazy">
           <div class="cat-overlay"><h3>Roses</h3><span>12 bouquets</span></div>
         </div>
         <div class="cat-card" onclick="showPage('pivoines')">
-          <div class="cat-bg" style="background:linear-gradient(135deg,#F2C0A3,#D4A088);width:100%;height:100%"></div>
+          <img class="cat-bg" src="https://images.pexels.com/photos/10266847/pexels-photo-10266847.jpeg?auto=compress&cs=tinysrgb&w=800&dpr=1" alt="Pivoines" loading="lazy">
           <div class="cat-overlay"><h3>Pivoines</h3><span>8 bouquets</span></div>
         </div>
         <div class="cat-card" onclick="showPage('hortensias')">
-          <div class="cat-bg" style="background:linear-gradient(135deg,#A0B8D8,#7A9CC6);width:100%;height:100%"></div>
+          <img class="cat-bg" src="https://images.pexels.com/photos/827063/pexels-photo-827063.jpeg?auto=compress&cs=tinysrgb&w=800&dpr=1" alt="Hortensias" loading="lazy">
           <div class="cat-overlay"><h3>Hortensias</h3><span>6 bouquets</span></div>
         </div>
         <div class="cat-card" onclick="showPage('tulipes')">
-          <div class="cat-bg" style="background:linear-gradient(135deg,#F0D080,#E0B860);width:100%;height:100%"></div>
+          <img class="cat-bg" src="https://images.pexels.com/photos/434334/pexels-photo-434334.jpeg?auto=compress&cs=tinysrgb&w=800&dpr=1" alt="Tulipes" loading="lazy">
           <div class="cat-overlay"><h3>Tulipes</h3><span>9 bouquets</span></div>
         </div>
       </div>
@@ -450,19 +452,19 @@ button{cursor:pointer;border:none;background:none;font-family:inherit}
       </div>
       <div class="product-grid">
         <div class="product-card" onclick="showPage('boutique')">
-          <div class="product-img"><span class="placeholder">🌹</span><span class="product-badge">Best-seller</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div>
+          <div class="product-img"><img src="https://images.pexels.com/photos/4494437/pexels-photo-4494437.jpeg?auto=compress&cs=tinysrgb&w=800&dpr=1" alt="Bouquet" loading="lazy"><span class="product-badge">Best-seller</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div>
           <div class="product-info"><div class="cat">Roses</div><h4>Le Jardin de Diane</h4><div class="price">65,00 €</div></div>
         </div>
         <div class="product-card" onclick="showPage('boutique')">
-          <div class="product-img"><span class="placeholder">🌸</span><span class="product-badge green">Nouveau</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div>
+          <div class="product-img"><img src="https://images.pexels.com/photos/931162/pexels-photo-931162.jpeg?auto=compress&cs=tinysrgb&w=800&dpr=1" alt="Bouquet" loading="lazy"><span class="product-badge green">Nouveau</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div>
           <div class="product-info"><div class="cat">Pivoines</div><h4>Éclat de Pivoine</h4><div class="price">75,00 €</div></div>
         </div>
         <div class="product-card" onclick="showPage('boutique')">
-          <div class="product-img"><span class="placeholder">💐</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div>
+          <div class="product-img"><img src="https://images.pexels.com/photos/29093045/pexels-photo-29093045.jpeg?auto=compress&cs=tinysrgb&w=800&dpr=1" alt="Bouquet" loading="lazy"><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div>
           <div class="product-info"><div class="cat">Compositions</div><h4>Symphonie Pastel</h4><div class="price">55,00 €</div></div>
         </div>
         <div class="product-card" onclick="showPage('boutique')">
-          <div class="product-img"><span class="placeholder">🌷</span><span class="product-badge">Best-seller</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div>
+          <div class="product-img"><img src="https://images.pexels.com/photos/434334/pexels-photo-434334.jpeg?auto=compress&cs=tinysrgb&w=800&dpr=1" alt="Bouquet" loading="lazy"><span class="product-badge">Best-seller</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div>
           <div class="product-info"><div class="cat">Tulipes</div><h4>Aurore Printanière</h4><div class="price">48,00 €</div></div>
         </div>
       </div>
@@ -472,7 +474,7 @@ button{cursor:pointer;border:none;background:none;font-family:inherit}
   <!-- BANNER LOOKBOOK -->
   <section class="section">
     <div class="container">
-      <div class="banner" style="background:linear-gradient(135deg,#34352D,#4A4B3F,#859839)">
+      <div class="banner" style="background:url(https://images.pexels.com/photos/2300713/pexels-photo-2300713.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1) center/cover;position:relative">
         <div class="banner-content">
           <h2>Collection Prestige</h2>
           <p>Des compositions d'exception pour les moments qui comptent. Roses de jardin, pivoines premium et orchidées rares assemblées par nos maîtres artisans.</p>
@@ -492,19 +494,19 @@ button{cursor:pointer;border:none;background:none;font-family:inherit}
       </div>
       <div class="product-grid">
         <div class="product-card" onclick="showPage('boutique')">
-          <div class="product-img"><span class="placeholder">🌺</span><span class="product-badge green">Saison</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div>
+          <div class="product-img"><img src="https://images.pexels.com/photos/20206456/pexels-photo-20206456.jpeg?auto=compress&cs=tinysrgb&w=800&dpr=1" alt="Bouquet" loading="lazy"><span class="product-badge green">Saison</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div>
           <div class="product-info"><div class="cat">Compositions</div><h4>Brise Méditerranéenne</h4><div class="price">58,00 €</div></div>
         </div>
         <div class="product-card" onclick="showPage('boutique')">
-          <div class="product-img"><span class="placeholder">🪻</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div>
+          <div class="product-img"><img src="https://images.pexels.com/photos/12519/pexels-photo-12519.jpeg?auto=compress&cs=tinysrgb&w=800&dpr=1" alt="Bouquet" loading="lazy"><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div>
           <div class="product-info"><div class="cat">Lavande</div><h4>Champs de Provence</h4><div class="price">42,00 €</div></div>
         </div>
         <div class="product-card" onclick="showPage('boutique')">
-          <div class="product-img"><span class="placeholder">🌻</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div>
+          <div class="product-img"><img src="https://images.pexels.com/photos/1562262/pexels-photo-1562262.jpeg?auto=compress&cs=tinysrgb&w=800&dpr=1" alt="Bouquet" loading="lazy"><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div>
           <div class="product-info"><div class="cat">Tournesols</div><h4>Soleil d'Or</h4><div class="price">45,00 €</div></div>
         </div>
         <div class="product-card" onclick="showPage('boutique')">
-          <div class="product-img"><span class="placeholder">🌿</span><span class="product-badge">Nouveau</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div>
+          <div class="product-img"><img src="https://images.pexels.com/photos/1831126/pexels-photo-1831126.jpeg?auto=compress&cs=tinysrgb&w=800&dpr=1" alt="Bouquet" loading="lazy"><span class="product-badge">Nouveau</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div>
           <div class="product-info"><div class="cat">Plantes</div><h4>Monstera Deliciosa</h4><div class="price">38,00 €</div></div>
         </div>
       </div>
@@ -546,7 +548,7 @@ button{cursor:pointer;border:none;background:none;font-family:inherit}
   <section class="section" style="background:var(--white)">
     <div class="container">
       <div class="savoir-faire">
-        <div class="sf-img">🌿</div>
+        <div class="sf-img"><img src="https://images.pexels.com/photos/5273741/pexels-photo-5273741.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Artisan fleuriste" loading="lazy"></div>
         <div class="sf-content">
           <h2>Notre Savoir-Faire</h2>
           <p>Depuis 2012, Maison Pétale perpétue l'art floral parisien avec passion et exigence. Chaque bouquet est une création unique, composée à la main dans notre atelier du Marais.</p>
@@ -588,12 +590,12 @@ button{cursor:pointer;border:none;background:none;font-family:inherit}
       </div>
     </div>
     <div class="insta-grid">
-      <div class="insta-item" style="background:linear-gradient(135deg,#F2C0A3,#E8A0A0)">🌸<div class="insta-overlay">♡</div></div>
-      <div class="insta-item" style="background:linear-gradient(135deg,#A4B85C,#859839)">🌿<div class="insta-overlay">♡</div></div>
-      <div class="insta-item" style="background:linear-gradient(135deg,#E8A0A0,#C67070)">🌹<div class="insta-overlay">♡</div></div>
-      <div class="insta-item" style="background:linear-gradient(135deg,#F0D080,#E0B860)">🌻<div class="insta-overlay">♡</div></div>
-      <div class="insta-item" style="background:linear-gradient(135deg,#A0B8D8,#7A9CC6)">💐<div class="insta-overlay">♡</div></div>
-      <div class="insta-item" style="background:linear-gradient(135deg,#D4A0D4,#B880B8)">🌷<div class="insta-overlay">♡</div></div>
+      <div class="insta-item"><img src="https://images.pexels.com/photos/14298131/pexels-photo-14298131.jpeg?auto=compress&cs=tinysrgb&w=600&dpr=1" alt="Instagram" style="width:100%;height:100%;object-fit:cover" loading="lazy"><div class="insta-overlay">♡</div></div>
+      <div class="insta-item"><img src="https://images.pexels.com/photos/963043/pexels-photo-963043.jpeg?auto=compress&cs=tinysrgb&w=600&dpr=1" alt="Instagram" style="width:100%;height:100%;object-fit:cover" loading="lazy"><div class="insta-overlay">♡</div></div>
+      <div class="insta-item"><img src="https://images.pexels.com/photos/928098/pexels-photo-928098.jpeg?auto=compress&cs=tinysrgb&w=600&dpr=1" alt="Instagram" style="width:100%;height:100%;object-fit:cover" loading="lazy"><div class="insta-overlay">♡</div></div>
+      <div class="insta-item"><img src="https://images.pexels.com/photos/1083822/pexels-photo-1083822.jpeg?auto=compress&cs=tinysrgb&w=600&dpr=1" alt="Instagram" style="width:100%;height:100%;object-fit:cover" loading="lazy"><div class="insta-overlay">♡</div></div>
+      <div class="insta-item"><img src="https://images.pexels.com/photos/1072821/pexels-photo-1072821.jpeg?auto=compress&cs=tinysrgb&w=600&dpr=1" alt="Instagram" style="width:100%;height:100%;object-fit:cover" loading="lazy"><div class="insta-overlay">♡</div></div>
+      <div class="insta-item"><img src="https://images.pexels.com/photos/635284/pexels-photo-635284.jpeg?auto=compress&cs=tinysrgb&w=600&dpr=1" alt="Instagram" style="width:100%;height:100%;object-fit:cover" loading="lazy"><div class="insta-overlay">♡</div></div>
     </div>
   </section>
 
@@ -618,18 +620,18 @@ button{cursor:pointer;border:none;background:none;font-family:inherit}
   <div class="page-hero"><div class="container"><h2>Notre Boutique</h2><p>Tous nos bouquets et compositions florales</p><div class="breadcrumb"><a href="#" onclick="showPage('home');return false">Accueil</a> / Boutique</div></div></div>
   <section class="section"><div class="container">
     <div class="product-grid">
-      <div class="product-card"><div class="product-img"><span class="placeholder">🌹</span><span class="product-badge">Best-seller</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Roses</div><h4>Le Jardin de Diane</h4><div class="price">65,00 €</div></div></div>
-      <div class="product-card"><div class="product-img"><span class="placeholder">🌸</span><span class="product-badge green">Nouveau</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Pivoines</div><h4>Éclat de Pivoine</h4><div class="price">75,00 €</div></div></div>
-      <div class="product-card"><div class="product-img"><span class="placeholder">💐</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Compositions</div><h4>Symphonie Pastel</h4><div class="price">55,00 €</div></div></div>
-      <div class="product-card"><div class="product-img"><span class="placeholder">🌷</span><span class="product-badge">Best-seller</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Tulipes</div><h4>Aurore Printanière</h4><div class="price">48,00 €</div></div></div>
-      <div class="product-card"><div class="product-img"><span class="placeholder">🌺</span><span class="product-badge green">Saison</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Compositions</div><h4>Brise Méditerranéenne</h4><div class="price">58,00 €</div></div></div>
-      <div class="product-card"><div class="product-img"><span class="placeholder">🪻</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Lavande</div><h4>Champs de Provence</h4><div class="price">42,00 €</div></div></div>
-      <div class="product-card"><div class="product-img"><span class="placeholder">🌻</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Tournesols</div><h4>Soleil d'Or</h4><div class="price">45,00 €</div></div></div>
-      <div class="product-card"><div class="product-img"><span class="placeholder">🌿</span><span class="product-badge green">Nouveau</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Plantes</div><h4>Monstera Deliciosa</h4><div class="price">38,00 €</div></div></div>
-      <div class="product-card"><div class="product-img"><span class="placeholder">🏵️</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Roses</div><h4>Roses Éternelles Coffret</h4><div class="price">89,00 €</div></div></div>
-      <div class="product-card"><div class="product-img"><span class="placeholder">🌼</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Champêtre</div><h4>Prairie Sauvage</h4><div class="price">52,00 €</div></div></div>
-      <div class="product-card"><div class="product-img"><span class="placeholder">🪷</span><span class="product-badge">Prestige</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Orchidées</div><h4>Orchidée Impériale</h4><div class="price">120,00 €</div></div></div>
-      <div class="product-card"><div class="product-img"><span class="placeholder">💮</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Compositions</div><h4>Nuage de Coton</h4><div class="price">62,00 €</div></div></div>
+      <div class="product-card"><div class="product-img"><img src="https://images.pexels.com/photos/4494437/pexels-photo-4494437.jpeg?auto=compress&cs=tinysrgb&w=800&dpr=1" alt="Bouquet" loading="lazy"><span class="product-badge">Best-seller</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Roses</div><h4>Le Jardin de Diane</h4><div class="price">65,00 €</div></div></div>
+      <div class="product-card"><div class="product-img"><img src="https://images.pexels.com/photos/931162/pexels-photo-931162.jpeg?auto=compress&cs=tinysrgb&w=800&dpr=1" alt="Bouquet" loading="lazy"><span class="product-badge green">Nouveau</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Pivoines</div><h4>Éclat de Pivoine</h4><div class="price">75,00 €</div></div></div>
+      <div class="product-card"><div class="product-img"><img src="https://images.pexels.com/photos/29093045/pexels-photo-29093045.jpeg?auto=compress&cs=tinysrgb&w=800&dpr=1" alt="Bouquet" loading="lazy"><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Compositions</div><h4>Symphonie Pastel</h4><div class="price">55,00 €</div></div></div>
+      <div class="product-card"><div class="product-img"><img src="https://images.pexels.com/photos/434334/pexels-photo-434334.jpeg?auto=compress&cs=tinysrgb&w=800&dpr=1" alt="Bouquet" loading="lazy"><span class="product-badge">Best-seller</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Tulipes</div><h4>Aurore Printanière</h4><div class="price">48,00 €</div></div></div>
+      <div class="product-card"><div class="product-img"><img src="https://images.pexels.com/photos/20206456/pexels-photo-20206456.jpeg?auto=compress&cs=tinysrgb&w=800&dpr=1" alt="Bouquet" loading="lazy"><span class="product-badge green">Saison</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Compositions</div><h4>Brise Méditerranéenne</h4><div class="price">58,00 €</div></div></div>
+      <div class="product-card"><div class="product-img"><img src="https://images.pexels.com/photos/12519/pexels-photo-12519.jpeg?auto=compress&cs=tinysrgb&w=800&dpr=1" alt="Bouquet" loading="lazy"><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Lavande</div><h4>Champs de Provence</h4><div class="price">42,00 €</div></div></div>
+      <div class="product-card"><div class="product-img"><img src="https://images.pexels.com/photos/1562262/pexels-photo-1562262.jpeg?auto=compress&cs=tinysrgb&w=800&dpr=1" alt="Bouquet" loading="lazy"><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Tournesols</div><h4>Soleil d'Or</h4><div class="price">45,00 €</div></div></div>
+      <div class="product-card"><div class="product-img"><img src="https://images.pexels.com/photos/1831126/pexels-photo-1831126.jpeg?auto=compress&cs=tinysrgb&w=800&dpr=1" alt="Bouquet" loading="lazy"><span class="product-badge green">Nouveau</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Plantes</div><h4>Monstera Deliciosa</h4><div class="price">38,00 €</div></div></div>
+      <div class="product-card"><div class="product-img"><img src="https://images.pexels.com/photos/2300713/pexels-photo-2300713.jpeg?auto=compress&cs=tinysrgb&w=800&dpr=1" alt="Bouquet" loading="lazy"><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Roses</div><h4>Roses Éternelles Coffret</h4><div class="price">89,00 €</div></div></div>
+      <div class="product-card"><div class="product-img"><img src="https://images.pexels.com/photos/17903880/pexels-photo-17903880.jpeg?auto=compress&cs=tinysrgb&w=800&dpr=1" alt="Bouquet" loading="lazy"><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Champêtre</div><h4>Prairie Sauvage</h4><div class="price">52,00 €</div></div></div>
+      <div class="product-card"><div class="product-img"><img src="https://images.pexels.com/photos/20206456/pexels-photo-20206456.jpeg?auto=compress&cs=tinysrgb&w=800&dpr=1" alt="Bouquet" loading="lazy"><span class="product-badge">Prestige</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Orchidées</div><h4>Orchidée Impériale</h4><div class="price">120,00 €</div></div></div>
+      <div class="product-card"><div class="product-img"><img src="https://images.pexels.com/photos/540522/pexels-photo-540522.jpeg?auto=compress&cs=tinysrgb&w=800&dpr=1" alt="Bouquet" loading="lazy"><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Compositions</div><h4>Nuage de Coton</h4><div class="price">62,00 €</div></div></div>
     </div>
   </div></section>
 </div>
@@ -641,10 +643,10 @@ button{cursor:pointer;border:none;background:none;font-family:inherit}
   <div class="page-hero" style="background:linear-gradient(135deg,#C67070,#34352D)"><div class="container"><h2>Roses</h2><p>La fleur de l'amour par excellence</p><div class="breadcrumb"><a href="#" onclick="showPage('home');return false">Accueil</a> / <a href="#" onclick="showPage('boutique');return false">Boutique</a> / Roses</div></div></div>
   <section class="section"><div class="container">
     <div class="product-grid">
-      <div class="product-card"><div class="product-img"><span class="placeholder">🌹</span><span class="product-badge">Best-seller</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Roses rouges</div><h4>Le Jardin de Diane</h4><div class="price">65,00 €</div></div></div>
-      <div class="product-card"><div class="product-img"><span class="placeholder">🌹</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Roses roses</div><h4>Douceur Matinale</h4><div class="price">55,00 €</div></div></div>
-      <div class="product-card"><div class="product-img"><span class="placeholder">🤍</span><span class="product-badge green">Nouveau</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Roses blanches</div><h4>Pureté Absolue</h4><div class="price">60,00 €</div></div></div>
-      <div class="product-card"><div class="product-img"><span class="placeholder">🏵️</span><span class="product-badge">Prestige</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Roses éternelles</div><h4>Roses Éternelles Coffret</h4><div class="price">89,00 €</div></div></div>
+      <div class="product-card"><div class="product-img"><img src="https://images.pexels.com/photos/4494437/pexels-photo-4494437.jpeg?auto=compress&cs=tinysrgb&w=800&dpr=1" alt="Bouquet" loading="lazy"><span class="product-badge">Best-seller</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Roses rouges</div><h4>Le Jardin de Diane</h4><div class="price">65,00 €</div></div></div>
+      <div class="product-card"><div class="product-img"><img src="https://images.pexels.com/photos/4494437/pexels-photo-4494437.jpeg?auto=compress&cs=tinysrgb&w=800&dpr=1" alt="Bouquet" loading="lazy"><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Roses roses</div><h4>Douceur Matinale</h4><div class="price">55,00 €</div></div></div>
+      <div class="product-card"><div class="product-img"><img src="https://images.pexels.com/photos/540522/pexels-photo-540522.jpeg?auto=compress&cs=tinysrgb&w=800&dpr=1" alt="Bouquet" loading="lazy"><span class="product-badge green">Nouveau</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Roses blanches</div><h4>Pureté Absolue</h4><div class="price">60,00 €</div></div></div>
+      <div class="product-card"><div class="product-img"><img src="https://images.pexels.com/photos/2300713/pexels-photo-2300713.jpeg?auto=compress&cs=tinysrgb&w=800&dpr=1" alt="Bouquet" loading="lazy"><span class="product-badge">Prestige</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Roses éternelles</div><h4>Roses Éternelles Coffret</h4><div class="price">89,00 €</div></div></div>
     </div>
   </div></section>
 </div>
@@ -656,9 +658,9 @@ button{cursor:pointer;border:none;background:none;font-family:inherit}
   <div class="page-hero" style="background:linear-gradient(135deg,#D4A088,#34352D)"><div class="container"><h2>Pivoines</h2><p>Généreuses et parfumées, les reines du printemps</p><div class="breadcrumb"><a href="#" onclick="showPage('home');return false">Accueil</a> / <a href="#" onclick="showPage('boutique');return false">Boutique</a> / Pivoines</div></div></div>
   <section class="section"><div class="container">
     <div class="product-grid">
-      <div class="product-card"><div class="product-img"><span class="placeholder">🌸</span><span class="product-badge green">Nouveau</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Pivoines roses</div><h4>Éclat de Pivoine</h4><div class="price">75,00 €</div></div></div>
-      <div class="product-card"><div class="product-img"><span class="placeholder">🌸</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Pivoines blanches</div><h4>Neige de Mai</h4><div class="price">72,00 €</div></div></div>
-      <div class="product-card"><div class="product-img"><span class="placeholder">🌸</span><span class="product-badge">Prestige</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Pivoines luxe</div><h4>Bouquet Royal 30 pivoines</h4><div class="price">130,00 €</div></div></div>
+      <div class="product-card"><div class="product-img"><img src="https://images.pexels.com/photos/931162/pexels-photo-931162.jpeg?auto=compress&cs=tinysrgb&w=800&dpr=1" alt="Bouquet" loading="lazy"><span class="product-badge green">Nouveau</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Pivoines roses</div><h4>Éclat de Pivoine</h4><div class="price">75,00 €</div></div></div>
+      <div class="product-card"><div class="product-img"><img src="https://images.pexels.com/photos/931162/pexels-photo-931162.jpeg?auto=compress&cs=tinysrgb&w=800&dpr=1" alt="Bouquet" loading="lazy"><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Pivoines blanches</div><h4>Neige de Mai</h4><div class="price">72,00 €</div></div></div>
+      <div class="product-card"><div class="product-img"><img src="https://images.pexels.com/photos/931162/pexels-photo-931162.jpeg?auto=compress&cs=tinysrgb&w=800&dpr=1" alt="Bouquet" loading="lazy"><span class="product-badge">Prestige</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Pivoines luxe</div><h4>Bouquet Royal 30 pivoines</h4><div class="price">130,00 €</div></div></div>
     </div>
   </div></section>
 </div>
@@ -667,32 +669,32 @@ button{cursor:pointer;border:none;background:none;font-family:inherit}
 <div class="page" id="page-hortensias">
   <div class="page-hero" style="background:linear-gradient(135deg,#7A9CC6,#34352D)"><div class="container"><h2>Hortensias</h2><p>Volumes généreux et couleurs tendres</p><div class="breadcrumb"><a href="#" onclick="showPage('home');return false">Accueil</a> / <a href="#" onclick="showPage('boutique');return false">Boutique</a> / Hortensias</div></div></div>
   <section class="section"><div class="container"><div class="product-grid">
-    <div class="product-card"><div class="product-img"><span class="placeholder">💠</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Hortensias</div><h4>Nuage Bleu</h4><div class="price">68,00 €</div></div></div>
-    <div class="product-card"><div class="product-img"><span class="placeholder">💠</span><span class="product-badge green">Saison</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Hortensias</div><h4>Rosée du Matin</h4><div class="price">62,00 €</div></div></div>
+    <div class="product-card"><div class="product-img"><img src="https://images.pexels.com/photos/827063/pexels-photo-827063.jpeg?auto=compress&cs=tinysrgb&w=800&dpr=1" alt="Bouquet" loading="lazy"><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Hortensias</div><h4>Nuage Bleu</h4><div class="price">68,00 €</div></div></div>
+    <div class="product-card"><div class="product-img"><img src="https://images.pexels.com/photos/827063/pexels-photo-827063.jpeg?auto=compress&cs=tinysrgb&w=800&dpr=1" alt="Bouquet" loading="lazy"><span class="product-badge green">Saison</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Hortensias</div><h4>Rosée du Matin</h4><div class="price">62,00 €</div></div></div>
   </div></div></section>
 </div>
 
 <div class="page" id="page-tulipes">
   <div class="page-hero" style="background:linear-gradient(135deg,#E0B860,#34352D)"><div class="container"><h2>Tulipes</h2><p>Fraîcheur et élégance hollandaise</p><div class="breadcrumb"><a href="#" onclick="showPage('home');return false">Accueil</a> / <a href="#" onclick="showPage('boutique');return false">Boutique</a> / Tulipes</div></div></div>
   <section class="section"><div class="container"><div class="product-grid">
-    <div class="product-card"><div class="product-img"><span class="placeholder">🌷</span><span class="product-badge">Best-seller</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Tulipes</div><h4>Aurore Printanière</h4><div class="price">48,00 €</div></div></div>
-    <div class="product-card"><div class="product-img"><span class="placeholder">🌷</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Tulipes</div><h4>Tulipes Perroquet Mix</h4><div class="price">52,00 €</div></div></div>
+    <div class="product-card"><div class="product-img"><img src="https://images.pexels.com/photos/434334/pexels-photo-434334.jpeg?auto=compress&cs=tinysrgb&w=800&dpr=1" alt="Bouquet" loading="lazy"><span class="product-badge">Best-seller</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Tulipes</div><h4>Aurore Printanière</h4><div class="price">48,00 €</div></div></div>
+    <div class="product-card"><div class="product-img"><img src="https://images.pexels.com/photos/434334/pexels-photo-434334.jpeg?auto=compress&cs=tinysrgb&w=800&dpr=1" alt="Bouquet" loading="lazy"><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Tulipes</div><h4>Tulipes Perroquet Mix</h4><div class="price">52,00 €</div></div></div>
   </div></div></section>
 </div>
 
 <div class="page" id="page-plantes">
   <div class="page-hero" style="background:linear-gradient(135deg,#859839,#34352D)"><div class="container"><h2>Plantes Vertes</h2><p>Apportez la nature chez vous</p><div class="breadcrumb"><a href="#" onclick="showPage('home');return false">Accueil</a> / <a href="#" onclick="showPage('boutique');return false">Boutique</a> / Plantes</div></div></div>
   <section class="section"><div class="container"><div class="product-grid">
-    <div class="product-card"><div class="product-img"><span class="placeholder">🌿</span><span class="product-badge green">Nouveau</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Plantes</div><h4>Monstera Deliciosa</h4><div class="price">38,00 €</div></div></div>
-    <div class="product-card"><div class="product-img"><span class="placeholder">🪴</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Plantes</div><h4>Ficus Lyrata</h4><div class="price">55,00 €</div></div></div>
+    <div class="product-card"><div class="product-img"><img src="https://images.pexels.com/photos/1831126/pexels-photo-1831126.jpeg?auto=compress&cs=tinysrgb&w=800&dpr=1" alt="Bouquet" loading="lazy"><span class="product-badge green">Nouveau</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Plantes</div><h4>Monstera Deliciosa</h4><div class="price">38,00 €</div></div></div>
+    <div class="product-card"><div class="product-img"><img src="https://images.pexels.com/photos/1831126/pexels-photo-1831126.jpeg?auto=compress&cs=tinysrgb&w=800&dpr=1" alt="Bouquet" loading="lazy"><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Plantes</div><h4>Ficus Lyrata</h4><div class="price">55,00 €</div></div></div>
   </div></div></section>
 </div>
 
 <div class="page" id="page-vases">
   <div class="page-hero" style="background:linear-gradient(135deg,#C67D4A,#34352D)"><div class="container"><h2>Vases & Accessoires</h2><p>L'écrin parfait pour vos bouquets</p><div class="breadcrumb"><a href="#" onclick="showPage('home');return false">Accueil</a> / <a href="#" onclick="showPage('boutique');return false">Boutique</a> / Vases</div></div></div>
   <section class="section"><div class="container"><div class="product-grid">
-    <div class="product-card"><div class="product-img"><span class="placeholder">🏺</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Vases</div><h4>Vase Cylindre Fumé</h4><div class="price">28,00 €</div></div></div>
-    <div class="product-card"><div class="product-img"><span class="placeholder">🏺</span><span class="product-badge green">Nouveau</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Vases</div><h4>Vase Boule Opaline</h4><div class="price">35,00 €</div></div></div>
+    <div class="product-card"><div class="product-img"><img src="https://images.pexels.com/photos/6587866/pexels-photo-6587866.jpeg?auto=compress&cs=tinysrgb&w=800&dpr=1" alt="Bouquet" loading="lazy"><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Vases</div><h4>Vase Cylindre Fumé</h4><div class="price">28,00 €</div></div></div>
+    <div class="product-card"><div class="product-img"><img src="https://images.pexels.com/photos/6587866/pexels-photo-6587866.jpeg?auto=compress&cs=tinysrgb&w=800&dpr=1" alt="Bouquet" loading="lazy"><span class="product-badge green">Nouveau</span><button class="product-wishlist">♡</button><div class="product-hover"><button>Ajouter au panier</button><button>Voir détails</button></div></div><div class="product-info"><div class="cat">Vases</div><h4>Vase Boule Opaline</h4><div class="price">35,00 €</div></div></div>
   </div></div></section>
 </div>
 
@@ -703,10 +705,10 @@ button{cursor:pointer;border:none;background:none;font-family:inherit}
   <div class="page-hero" style="background:linear-gradient(135deg,#34352D,#859839)"><div class="container"><h2>Nos Collections</h2><p>Des bouquets pensés pour chaque style et chaque saison</p><div class="breadcrumb"><a href="#" onclick="showPage('home');return false">Accueil</a> / Collections</div></div></div>
   <section class="section"><div class="container">
     <div class="cat-grid">
-      <div class="cat-card" onclick="showPage('boutique')"><div class="cat-bg" style="background:linear-gradient(135deg,#C67D4A,#A8623A);width:100%;height:100%"></div><div class="cat-overlay"><h3>Prestige</h3><span>Compositions d'exception</span></div></div>
-      <div class="cat-card" onclick="showPage('boutique')"><div class="cat-bg" style="background:linear-gradient(135deg,#859839,#6B7C2E);width:100%;height:100%"></div><div class="cat-overlay"><h3>Saison</h3><span>Fleurs de printemps</span></div></div>
-      <div class="cat-card" onclick="showPage('boutique')"><div class="cat-bg" style="background:linear-gradient(135deg,#F2C0A3,#E8A0A0);width:100%;height:100%"></div><div class="cat-overlay"><h3>Tons Pastels</h3><span>Douceur et poésie</span></div></div>
-      <div class="cat-card" onclick="showPage('boutique')"><div class="cat-bg" style="background:linear-gradient(135deg,#C67070,#A04848);width:100%;height:100%"></div><div class="cat-overlay"><h3>Rouges</h3><span>Passion et élégance</span></div></div>
+      <div class="cat-card" onclick="showPage('boutique')"><img class="cat-bg" src="https://images.pexels.com/photos/2300713/pexels-photo-2300713.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Prestige" loading="lazy"><div class="cat-overlay"><h3>Prestige</h3><span>Compositions d'exception</span></div></div>
+      <div class="cat-card" onclick="showPage('boutique')"><img class="cat-bg" src="https://images.pexels.com/photos/963043/pexels-photo-963043.jpeg?auto=compress&cs=tinysrgb&w=800&dpr=1" alt="Saison" loading="lazy"><div class="cat-overlay"><h3>Saison</h3><span>Fleurs de printemps</span></div></div>
+      <div class="cat-card" onclick="showPage('boutique')"><img class="cat-bg" src="https://images.pexels.com/photos/10266847/pexels-photo-10266847.jpeg?auto=compress&cs=tinysrgb&w=800&dpr=1" alt="Tons pastels" loading="lazy"><div class="cat-overlay"><h3>Tons Pastels</h3><span>Douceur et poésie</span></div></div>
+      <div class="cat-card" onclick="showPage('boutique')"><img class="cat-bg" src="https://images.pexels.com/photos/2791043/pexels-photo-2791043.jpeg?auto=compress&cs=tinysrgb&w=800&dpr=1" alt="Rouges" loading="lazy"><div class="cat-overlay"><h3>Rouges</h3><span>Passion et élégance</span></div></div>
     </div>
   </div></section>
 </div>
@@ -735,7 +737,7 @@ button{cursor:pointer;border:none;background:none;font-family:inherit}
   <div class="page-hero" style="background:linear-gradient(135deg,#859839,#34352D)"><div class="container"><h2>Notre Maison</h2><p>L'art floral parisien depuis 2012</p><div class="breadcrumb"><a href="#" onclick="showPage('home');return false">Accueil</a> / Notre Maison</div></div></div>
   <section class="section"><div class="container">
     <div class="savoir-faire">
-      <div class="sf-img">🌿</div>
+      <div class="sf-img"><img src="https://images.pexels.com/photos/5273741/pexels-photo-5273741.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Artisan fleuriste" loading="lazy"></div>
       <div class="sf-content">
         <h2>Notre Histoire</h2>
         <p>Fondée en 2012 par Camille Laurent, Maison Pétale est née d'une passion pour l'art floral et d'une vision : rendre accessible la haute fleuristerie parisienne.</p>
