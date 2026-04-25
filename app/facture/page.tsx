@@ -418,7 +418,6 @@ export default function FacturePage() {
     const text = [
       `Facture ${factureNum}`,
       `Client: ${client || "—"}`,
-      `Date: ${factureDate}`,
       "",
       ...items.map(r => `${r.designation} × ${r.qte} = ${formatMoney((Number(r.qte) || 0) * (Number(r.pu) || 0))}`),
       "",
@@ -970,7 +969,7 @@ export default function FacturePage() {
                 </div>
 
                 {/* Invoice info */}
-                <div className="grid grid-cols-3 border-2 border-blue-500 rounded-lg overflow-hidden mb-5">
+                <div className="grid grid-cols-3 border-2 border-blue-500 rounded-lg overflow-hidden mb-5 print:hidden">
                   {["Facture", "Date", "Échéance"].map(h => (
                     <div key={h} className="bg-blue-500 text-white font-bold text-xs text-center py-2.5 uppercase tracking-wide">{h}</div>
                   ))}
