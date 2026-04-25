@@ -1049,6 +1049,23 @@ export default function FacturePage() {
                   <Package size={16} />
                   Base produits
                 </button>
+                <button
+                  onClick={refreshProducts}
+                  disabled={syncStatus === "syncing"}
+                  className={cn(
+                    "flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all",
+                    syncStatus === "ok" ? "bg-emerald-50 text-emerald-700 border border-emerald-200" :
+                    syncStatus === "error" ? "bg-red-50 text-red-600 border border-red-200" :
+                    syncStatus === "syncing" ? "bg-blue-50 text-blue-600 border border-blue-200" :
+                    "bg-orange-50 hover:bg-orange-100 text-orange-700 border border-orange-200"
+                  )}
+                >
+                  <RefreshCw size={16} className={syncStatus === "syncing" ? "animate-spin" : ""} />
+                  {syncStatus === "syncing" ? "Sync..." :
+                   syncStatus === "ok" ? `${syncCount} produits OK` :
+                   syncStatus === "error" ? "Erreur" :
+                   "Màj catalogue"}
+                </button>
                 <button onClick={addRow} className="flex items-center gap-2 px-4 py-2.5 bg-amber-500 hover:bg-amber-600 text-gray-900 font-medium rounded-lg text-sm transition-colors ml-auto">
                   <Plus size={16} />
                   Ligne
