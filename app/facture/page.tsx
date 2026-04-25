@@ -24,6 +24,8 @@ import {
   ChevronDown,
   Lock,
   ShieldCheck,
+  KeyRound,
+  LogOut,
 } from "lucide-react"
 
 // ─── Types ──────────────────────────────────────────────────────────────────
@@ -192,6 +194,53 @@ export default function FacturePage() {
   const [echeance, setEcheance] = useState(plus30())
   const [editingIndex, setEditingIndex] = useState<number | null>(null)
   const [shareMsg, setShareMsg] = useState("")
+
+  // Change PIN modal
+  const [showPinModal, setShowPinModal] = useState(false)
+  const [oldPinInput, setOldPinInput] = useState("")
+  const [newPinInput, setNewPinInput] = useState("")
+  const [confirmPinInput, setConfirmPinInput] = useState("")
+  const [pinChangeMsg, setPinChangeMsg] = useState<{ type: "ok" | "error"; text: string } | null>(null)
+  const [pinChanging, setPinChanging] = useState(false)
+
+  async function handleChangePin() {
+    if (pinChanging) return
+    if (newPinInput !== confirmPinInput) {
+      setPinChangeMsg({ type: "error", text: "Les nouveaux PIN ne correspondent pas" })
+      return
+    }
+    if (!/^\d{4}$/.test(newPinInput)) {
+      setPinChangeMsg({ type: "error", text: "Le PIN doit contenir 4 chiffres" })
+      return
+    }
+    setPinChanging(true)
+    try {
+      const res = await fetch("/api/facture-auth", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ oldPin: oldPinInput, newPin: newPinInput }),
+      })
+      const data = await res.json()
+      if (res.ok) {
+        setPinChangeMsg({ type: "ok", text: "PIN modifié avec succès" })
+        setOldPinInput("")
+        setNewPinInput("")
+        setConfirmPinInput("")
+        setTimeout(() => { setShowPinModal(false); setPinChangeMsg(null) }, 1500)
+      } else {
+        setPinChangeMsg({ type: "error", text: data.error || "Erreur" })
+      }
+    } catch {
+      setPinChangeMsg({ type: "error", text: "Erreur réseau" })
+    } finally {
+      setPinChanging(false)
+    }
+  }
+
+  async function handleLogout() {
+    await fetch("/api/facture-auth", { method: "DELETE" })
+    setIsUnlocked(false)
+  }
 
   // Autocomplete
   const [acIndex, setAcIndex] = useState<number | null>(null)
@@ -637,10 +686,28 @@ export default function FacturePage() {
           })}
         </nav>
 
-        {/* Bottom stats */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-slate-700">
-          <div className="text-xs text-slate-500">Total factures</div>
-          <div className="text-lg font-bold text-white">{invoices.length}</div>
+        {/* Bottom actions */}
+        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-slate-700 space-y-2">
+          <div className="flex items-center justify-between mb-2">
+            <div>
+              <div className="text-xs text-slate-500">Total factures</div>
+              <div className="text-lg font-bold text-white">{invoices.length}</div>
+            </div>
+          </div>
+          <button
+            onClick={() => { setShowPinModal(true); setPinChangeMsg(null); setOldPinInput(""); setNewPinInput(""); setConfirmPinInput("") }}
+            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-700/50 transition-colors"
+          >
+            <KeyRound size={14} />
+            Changer le PIN
+          </button>
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors"
+          >
+            <LogOut size={14} />
+            Déconnexion
+          </button>
         </div>
       </aside>
 
@@ -1155,6 +1222,78 @@ export default function FacturePage() {
           )}
         </div>
       </main>
+
+      {/* Modal changer PIN */}
+      {showPinModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 print:hidden" onClick={() => setShowPinModal(false)}>
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm mx-4 p-6" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center">
+                <KeyRound size={20} className="text-blue-500" />
+              </div>
+              <div>
+                <h2 className="font-bold text-gray-900">Changer le PIN</h2>
+                <p className="text-xs text-gray-400">4 chiffres requis</p>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <div>
+                <label className="text-xs font-medium text-gray-500 uppercase mb-1 block">Ancien PIN</label>
+                <input
+                  type="password"
+                  maxLength={4}
+                  value={oldPinInput}
+                  onChange={e => setOldPinInput(e.target.value.replace(/\D/g, ""))}
+                  className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-center text-lg tracking-[0.5em] outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+                  placeholder="••••"
+                />
+              </div>
+              <div>
+                <label className="text-xs font-medium text-gray-500 uppercase mb-1 block">Nouveau PIN</label>
+                <input
+                  type="password"
+                  maxLength={4}
+                  value={newPinInput}
+                  onChange={e => setNewPinInput(e.target.value.replace(/\D/g, ""))}
+                  className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-center text-lg tracking-[0.5em] outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+                  placeholder="••••"
+                />
+              </div>
+              <div>
+                <label className="text-xs font-medium text-gray-500 uppercase mb-1 block">Confirmer</label>
+                <input
+                  type="password"
+                  maxLength={4}
+                  value={confirmPinInput}
+                  onChange={e => setConfirmPinInput(e.target.value.replace(/\D/g, ""))}
+                  className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-center text-lg tracking-[0.5em] outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+                  placeholder="••••"
+                />
+              </div>
+            </div>
+
+            {pinChangeMsg && (
+              <p className={cn("text-sm text-center mt-3", pinChangeMsg.type === "ok" ? "text-emerald-600" : "text-red-500")}>
+                {pinChangeMsg.text}
+              </p>
+            )}
+
+            <div className="flex gap-2 mt-5">
+              <button onClick={() => setShowPinModal(false)} className="flex-1 py-2.5 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-600 text-sm font-medium transition-colors">
+                Annuler
+              </button>
+              <button
+                onClick={handleChangePin}
+                disabled={pinChanging || oldPinInput.length !== 4 || newPinInput.length !== 4 || confirmPinInput.length !== 4}
+                className="flex-1 py-2.5 rounded-lg bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium transition-colors disabled:opacity-40"
+              >
+                {pinChanging ? "..." : "Confirmer"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Print styles — @page margin:0 supprime les headers/footers du navigateur */}
       <style jsx global>{`
