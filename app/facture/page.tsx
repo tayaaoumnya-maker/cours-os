@@ -969,8 +969,10 @@ export default function FacturePage() {
                 </div>
 
                 {/* Invoice info */}
-                <div className="border-2 border-blue-500 rounded-lg overflow-hidden mb-5 max-w-[240px]">
+                <div className="grid grid-cols-3 print:grid-cols-1 border-2 border-blue-500 rounded-lg overflow-hidden mb-5">
                   <div className="bg-blue-500 text-white font-bold text-xs text-center py-2.5 uppercase tracking-wide">Facture</div>
+                  <div className="bg-blue-500 text-white font-bold text-xs text-center py-2.5 uppercase tracking-wide print:hidden">Date</div>
+                  <div className="bg-blue-500 text-white font-bold text-xs text-center py-2.5 uppercase tracking-wide print:hidden">Échéance</div>
                   <div className="p-2 text-center">
                     <input
                       value={factureNum}
@@ -978,6 +980,12 @@ export default function FacturePage() {
                       className="w-full border-none text-center text-sm text-gray-900 outline-none bg-transparent"
                       placeholder="F-2026-0001"
                     />
+                  </div>
+                  <div className="p-2 text-center print:hidden">
+                    <input type="date" value={factureDate} onChange={e => setFactureDate(e.target.value)} className="w-full border-none text-center text-sm text-gray-900 outline-none bg-transparent" />
+                  </div>
+                  <div className="p-2 text-center print:hidden">
+                    <input type="date" value={echeance} onChange={e => setEcheance(e.target.value)} className="w-full border-none text-center text-sm text-gray-900 outline-none bg-transparent" />
                   </div>
                 </div>
 
