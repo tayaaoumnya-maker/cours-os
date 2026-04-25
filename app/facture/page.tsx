@@ -109,79 +109,68 @@ function nextStatus(s: InvoiceStatus): InvoiceStatus {
 // ─── Component ──────────────────────────────────────────────────────────────
 
 export default function FacturePage() {
-  // ─── PIN Lock ────────────────────────────────────────────────────────────
-  const PIN_CODE = "2026"
+  // ─── PIN Lock (server-side auth) ──────────────────────────────────────────
   const MAX_ATTEMPTS = 5
   const LOCKOUT_MS = 60_000
-  const SESSION_KEY = "facture_session"
 
-  const [isUnlocked, setIsUnlocked] = useState(() => {
-    if (typeof window === "undefined") return false
-    try {
-      const session = localStorage.getItem(SESSION_KEY)
-      if (session) {
-        const { ts } = JSON.parse(session)
-        // Session valide 30 min
-        if (Date.now() - ts < 30 * 60_000) return true
-      }
-    } catch { /* ignore */ }
-    return false
-  })
+  const [isUnlocked, setIsUnlocked] = useState(false)
+  const [authChecked, setAuthChecked] = useState(false)
   const [pinInput, setPinInput] = useState("")
   const [pinError, setPinError] = useState(false)
+  const [pinLoading, setPinLoading] = useState(false)
   const [pinAttempts, setPinAttempts] = useState(0)
   const [pinLockUntil, setPinLockUntil] = useState(0)
   const [pinShake, setPinShake] = useState(false)
 
-  function handlePinSubmit() {
-    if (Date.now() < pinLockUntil) return
-    if (pinInput === PIN_CODE) {
-      setIsUnlocked(true)
-      setPinInput("")
-      setPinError(false)
-      setPinAttempts(0)
-      localStorage.setItem(SESSION_KEY, JSON.stringify({ ts: Date.now() }))
-    } else {
-      setPinError(true)
-      setPinShake(true)
-      setTimeout(() => setPinShake(false), 500)
-      setPinInput("")
-      const next = pinAttempts + 1
-      setPinAttempts(next)
-      if (next >= MAX_ATTEMPTS) {
-        setPinLockUntil(Date.now() + LOCKOUT_MS)
-        setTimeout(() => { setPinAttempts(0); setPinLockUntil(0) }, LOCKOUT_MS)
+  // Vérifier la session au chargement (cookie HttpOnly côté serveur)
+  useEffect(() => {
+    fetch("/api/facture-auth")
+      .then(r => { setIsUnlocked(r.ok); setAuthChecked(true) })
+      .catch(() => setAuthChecked(true))
+  }, [])
+
+  async function verifyPin(code: string) {
+    if (Date.now() < pinLockUntil || pinLoading) return
+    setPinLoading(true)
+    try {
+      const res = await fetch("/api/facture-auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pin: code }),
+      })
+      if (res.ok) {
+        setIsUnlocked(true)
+        setPinInput("")
+        setPinError(false)
+        setPinAttempts(0)
+      } else {
+        setPinError(true)
+        setPinShake(true)
+        setTimeout(() => setPinShake(false), 500)
+        setPinInput("")
+        const next = pinAttempts + 1
+        setPinAttempts(next)
+        if (next >= MAX_ATTEMPTS) {
+          setPinLockUntil(Date.now() + LOCKOUT_MS)
+          setTimeout(() => { setPinAttempts(0); setPinLockUntil(0) }, LOCKOUT_MS)
+        }
       }
+    } catch {
+      setPinError(true)
+      setPinInput("")
+    } finally {
+      setPinLoading(false)
     }
   }
 
   function handlePinKey(digit: string) {
-    if (Date.now() < pinLockUntil) return
+    if (Date.now() < pinLockUntil || pinLoading) return
     const next = pinInput + digit
     setPinError(false)
     if (next.length <= 4) {
       setPinInput(next)
       if (next.length === 4) {
-        setTimeout(() => {
-          if (next === PIN_CODE) {
-            setIsUnlocked(true)
-            setPinInput("")
-            setPinError(false)
-            setPinAttempts(0)
-            localStorage.setItem(SESSION_KEY, JSON.stringify({ ts: Date.now() }))
-          } else {
-            setPinError(true)
-            setPinShake(true)
-            setTimeout(() => setPinShake(false), 500)
-            setPinInput("")
-            const att = pinAttempts + 1
-            setPinAttempts(att)
-            if (att >= MAX_ATTEMPTS) {
-              setPinLockUntil(Date.now() + LOCKOUT_MS)
-              setTimeout(() => { setPinAttempts(0); setPinLockUntil(0) }, LOCKOUT_MS)
-            }
-          }
-        }, 150)
+        setTimeout(() => verifyPin(next), 150)
       }
     }
   }
@@ -490,7 +479,16 @@ export default function FacturePage() {
 
   // ─── Render ───────────────────────────────────────────────────────────
 
-  // PIN Lock Screen
+  // Vérification session en cours
+  if (!authChecked) {
+    return (
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
+        <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+      </div>
+    )
+  }
+
+  // PIN Lock Screen — auth serveur (cookie HttpOnly)
   if (!isUnlocked) {
     const isLocked = Date.now() < pinLockUntil
     return (
@@ -512,6 +510,7 @@ export default function FacturePage() {
                 key={i}
                 className={cn(
                   "w-4 h-4 rounded-full transition-all duration-200",
+                  pinLoading && i < pinInput.length ? "bg-blue-400 animate-pulse" :
                   i < pinInput.length
                     ? pinError ? "bg-red-500 scale-110" : "bg-blue-500 scale-110"
                     : "bg-slate-600"
@@ -520,8 +519,8 @@ export default function FacturePage() {
             ))}
           </div>
 
-          {/* Error message */}
-          {pinError && (
+          {/* Error / lock messages */}
+          {pinError && !isLocked && (
             <p className="text-red-400 text-sm text-center mb-4">
               Code incorrect {pinAttempts > 1 && `(${MAX_ATTEMPTS - pinAttempts} essai(s) restant(s))`}
             </p>
@@ -538,14 +537,14 @@ export default function FacturePage() {
               key === "" ? <div key="empty" /> : (
                 <button
                   key={key}
-                  disabled={isLocked}
+                  disabled={isLocked || pinLoading}
                   onClick={() => {
                     if (key === "←") { setPinInput(prev => prev.slice(0, -1)); setPinError(false) }
                     else handlePinKey(key)
                   }}
                   className={cn(
                     "w-16 h-16 rounded-xl text-xl font-semibold transition-all",
-                    isLocked
+                    (isLocked || pinLoading)
                       ? "bg-slate-700/50 text-slate-600 cursor-not-allowed"
                       : key === "←"
                         ? "bg-slate-700 text-slate-300 hover:bg-slate-600 active:scale-95"
@@ -560,7 +559,7 @@ export default function FacturePage() {
 
           <p className="text-slate-500 text-xs text-center mt-6">
             <ShieldCheck size={12} className="inline mr-1" />
-            Accès sécurisé — usage interne
+            Accès sécurisé — cookie HttpOnly
           </p>
         </div>
 
