@@ -1027,7 +1027,7 @@ export default function FacturePage() {
                               placeholder="Désignation"
                             />
                             {acIndex === i && acFiltered.length > 0 && (
-                              <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-b-lg shadow-lg z-50 max-h-48 overflow-y-auto">
+                              <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-b-lg shadow-lg z-50 max-h-48 overflow-y-auto" onMouseDown={e => e.preventDefault()}>
                                 {acFiltered.map((p, j) => (
                                   <div
                                     key={p.id}
