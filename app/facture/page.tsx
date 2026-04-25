@@ -26,6 +26,7 @@ import {
   ShieldCheck,
   KeyRound,
   LogOut,
+  RefreshCw,
 } from "lucide-react"
 
 // ─── Types ──────────────────────────────────────────────────────────────────
@@ -240,6 +241,30 @@ export default function FacturePage() {
   async function handleLogout() {
     await fetch("/api/facture-auth", { method: "DELETE" })
     setIsUnlocked(false)
+  }
+
+  // Sync produits
+  const [syncStatus, setSyncStatus] = useState<"" | "syncing" | "ok" | "error">("")
+  const [syncCount, setSyncCount] = useState(0)
+
+  async function refreshProducts() {
+    if (syncStatus === "syncing") return
+    setSyncStatus("syncing")
+    try {
+      const db = await dbGetAll()
+      if (db && db.atm_products) {
+        const raw = db.atm_products as Array<Record<string, unknown>>
+        const prods = raw.map(p => ({ id: String(p.id), name: String(p.name), price: Number(p.price) }))
+        setProducts(prods)
+        setSyncCount(prods.length)
+        setSyncStatus("ok")
+      } else {
+        setSyncStatus("error")
+      }
+    } catch {
+      setSyncStatus("error")
+    }
+    setTimeout(() => setSyncStatus(""), 3000)
   }
 
   // Autocomplete
@@ -932,8 +957,9 @@ export default function FacturePage() {
           {/* ═══ PRODUCTS ═══ */}
           {view === "products" && (
             <div className="space-y-4">
-              <div className="bg-white rounded-xl border border-gray-200 p-4">
-                <div className="relative">
+              {/* Sync bar */}
+              <div className="bg-white rounded-xl border border-gray-200 p-4 flex flex-col sm:flex-row gap-3">
+                <div className="relative flex-1">
                   <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                   <input
                     value={productSearch}
@@ -942,6 +968,23 @@ export default function FacturePage() {
                     className="w-full pl-9 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
                   />
                 </div>
+                <button
+                  onClick={refreshProducts}
+                  disabled={syncStatus === "syncing"}
+                  className={cn(
+                    "flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap",
+                    syncStatus === "ok" ? "bg-emerald-50 text-emerald-700 border border-emerald-200" :
+                    syncStatus === "error" ? "bg-red-50 text-red-700 border border-red-200" :
+                    syncStatus === "syncing" ? "bg-blue-50 text-blue-700 border border-blue-200" :
+                    "bg-amber-500 hover:bg-amber-600 text-gray-900"
+                  )}
+                >
+                  <RefreshCw size={16} className={syncStatus === "syncing" ? "animate-spin" : ""} />
+                  {syncStatus === "syncing" ? "Mise à jour..." :
+                   syncStatus === "ok" ? `${syncCount} produits synchronisés` :
+                   syncStatus === "error" ? "Erreur de sync" :
+                   "Mise à jour catalogue"}
+                </button>
               </div>
 
               <div className="bg-white rounded-xl border border-gray-200">
