@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
       maxAge: SESSION_DURATION,
-      path: "/facture",
+      path: "/",
     })
 
     return NextResponse.json({ ok: true })
