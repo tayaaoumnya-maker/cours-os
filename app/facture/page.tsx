@@ -22,6 +22,8 @@ import {
   Save,
   CheckCircle2,
   ChevronDown,
+  Lock,
+  ShieldCheck,
 } from "lucide-react"
 
 // ─── Types ──────────────────────────────────────────────────────────────────
@@ -107,6 +109,83 @@ function nextStatus(s: InvoiceStatus): InvoiceStatus {
 // ─── Component ──────────────────────────────────────────────────────────────
 
 export default function FacturePage() {
+  // ─── PIN Lock ────────────────────────────────────────────────────────────
+  const PIN_CODE = "2026"
+  const MAX_ATTEMPTS = 5
+  const LOCKOUT_MS = 60_000
+  const SESSION_KEY = "facture_session"
+
+  const [isUnlocked, setIsUnlocked] = useState(() => {
+    if (typeof window === "undefined") return false
+    try {
+      const session = localStorage.getItem(SESSION_KEY)
+      if (session) {
+        const { ts } = JSON.parse(session)
+        // Session valide 30 min
+        if (Date.now() - ts < 30 * 60_000) return true
+      }
+    } catch { /* ignore */ }
+    return false
+  })
+  const [pinInput, setPinInput] = useState("")
+  const [pinError, setPinError] = useState(false)
+  const [pinAttempts, setPinAttempts] = useState(0)
+  const [pinLockUntil, setPinLockUntil] = useState(0)
+  const [pinShake, setPinShake] = useState(false)
+
+  function handlePinSubmit() {
+    if (Date.now() < pinLockUntil) return
+    if (pinInput === PIN_CODE) {
+      setIsUnlocked(true)
+      setPinInput("")
+      setPinError(false)
+      setPinAttempts(0)
+      localStorage.setItem(SESSION_KEY, JSON.stringify({ ts: Date.now() }))
+    } else {
+      setPinError(true)
+      setPinShake(true)
+      setTimeout(() => setPinShake(false), 500)
+      setPinInput("")
+      const next = pinAttempts + 1
+      setPinAttempts(next)
+      if (next >= MAX_ATTEMPTS) {
+        setPinLockUntil(Date.now() + LOCKOUT_MS)
+        setTimeout(() => { setPinAttempts(0); setPinLockUntil(0) }, LOCKOUT_MS)
+      }
+    }
+  }
+
+  function handlePinKey(digit: string) {
+    if (Date.now() < pinLockUntil) return
+    const next = pinInput + digit
+    setPinError(false)
+    if (next.length <= 4) {
+      setPinInput(next)
+      if (next.length === 4) {
+        setTimeout(() => {
+          if (next === PIN_CODE) {
+            setIsUnlocked(true)
+            setPinInput("")
+            setPinError(false)
+            setPinAttempts(0)
+            localStorage.setItem(SESSION_KEY, JSON.stringify({ ts: Date.now() }))
+          } else {
+            setPinError(true)
+            setPinShake(true)
+            setTimeout(() => setPinShake(false), 500)
+            setPinInput("")
+            const att = pinAttempts + 1
+            setPinAttempts(att)
+            if (att >= MAX_ATTEMPTS) {
+              setPinLockUntil(Date.now() + LOCKOUT_MS)
+              setTimeout(() => { setPinAttempts(0); setPinLockUntil(0) }, LOCKOUT_MS)
+            }
+          }
+        }, 150)
+      }
+    }
+  }
+
   // Navigation
   const [view, setView] = useState<View>("dashboard")
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -410,6 +489,91 @@ export default function FacturePage() {
   }
 
   // ─── Render ───────────────────────────────────────────────────────────
+
+  // PIN Lock Screen
+  if (!isUnlocked) {
+    const isLocked = Date.now() < pinLockUntil
+    return (
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
+        <div className={cn("bg-slate-800 rounded-2xl p-8 w-full max-w-sm shadow-2xl border border-slate-700", pinShake && "animate-[shake_0.5s_ease-in-out]")}>
+          {/* Logo */}
+          <div className="flex flex-col items-center mb-8">
+            <div className="w-16 h-16 bg-blue-500/10 rounded-2xl flex items-center justify-center mb-4">
+              <Lock size={28} className="text-blue-400" />
+            </div>
+            <h1 className="text-white text-xl font-bold">ATM Facturation</h1>
+            <p className="text-slate-400 text-sm mt-1">Entrez votre code PIN</p>
+          </div>
+
+          {/* PIN dots */}
+          <div className="flex justify-center gap-4 mb-8">
+            {[0, 1, 2, 3].map(i => (
+              <div
+                key={i}
+                className={cn(
+                  "w-4 h-4 rounded-full transition-all duration-200",
+                  i < pinInput.length
+                    ? pinError ? "bg-red-500 scale-110" : "bg-blue-500 scale-110"
+                    : "bg-slate-600"
+                )}
+              />
+            ))}
+          </div>
+
+          {/* Error message */}
+          {pinError && (
+            <p className="text-red-400 text-sm text-center mb-4">
+              Code incorrect {pinAttempts > 1 && `(${MAX_ATTEMPTS - pinAttempts} essai(s) restant(s))`}
+            </p>
+          )}
+          {isLocked && (
+            <p className="text-red-400 text-sm text-center mb-4">
+              Trop de tentatives. Réessayez dans 1 minute.
+            </p>
+          )}
+
+          {/* Numpad */}
+          <div className="grid grid-cols-3 gap-3 max-w-[240px] mx-auto">
+            {["1", "2", "3", "4", "5", "6", "7", "8", "9", "", "0", "←"].map(key => (
+              key === "" ? <div key="empty" /> : (
+                <button
+                  key={key}
+                  disabled={isLocked}
+                  onClick={() => {
+                    if (key === "←") { setPinInput(prev => prev.slice(0, -1)); setPinError(false) }
+                    else handlePinKey(key)
+                  }}
+                  className={cn(
+                    "w-16 h-16 rounded-xl text-xl font-semibold transition-all",
+                    isLocked
+                      ? "bg-slate-700/50 text-slate-600 cursor-not-allowed"
+                      : key === "←"
+                        ? "bg-slate-700 text-slate-300 hover:bg-slate-600 active:scale-95"
+                        : "bg-slate-700 text-white hover:bg-slate-600 active:scale-95 active:bg-blue-500"
+                  )}
+                >
+                  {key}
+                </button>
+              )
+            ))}
+          </div>
+
+          <p className="text-slate-500 text-xs text-center mt-6">
+            <ShieldCheck size={12} className="inline mr-1" />
+            Accès sécurisé — usage interne
+          </p>
+        </div>
+
+        <style jsx global>{`
+          @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+          }
+        `}</style>
+      </div>
+    )
+  }
 
   if (!loaded) {
     return (
