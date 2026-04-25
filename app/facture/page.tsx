@@ -1157,15 +1157,15 @@ export default function FacturePage() {
         </div>
       </main>
 
-      {/* Print styles */}
+      {/* Print styles — @page margin:0 supprime les headers/footers du navigateur */}
       <style jsx global>{`
         @page {
-          margin: 10mm;
+          margin: 0;
           size: A4;
         }
         @media print {
           aside, header, .print\\:hidden { display: none !important; }
-          main { margin-left: 0 !important; }
+          main { margin-left: 0 !important; padding: 12mm !important; }
           body { background: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         }
       `}</style>
