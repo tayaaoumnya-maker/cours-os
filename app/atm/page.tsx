@@ -699,6 +699,12 @@ export default function ATMApp() {
   const [loginRole, setLoginRole]             = useState<UserRole>("Administrateur")
   const [loginInput, setLoginInput]           = useState("")
   const [loginError, setLoginError]           = useState(false)
+  const [loginAttempts, setLoginAttempts]     = useState(0)
+  const [loginLockUntil, setLoginLockUntil]  = useState(0)
+  const MAX_LOGIN_ATTEMPTS = 5
+  const LOCKOUT_DURATION = 60_000 // 60 secondes
+  const SESSION_TIMEOUT = 30 * 60_000 // 30 minutes d'inactivité → déconnexion
+  const lastActivity = useRef(Date.now())
   const [showMobileMenu, setShowMobileMenu]   = useState(false)
   const [showMobileCart, setShowMobileCart]   = useState(false)
   // Vitrine
@@ -718,11 +724,14 @@ export default function ATMApp() {
   // Prix variable
   const [cartPrices, setCartPrices]           = useState<Record<string, number>>({})
   const [variablePriceModal, setVariablePriceModal] = useState<{ productId: string; name: string } | null>(null)
+  const [qtyInputModal, setQtyInputModal] = useState<{ productId: string; name: string; stock: number } | null>(null)
+  const [qtyInputValue, setQtyInputValue] = useState("")
   const [variablePriceInput, setVariablePriceInput] = useState("")
   // Catalogue
   const [catEditProduct, setCatEditProduct]   = useState<Product | null>(null)
   const [catAddMode, setCatAddMode]           = useState(false)
   const [catSearch, setCatSearch]             = useState("")
+  const [syncFactureMsg, setSyncFactureMsg]   = useState<"" | "syncing" | "ok" | "error">("")
   // Stock — edit inline
   const [stockEditProduct, setStockEditProduct] = useState<Product | null>(null)
   const [stockAddMode, setStockAddMode]         = useState(false)
@@ -797,7 +806,6 @@ export default function ATMApp() {
     LS.get<InternalNote[]>("atm_notes", []).map(n => ({ ...n, createdAt: new Date(n.createdAt) }))
   )
   const [noteInput, setNoteInput]             = useState("")
-
   // ─── Persistence localStorage + Supabase ────────────────────────────────────
   useEffect(() => {
     // Images base64 → stockées dans des clés individuelles (atm_img_<id>) dans localStorage ET Supabase
@@ -851,6 +859,37 @@ export default function ATMApp() {
   useEffect(() => { setToday(new Date().toDateString()) }, [])
 
   // PINs persistés via useEffect lignes 808-809
+
+  // ─── Sync produits vers app Facture ─────────────────────────────────────────
+  async function syncProduitsFacture() {
+    setSyncFactureMsg("syncing")
+    try {
+      const productsForSync = products.map(p => ({ id: p.id, name: p.name, price: p.price }))
+      await dbSet("atm_products", productsForSync)
+      setSyncFactureMsg("ok")
+      setTimeout(() => setSyncFactureMsg(""), 3000)
+    } catch {
+      setSyncFactureMsg("error")
+      setTimeout(() => setSyncFactureMsg(""), 3000)
+    }
+  }
+
+  // ─── Auto-logout après inactivité ──────────────────────────────────────────
+  useEffect(() => {
+    if (!isLoggedIn) return
+    const resetTimer = () => { lastActivity.current = Date.now() }
+    const events = ["mousedown", "keydown", "touchstart", "scroll"] as const
+    events.forEach(e => window.addEventListener(e, resetTimer))
+    const check = setInterval(() => {
+      if (Date.now() - lastActivity.current > SESSION_TIMEOUT) {
+        setIsLoggedIn(false); setLoginStep("choose"); setLoginInput("")
+      }
+    }, 60_000)
+    return () => {
+      events.forEach(e => window.removeEventListener(e, resetTimer))
+      clearInterval(check)
+    }
+  }, [isLoggedIn])
 
   // ─── Chargement initial depuis Supabase ──────────────────────────────────────
   useEffect(() => {
@@ -1996,7 +2035,8 @@ export default function ATMApp() {
                     }`} />
                   ))}
                 </div>
-                {loginError && <p className="text-red-400 text-xs mb-4 animate-pulse">Code incorrect</p>}
+                {Date.now() < loginLockUntil && <p className="text-red-400 text-xs mb-4 animate-pulse">Trop de tentatives — reessayez dans 1 minute</p>}
+                {loginError && Date.now() >= loginLockUntil && <p className="text-red-400 text-xs mb-4 animate-pulse">Code incorrect ({MAX_LOGIN_ATTEMPTS - loginAttempts} essai{MAX_LOGIN_ATTEMPTS - loginAttempts > 1 ? "s" : ""} restant{MAX_LOGIN_ATTEMPTS - loginAttempts > 1 ? "s" : ""})</p>}
                 <div className="grid grid-cols-3 gap-3 max-w-[220px] mx-auto">
                   {["1","2","3","4","5","6","7","8","9","","0","⌫"].map((k, i) => (
                     k === "" ? <div key={i} /> :
@@ -2006,18 +2046,31 @@ export default function ATMApp() {
                         const next = loginInput + k
                         setLoginInput(next)
                         if (next.length === 4) {
+                          // Anti brute-force : vérifier le lockout
+                          if (Date.now() < loginLockUntil) {
+                            setLoginInput("")
+                            return
+                          }
                           const storedHash = loginRole === "Administrateur" ? adminPin : partenairePin
                           // Aucun PIN configuré → accès libre
                           if (!storedHash) {
+                            setLoginAttempts(0)
                             setUserRole(loginRole); setIsLoggedIn(true)
                             setLoginInput(""); setLoginStep("choose")
                             return
                           }
                           hashPin(next).then(inputHash => {
                             if (inputHash === storedHash) {
+                              setLoginAttempts(0)
                               setUserRole(loginRole); setIsLoggedIn(true)
                               setLoginInput(""); setLoginStep("choose")
                             } else {
+                              const newAttempts = loginAttempts + 1
+                              setLoginAttempts(newAttempts)
+                              if (newAttempts >= MAX_LOGIN_ATTEMPTS) {
+                                setLoginLockUntil(Date.now() + LOCKOUT_DURATION)
+                                setLoginAttempts(0)
+                              }
                               setLoginError(true)
                               setTimeout(() => { setLoginInput(""); setLoginError(false) }, 700)
                             }
@@ -3200,8 +3253,14 @@ export default function ATMApp() {
                               return
                             }
                             if (isOutOfStock) return
-                            if (!selected) addToCart(product.id)
-                            else setCart(prev => { const { [product.id]: _, ...rest } = prev; return rest })
+                            if (!selected) {
+                              addToCart(product.id)
+                              setQtyInputModal({ productId: product.id, name: product.name, stock: product.stock })
+                              setQtyInputValue("1")
+                            } else {
+                              setQtyInputModal({ productId: product.id, name: product.name, stock: product.stock })
+                              setQtyInputValue(String(cart[product.id] ?? 1))
+                            }
                           }}
                         >
                           {/* Checkbox suppression */}
@@ -3247,7 +3306,11 @@ export default function ATMApp() {
                                     if (n <= 0) { const { [product.id]: _, ...rest } = prev; return rest }
                                     return { ...prev, [product.id]: n }
                                   })}>−</button>
-                                <span className="text-xs font-bold text-white min-w-[16px] text-center">{inCart}</span>
+                                <button
+                                  className="min-w-[28px] h-6 px-1.5 rounded-md bg-white/[0.08] hover:bg-amber-500/30 flex items-center justify-center cursor-pointer transition-all active:scale-95"
+                                  onClick={(e) => { e.stopPropagation(); setQtyInputModal({ productId: product.id, name: product.name, stock: product.stock }); setQtyInputValue(String(inCart)) }}>
+                                  <span className="text-xs font-bold text-white">{inCart}</span>
+                                </button>
                                 <button
                                   className="w-5 h-5 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white text-xs font-bold transition-colors"
                                   onClick={() => setCart(prev => ({ ...prev, [product.id]: Math.min((prev[product.id] ?? 1) + 1, product.stock) }))}>+</button>
@@ -3271,7 +3334,7 @@ export default function ATMApp() {
             {/* Cart panel — caché sur mobile, visible sur desktop */}
             <aside className="hidden md:flex w-72 flex-shrink-0 flex-col border-l border-white/[0.06] bg-[#0e0e18]">
               <div className="px-4 py-3 border-b border-white/[0.06] flex items-center justify-between">
-                <h2 className="font-semibold text-sm text-white/70">Panier en cours</h2>
+                <h2 className="font-semibold text-sm text-white/70">Panier en cours{cartItems.length > 0 && <span className="ml-1.5 inline-flex items-center justify-center min-w-[18px] h-[18px] rounded-full bg-amber-500 text-[10px] font-bold text-black px-1">{cartItems.reduce((s, i) => s + i.qty, 0)}</span>}</h2>
                 <button
                   onClick={() => setShowPendingPanel(v => !v)}
                   className="relative flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/[0.05] hover:bg-white/10 text-xs text-white/50 hover:text-white transition-all"
@@ -3575,7 +3638,7 @@ export default function ATMApp() {
                   </div>
                   {/* Header */}
                   <div className="flex items-center justify-between px-5 py-3 border-b border-white/[0.06]">
-                    <h2 className="font-bold text-base">Panier</h2>
+                    <h2 className="font-bold text-base">Panier{cartItems.length > 0 && <span className="ml-2 inline-flex items-center justify-center min-w-[20px] h-5 rounded-full bg-amber-500 text-[10px] font-bold text-black px-1.5">{cartItems.reduce((s, i) => s + i.qty, 0)}</span>}</h2>
                     <button onClick={() => setShowMobileCart(false)} className="w-8 h-8 rounded-full bg-white/[0.08] flex items-center justify-center text-white/50 text-sm">✕</button>
                   </div>
                   {/* Nom client + livraison */}
@@ -3848,10 +3911,30 @@ export default function ATMApp() {
             <div className="px-3 sm:px-6 pt-4 sm:pt-5 pb-3 sm:pb-4 border-b border-white/[0.06]">
               <div className="flex items-center justify-between mb-3">
                 <h1 className="text-lg sm:text-xl font-bold">Catalogue</h1>
-                <button onClick={() => { setCatAddMode(true); setCatEditProduct(null) }}
-                  className="px-4 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-black text-sm font-bold transition-colors">
-                  + Nouveau produit
-                </button>
+                <div className="flex items-center gap-2">
+                  <button onClick={syncProduitsFacture}
+                    disabled={syncFactureMsg === "syncing"}
+                    className={`px-3 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
+                      syncFactureMsg === "ok" ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" :
+                      syncFactureMsg === "error" ? "bg-red-500/20 text-red-400 border border-red-500/30" :
+                      syncFactureMsg === "syncing" ? "bg-blue-500/20 text-blue-400 border border-blue-500/30" :
+                      "bg-white/[0.06] hover:bg-white/10 text-white/60 hover:text-white border border-white/[0.08]"
+                    }`}>
+                    {syncFactureMsg === "syncing" ? (
+                      <><span className="animate-spin inline-block">⟳</span> Sync en cours...</>
+                    ) : syncFactureMsg === "ok" ? (
+                      <><span>✓</span> Synchronisé !</>
+                    ) : syncFactureMsg === "error" ? (
+                      <><span>✕</span> Erreur sync</>
+                    ) : (
+                      <><span>🔄</span> <span className="hidden sm:inline">Sync vers</span> Facture</>
+                    )}
+                  </button>
+                  <button onClick={() => { setCatAddMode(true); setCatEditProduct(null) }}
+                    className="px-4 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-black text-sm font-bold transition-colors">
+                    + Nouveau produit
+                  </button>
+                </div>
               </div>
               <input type="text" value={catSearch} onChange={e => setCatSearch(e.target.value)}
                 placeholder="Rechercher un produit..."
@@ -5833,6 +5916,93 @@ export default function ATMApp() {
                   className="flex-1 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-sm transition-colors disabled:opacity-30"
                 >
                   Ajouter au panier
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── MODAL SAISIE QUANTITÉ RAPIDE ─────────────────────────────────────── */}
+      {qtyInputModal && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center" onClick={() => setQtyInputModal(null)}>
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+          <div className="relative z-10 w-full max-w-sm bg-[#12121f] border border-white/[0.08] rounded-t-2xl sm:rounded-2xl overflow-hidden shadow-2xl animate-[slideUp_0.2s_ease-out]" onClick={e => e.stopPropagation()}>
+            <style>{`@keyframes slideUp { from { transform: translateY(100%); opacity: 0 } to { transform: translateY(0); opacity: 1 } }`}</style>
+            <div className="px-5 py-4 border-b border-white/[0.06] flex items-center justify-between">
+              <div>
+                <h2 className="text-sm font-bold">Quantité</h2>
+                <p className="text-xs text-white/40 mt-0.5 truncate">{qtyInputModal.name}</p>
+              </div>
+              <span className="text-[10px] text-white/30">Stock : {qtyInputModal.stock}</span>
+            </div>
+            <div className="p-5 space-y-4">
+              {/* Input + boutons -/+ sur les côtés */}
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => { const v = Math.max(1, (parseInt(qtyInputValue) || 1) - 1); setQtyInputValue(String(v)) }}
+                  className="w-12 h-12 rounded-xl bg-white/[0.06] hover:bg-white/10 border border-white/[0.08] flex items-center justify-center text-xl font-bold text-white/60 hover:text-white transition-all active:scale-95"
+                >−</button>
+                <input
+                  autoFocus
+                  type="number"
+                  min={1}
+                  max={qtyInputModal.stock}
+                  value={qtyInputValue}
+                  onChange={e => {
+                    const v = e.target.value
+                    if (v === "") { setQtyInputValue(""); return }
+                    const n = parseInt(v)
+                    if (!isNaN(n) && n >= 0 && n <= qtyInputModal.stock) setQtyInputValue(String(n))
+                  }}
+                  onKeyDown={e => {
+                    if (e.key === "Enter") {
+                      const n = parseInt(qtyInputValue)
+                      if (!isNaN(n) && n >= 1 && n <= qtyInputModal.stock) {
+                        setCart(prev => ({ ...prev, [qtyInputModal.productId]: n }))
+                        setQtyInputModal(null)
+                      }
+                    }
+                  }}
+                  className="flex-1 bg-white/[0.06] border border-white/[0.12] rounded-xl px-4 py-3 text-2xl font-bold text-white text-center focus:outline-none focus:border-amber-500/50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                />
+                <button
+                  onClick={() => { const v = Math.min(qtyInputModal.stock, (parseInt(qtyInputValue) || 0) + 1); setQtyInputValue(String(v)) }}
+                  className="w-12 h-12 rounded-xl bg-white/[0.06] hover:bg-white/10 border border-white/[0.08] flex items-center justify-center text-xl font-bold text-white/60 hover:text-white transition-all active:scale-95"
+                >+</button>
+              </div>
+              {/* Raccourcis quantités */}
+              <div className="grid grid-cols-5 gap-2">
+                {[1, 2, 3, 5, 10].map(n => (
+                  <button key={n}
+                    disabled={n > qtyInputModal.stock}
+                    onClick={() => setQtyInputValue(String(n))}
+                    className={`py-2 rounded-lg text-sm font-bold transition-all active:scale-95 ${
+                      String(n) === qtyInputValue
+                        ? "bg-amber-500 text-black"
+                        : "bg-white/[0.06] hover:bg-white/10 text-white/60 hover:text-white disabled:opacity-20 disabled:pointer-events-none"
+                    }`}
+                  >{n}</button>
+                ))}
+              </div>
+              {/* Valider */}
+              <div className="flex gap-2 pt-1">
+                <button onClick={() => setQtyInputModal(null)}
+                  className="flex-1 py-3 rounded-xl bg-white/[0.05] hover:bg-white/10 text-white/50 text-sm transition-colors">
+                  Annuler
+                </button>
+                <button
+                  onClick={() => {
+                    const n = parseInt(qtyInputValue)
+                    if (!isNaN(n) && n >= 1 && n <= qtyInputModal.stock) {
+                      setCart(prev => ({ ...prev, [qtyInputModal.productId]: n }))
+                      setQtyInputModal(null)
+                    }
+                  }}
+                  disabled={!qtyInputValue || parseInt(qtyInputValue) < 1 || parseInt(qtyInputValue) > qtyInputModal.stock}
+                  className="flex-1 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-sm transition-colors disabled:opacity-30"
+                >
+                  Valider
                 </button>
               </div>
             </div>
