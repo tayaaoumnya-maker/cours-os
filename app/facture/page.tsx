@@ -940,6 +940,10 @@ export default function FacturePage() {
                   Partager
                   {shareMsg && <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs px-2 py-1 rounded whitespace-nowrap">{shareMsg}</span>}
                 </button>
+                <button onClick={() => setView("products")} className="flex items-center gap-2 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-lg text-sm transition-colors">
+                  <Package size={16} />
+                  Base produits
+                </button>
                 <button onClick={addRow} className="flex items-center gap-2 px-4 py-2.5 bg-amber-500 hover:bg-amber-600 text-gray-900 font-medium rounded-lg text-sm transition-colors ml-auto">
                   <Plus size={16} />
                   Ligne
@@ -1156,10 +1160,14 @@ export default function FacturePage() {
 
       {/* Print styles */}
       <style jsx global>{`
+        @page {
+          margin: 10mm;
+          size: A4;
+        }
         @media print {
           aside, header, .print\\:hidden { display: none !important; }
           main { margin-left: 0 !important; }
-          body { background: white !important; }
+          body { background: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         }
       `}</style>
     </div>
